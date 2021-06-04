@@ -1,7 +1,7 @@
 <?php
 
 
-class task
+class Task
 {
     private const TASK_STATUS_NEW = 'new';
     private const TASK_STATUS_CANCELED = 'canceled';
@@ -17,7 +17,7 @@ class task
 
     public function __construct(
         private int $customerId,
-        private int $implementerID
+        private int $executorID
     ) {
     }
 
@@ -42,39 +42,35 @@ class task
         ];
     }
 
-    public function getPossipbleActions(): ?array
+    public function getPossibleActionsForCustomer(): string|null
     {
-        if ($this->taskState === self::TASK_STATUS_NEW) {
-            return [
-                self::TASK_ACTION_CANCEL => 'Отменить',
-                self::TASK_ACTION_RESPOND => 'Откликнуться',
-            ];
-        }
-        if ($this->taskState === self::TASK_STATUS_IN_WORK) {
-            return [
-                self::TASK_ACTION_DONE => 'Выполнено',
-                self::TASK_ACTION_REFUSE => 'Отказаться',
-            ];
-        }
+        $possibleActions = [
+            self::TASK_ACTION_CANCEL => self::TASK_STATUS_CANCELED,
+            self::TASK_ACTION_DONE => self::TASK_STATUS_DONE,
+        ];
 
-        return null;
+        return $possibleActions[$this->taskState] ?? null;
     }
 
-    public function getTaskStateAfterAction($action): ?string
+    public function getPossibleActionsForExecutor(): string|null
     {
-        if ($action === self::TASK_ACTION_CANCEL) {
-            return self::TASK_STATUS_CANCELED;
-        }
-        if ($action === self::TASK_ACTION_RESPOND) {
-            return self::TASK_STATUS_IN_WORK;
-        }
-        if ($action === self::TASK_ACTION_DONE) {
-            return self::TASK_STATUS_DONE;
-        }
-        if ($action === self::TASK_ACTION_REFUSE) {
-            return self::TASK_STATUS_FAILED;
-        }
+        $possibleActions = [
+            self::TASK_ACTION_RESPOND => self::TASK_STATUS_IN_WORK,
+            self::TASK_ACTION_REFUSE => self::TASK_STATUS_FAILED,
+        ];
 
-        return null;
+        return $possibleActions[$this->taskState] ?? null;
+    }
+
+    public function getTaskStateAfterAction($action): string|null
+    {
+        $taskStateAfterAction = [
+            self::TASK_ACTION_CANCEL => self::TASK_STATUS_CANCELED,
+            self::TASK_ACTION_RESPOND => self::TASK_STATUS_IN_WORK,
+            self::TASK_ACTION_DONE => self::TASK_STATUS_DONE,
+            self::TASK_ACTION_REFUSE => self::TASK_STATUS_FAILED,
+        ];
+
+        return $taskStateAfterAction[$action] ?? null;
     }
 }

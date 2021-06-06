@@ -1,5 +1,6 @@
 <?php
 
+namespace Components\Tasks;
 
 class Task
 {

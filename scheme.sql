@@ -4,6 +4,13 @@ CREATE DATABASE taskforce
 
 USE taskforce;
 
+CREATE TABLE cities
+(
+    id       int PRIMARY KEY AUTO_INCREMENT,
+    title    varchar(64) NOT NULL,
+    location point       NOT NULL
+);
+
 CREATE TABLE users
 (
     id             int PRIMARY KEY AUTO_INCREMENT,
@@ -24,6 +31,11 @@ CREATE TABLE users
     FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
+CREATE TABLE specialties
+(
+    id    int PRIMARY KEY AUTO_INCREMENT,
+    title varchar(64) NOT NULL
+);
 
 CREATE TABLE users_specialty
 (
@@ -32,12 +44,6 @@ CREATE TABLE users_specialty
     specialty_id int NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (specialty_id) REFERENCES specialties (id)
-);
-
-CREATE TABLE specialties
-(
-    id    int PRIMARY KEY AUTO_INCREMENT,
-    title varchar(64) NOT NULL
 );
 
 CREATE TABLE portfolio
@@ -60,20 +66,13 @@ CREATE TABLE user_settings
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE cities
-(
-    id       int PRIMARY KEY AUTO_INCREMENT,
-    title    varchar(64) NOT NULL,
-    location point       NOT NULL
-);
-
 CREATE TABLE tasks
 (
     id              int PRIMARY KEY AUTO_INCREMENT,
     customer_id     int UNIQUE  NOT NULL,
     executor_id     int UNIQUE,
     title           varchar(64) NOT NULL,
-    category_id     varchar(64) NOT NULL,
+    category_id     int NOT NULL,
     state           varchar(10) NOT NULL,
     price           int         NOT NULL,
     deadline        date,

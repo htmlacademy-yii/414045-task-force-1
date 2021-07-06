@@ -72,7 +72,7 @@ CREATE TABLE tasks
     customer_id     int UNIQUE  NOT NULL,
     executor_id     int UNIQUE,
     title           varchar(64) NOT NULL,
-    category_id     int NOT NULL,
+    speciality_id   int         NOT NULL,
     state           varchar(10) NOT NULL,
     price           int         NOT NULL,
     deadline        date,
@@ -84,7 +84,7 @@ CREATE TABLE tasks
     updated_at      datetime,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES specialties (id),
+    FOREIGN KEY (speciality_id) REFERENCES specialties (id),
     FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
@@ -115,7 +115,7 @@ CREATE TABLE reviews
     sender_id    int        NOT NULL,
     addressee_id int        NOT NULL,
     task_id      int UNIQUE NOT NULL,
-    rating       int(1)     NOT NULL,
+    rating       int    NOT NULL,
     content      text       NOT NULL,
     created_at   datetime,
     FOREIGN KEY (sender_id) REFERENCES users (id),

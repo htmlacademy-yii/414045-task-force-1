@@ -1,4 +1,7 @@
 <?php
+/**
+ * @property int $user_id
+ */
 
 
 namespace Components\Tasks;
@@ -6,13 +9,6 @@ namespace Components\Tasks;
 
 class Refuse extends AbstractAction
 {
-
-    public function __construct(
-        private int $user_id,
-        private int $executor_id
-    ) {
-    }
-
     public function getAction(): ?string
     {
         if ($this->authUser()) {

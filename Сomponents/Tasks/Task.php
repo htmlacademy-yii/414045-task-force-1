@@ -14,11 +14,12 @@ class Task
     private const TASK_ACTION_DONE = 'done';
     private const TASK_ACTION_REFUSE = 'refuse';
 
-    private string $taskState;
+    public string $taskState = self::TASK_STATUS_NEW;
 
     public function __construct(
-        private int $customerId,
-        private int $executorID
+        private int $user_id,
+        private int $customer_id,
+        private int $executor_id
     ) {
     }
 
@@ -43,24 +44,51 @@ class Task
         ];
     }
 
-    public function getPossibleActionsForCustomer(): string|null
+    public function getPossibleActions()
     {
-        $possibleActions = [
-            self::TASK_ACTION_CANCEL => self::TASK_STATUS_CANCELED,
-            self::TASK_ACTION_DONE => self::TASK_STATUS_DONE,
-        ];
+        $possibleActions = [];
+        $cancel = new Cancel(
+            $this->user_id,
+            $this->customer_id,
+            $this->executor_id
+        );
+        $respond = new Respond(
+            $this->user_id,
+            $this->customer_id,
+            $this->executor_id
+        );
+        $done = new Done(
+            $this->user_id, $this->customer_id, $this->executor_id
+        );
+        $refuse = new Refuse(
+            $this->user_id,
+            $this->customer_id,
+            $this->executor_id
+        );
 
-        return $possibleActions[$this->taskState] ?? null;
-    }
+        if ($this->taskState === self::TASK_STATUS_NEW && $cancel->authUser()) {
+            $possibleActions[] = $cancel;
+        }
 
-    public function getPossibleActionsForExecutor(): string|null
-    {
-        $possibleActions = [
-            self::TASK_ACTION_RESPOND => self::TASK_STATUS_IN_WORK,
-            self::TASK_ACTION_REFUSE => self::TASK_STATUS_FAILED,
-        ];
+        if ($this->taskState === self::TASK_STATUS_NEW
+            && $respond->authUser()
+        ) {
+            $possibleActions[] = $respond;
+        }
 
-        return $possibleActions[$this->taskState] ?? null;
+        if ($this->taskState === self::TASK_STATUS_IN_WORK
+            && $done->authUser()
+        ) {
+            $possibleActions[] = $done;
+        }
+
+        if ($this->taskState === self::TASK_STATUS_IN_WORK
+            && $refuse->authUser()
+        ) {
+            $possibleActions[] = $refuse;
+        }
+
+        return $possibleActions ?? null;
     }
 
     public function getTaskStateAfterAction($action): string|null

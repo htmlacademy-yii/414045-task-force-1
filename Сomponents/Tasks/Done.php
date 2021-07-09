@@ -6,13 +6,6 @@ namespace Components\Tasks;
 
 class Done extends AbstractAction
 {
-
-    public function __construct(
-        private int $user_id,
-        private int $customer_id
-    ) {
-    }
-
     public function getAction(): ?string
     {
         if ($this->authUser()) {

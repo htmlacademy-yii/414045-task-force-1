@@ -4,12 +4,14 @@
 namespace Components\Tasks;
 
 
+use Components\Constants\ActionConstants;
+
 class Respond extends AbstractAction
 {
-    public function getAction(): ?string
+    public function getActionNameForUser(): ?string
     {
         if ($this->authUser()) {
-            return "Откликнуться";
+            return ActionConstants::RESPOND_ACTION_NAME_FOR_USER;
         }
 
         return null;
@@ -17,7 +19,7 @@ class Respond extends AbstractAction
 
     public function getActionName(): string
     {
-        return "respond";
+        return ActionConstants::RESPOND_ACTION_NAME;
     }
 
     public function authUser(): bool

@@ -2,19 +2,12 @@
 
 namespace Components\Tasks;
 
+use Components\Constants\ActionConstants;
+use Components\Constants\TaskConstants;
+
 class Task
 {
-    private const TASK_STATUS_NEW = 'new';
-    private const TASK_STATUS_CANCELED = 'canceled';
-    private const TASK_STATUS_IN_WORK = 'in work';
-    private const TASK_STATUS_DONE = 'done';
-    private const TASK_STATUS_FAILED = 'failed';
-    private const TASK_ACTION_CANCEL = 'cancel';
-    private const TASK_ACTION_RESPOND = 'respond';
-    private const TASK_ACTION_DONE = 'done';
-    private const TASK_ACTION_REFUSE = 'refuse';
-
-    public string $taskState = self::TASK_STATUS_NEW;
+    public string $taskState = TaskConstants::NEW_TASK_STATUS_NAME;
 
     public function __construct(
         private int $user_id,
@@ -26,66 +19,35 @@ class Task
     public function getStatusMap(): array
     {
         return [
-            self::TASK_STATUS_NEW => 'Новое',
-            self::TASK_STATUS_CANCELED => 'Отменено',
-            self::TASK_STATUS_IN_WORK => 'В работе',
-            self::TASK_STATUS_DONE => 'Выполнено',
-            self::TASK_STATUS_FAILED => 'Провалено',
+            TaskConstants::NEW_TASK_STATUS_NAME => TaskConstants::NEW_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::CANCELED_TASK_STATUS_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::IN_WORK_TASK_STATUS_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::DONE_TASK_STATUS_NAME => TaskConstants::DONE_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::FAILED_TASK_STATUS_NAME => TaskConstants::FAILED_TASK_STATUS_NAME_FOR_USER,
         ];
     }
 
     public function getActionMap(): array
     {
         return [
-            self::TASK_ACTION_CANCEL => 'Отменить',
-            self::TASK_ACTION_RESPOND => 'Откликнуться',
-            self::TASK_ACTION_DONE => 'Выполнено',
-            self::TASK_ACTION_REFUSE => 'Отказаться',
+            ActionConstants::CANCEL_ACTION_NAME => ActionConstants::CANCEL_ACTION_NAME_FOR_USER,
+            ActionConstants::RESPOND_ACTION_NAME => ActionConstants::RESPOND_ACTION_NAME_FOR_USER,
+            ActionConstants::DONE_ACTION_NAME => ActionConstants::DONE_ACTION_NAME_FOR_USER,
+            ActionConstants::REFUSE_ACTION_NAME => ActionConstants::REFUSE_ACTION_NAME_FOR_USER,
         ];
     }
 
     public function getPossibleActions()
     {
         $possibleActions = [];
-        $cancel = new Cancel(
-            $this->user_id,
-            $this->customer_id,
-            $this->executor_id
-        );
-        $respond = new Respond(
-            $this->user_id,
-            $this->customer_id,
-            $this->executor_id
-        );
-        $done = new Done(
-            $this->user_id, $this->customer_id, $this->executor_id
-        );
-        $refuse = new Refuse(
-            $this->user_id,
-            $this->customer_id,
-            $this->executor_id
-        );
 
-        if ($this->taskState === self::TASK_STATUS_NEW && $cancel->authUser()) {
-            $possibleActions[] = $cancel;
-        }
-
-        if ($this->taskState === self::TASK_STATUS_NEW
-            && $respond->authUser()
-        ) {
-            $possibleActions[] = $respond;
-        }
-
-        if ($this->taskState === self::TASK_STATUS_IN_WORK
-            && $done->authUser()
-        ) {
-            $possibleActions[] = $done;
-        }
-
-        if ($this->taskState === self::TASK_STATUS_IN_WORK
-            && $refuse->authUser()
-        ) {
-            $possibleActions[] = $refuse;
+        foreach (TaskConstants::TRANSFER_MAP as $status) {
+            foreach ($status as $action) {
+                $action = new $action($this->user_id, $this->customer_id, $this->executor_id);
+                if ($action->authUser()) {
+                    $possibleActions[] = $action;
+                }
+            }
         }
 
         return $possibleActions ?? null;
@@ -94,10 +56,10 @@ class Task
     public function getTaskStateAfterAction($action): string|null
     {
         $taskStateAfterAction = [
-            self::TASK_ACTION_CANCEL => self::TASK_STATUS_CANCELED,
-            self::TASK_ACTION_RESPOND => self::TASK_STATUS_IN_WORK,
-            self::TASK_ACTION_DONE => self::TASK_STATUS_DONE,
-            self::TASK_ACTION_REFUSE => self::TASK_STATUS_FAILED,
+            ActionConstants::CANCEL_ACTION_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME,
+            ActionConstants::RESPOND_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
+            ActionConstants::DONE_ACTION_NAME => TaskConstants::DONE_TASK_STATUS_NAME,
+            ActionConstants::REFUSE_ACTION_NAME => TaskConstants::FAILED_TASK_STATUS_NAME,
         ];
 
         return $taskStateAfterAction[$action] ?? null;

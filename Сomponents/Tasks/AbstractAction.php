@@ -19,7 +19,7 @@ abstract class AbstractAction
     {
     }
 
-    abstract public function getAction();
+    abstract public function getActionNameForUser();
     abstract public function getActionName();
     abstract public function authUser();
 }

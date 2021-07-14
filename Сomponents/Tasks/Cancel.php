@@ -4,12 +4,14 @@
 namespace Components\Tasks;
 
 
+use Components\Constants\ActionConstants;
+
 class Cancel extends AbstractAction
 {
-    public function getAction(): ?string
+    public function getActionNameForUser(): ?string
     {
         if ($this->authUser()) {
-            return "Отменить";
+            return ActionConstants::CANCEL_ACTION_NAME_FOR_USER;
         }
 
         return null;
@@ -17,7 +19,7 @@ class Cancel extends AbstractAction
 
     public function getActionName(): string
     {
-        return "cancel";
+        return ActionConstants::CANCEL_ACTION_NAME;
     }
 
     public function authUser(): bool

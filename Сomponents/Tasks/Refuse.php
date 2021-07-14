@@ -7,12 +7,14 @@
 namespace Components\Tasks;
 
 
+use Components\Constants\ActionConstants;
+
 class Refuse extends AbstractAction
 {
-    public function getAction(): ?string
+    public function getActionNameForUser(): ?string
     {
         if ($this->authUser()) {
-            return "Отказаться";
+            return ActionConstants::REFUSE_ACTION_NAME_FOR_USER;
         }
 
         return null;
@@ -20,7 +22,7 @@ class Refuse extends AbstractAction
 
     public function getActionName(): string
     {
-        return "refuse";
+        return ActionConstants::REFUSE_ACTION_NAME;
     }
 
     public function authUser(): bool

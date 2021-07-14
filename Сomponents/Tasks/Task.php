@@ -41,8 +41,8 @@ class Task
     {
         $possibleActions = [];
 
-        foreach (TaskConstants::TRANSFER_MAP as $status) {
-            foreach ($status as $action) {
+        foreach (TaskConstants::TRANSFER_MAP as $possibleActionsForStatus) {
+            foreach ($possibleActionsForStatus as $action) {
                 $action = new $action($this->user_id, $this->customer_id, $this->executor_id);
                 if ($action->authUser()) {
                     $possibleActions[] = $action;

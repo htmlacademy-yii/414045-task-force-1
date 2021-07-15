@@ -31,7 +31,7 @@ class Task
     /**
      * @throws TaskStateException
      */
-    public function getPossibleActions(string $state): array|null
+    public function getPossibleActions(string $state): array
     {
         if (!array_key_exists($state, TaskConstants::STATUS_MAP)){
             throw new TaskStateException('Выбранного состояния задания не существует');
@@ -39,9 +39,8 @@ class Task
         if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)){
             throw new TaskStateException('Для выбранного статуса задания нет доступных действий');
         }
-        $possibleActions = TaskConstants::TRANSFER_MAP[$state];
 
-        return $possibleActions ?? null;
+        return TaskConstants::TRANSFER_MAP[$state];
     }
 
     /**

@@ -15,4 +15,11 @@ class ActionConstants
     public const RESPOND_ACTION_NAME_FOR_USER = 'Откликнуться';
     public const DONE_ACTION_NAME_FOR_USER = 'Выполнено';
     public const REFUSE_ACTION_NAME_FOR_USER = 'Отказаться';
+
+    public const ACTION_MAP = [
+        ActionConstants::CANCEL_ACTION_NAME => ActionConstants::CANCEL_ACTION_NAME_FOR_USER,
+        ActionConstants::RESPOND_ACTION_NAME => ActionConstants::RESPOND_ACTION_NAME_FOR_USER,
+        ActionConstants::DONE_ACTION_NAME => ActionConstants::DONE_ACTION_NAME_FOR_USER,
+        ActionConstants::REFUSE_ACTION_NAME => ActionConstants::REFUSE_ACTION_NAME_FOR_USER,
+    ];
 }

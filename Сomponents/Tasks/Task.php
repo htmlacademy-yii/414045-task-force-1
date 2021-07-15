@@ -4,6 +4,8 @@ namespace Components\Tasks;
 
 use Components\Constants\ActionConstants;
 use Components\Constants\TaskConstants;
+use Components\Exceptions\TaskActionException;
+use Components\Exceptions\TaskStateException;
 
 class Task
 {
@@ -18,50 +20,38 @@ class Task
 
     public function getStatusMap(): array
     {
-        return [
-            TaskConstants::NEW_TASK_STATUS_NAME => TaskConstants::NEW_TASK_STATUS_NAME_FOR_USER,
-            TaskConstants::CANCELED_TASK_STATUS_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME_FOR_USER,
-            TaskConstants::IN_WORK_TASK_STATUS_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME_FOR_USER,
-            TaskConstants::DONE_TASK_STATUS_NAME => TaskConstants::DONE_TASK_STATUS_NAME_FOR_USER,
-            TaskConstants::FAILED_TASK_STATUS_NAME => TaskConstants::FAILED_TASK_STATUS_NAME_FOR_USER,
-        ];
+        return TaskConstants::STATUS_MAP;
     }
 
     public function getActionMap(): array
     {
-        return [
-            ActionConstants::CANCEL_ACTION_NAME => ActionConstants::CANCEL_ACTION_NAME_FOR_USER,
-            ActionConstants::RESPOND_ACTION_NAME => ActionConstants::RESPOND_ACTION_NAME_FOR_USER,
-            ActionConstants::DONE_ACTION_NAME => ActionConstants::DONE_ACTION_NAME_FOR_USER,
-            ActionConstants::REFUSE_ACTION_NAME => ActionConstants::REFUSE_ACTION_NAME_FOR_USER,
-        ];
+        return ActionConstants::ACTION_MAP;
     }
 
-    public function getPossibleActions()
+    /**
+     * @throws TaskStateException
+     */
+    public function getPossibleActions(string $state): array|null
     {
-        $possibleActions = [];
-
-        foreach (TaskConstants::TRANSFER_MAP as $possibleActionsForStatus) {
-            foreach ($possibleActionsForStatus as $action) {
-                $action = new $action($this->user_id, $this->customer_id, $this->executor_id);
-                if ($action->authUser()) {
-                    $possibleActions[] = $action;
-                }
-            }
+        if (!array_key_exists($state, TaskConstants::STATUS_MAP)){
+            throw new TaskStateException('Выбранного состояния задания не существует');
         }
+        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)){
+            throw new TaskStateException('Для выбранного статуса задания нет доступных действий');
+        }
+        $possibleActions = TaskConstants::TRANSFER_MAP[$state];
 
         return $possibleActions ?? null;
     }
 
-    public function getTaskStateAfterAction($action): string|null
+    /**
+     * @throws TaskActionException
+     */
+    public function getTaskStateAfterAction(string $action): string|null
     {
-        $taskStateAfterAction = [
-            ActionConstants::CANCEL_ACTION_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME,
-            ActionConstants::RESPOND_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
-            ActionConstants::DONE_ACTION_NAME => TaskConstants::DONE_TASK_STATUS_NAME,
-            ActionConstants::REFUSE_ACTION_NAME => TaskConstants::FAILED_TASK_STATUS_NAME,
-        ];
-
-        return $taskStateAfterAction[$action] ?? null;
+        if (in_array($action, ActionConstants::ACTION_MAP)){
+            throw new TaskActionException('Указанного действия не существует');
+        }
+        return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
     }
 }

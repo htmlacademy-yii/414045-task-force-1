@@ -8,7 +8,7 @@ use Components\Constants\ActionConstants;
 
 class Cancel extends AbstractAction
 {
-    public function getActionNameForUser(): ?string
+    public function getActionNameForUser(): string|null
     {
         return $this->authUser() ? ActionConstants::CANCEL_ACTION_NAME_FOR_USER : null;
     }

@@ -8,7 +8,7 @@ use Components\Constants\ActionConstants;
 
 class Respond extends AbstractAction
 {
-    public function getActionNameForUser(): ?string
+    public function getActionNameForUser(): string|null
     {
         return $this->authUser() ? ActionConstants::RESPOND_ACTION_NAME_FOR_USER : null;
     }

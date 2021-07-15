@@ -1,7 +1,4 @@
 <?php
-/**
- * @property int $user_id
- */
 
 
 namespace Components\Tasks;
@@ -13,11 +10,7 @@ class Refuse extends AbstractAction
 {
     public function getActionNameForUser(): ?string
     {
-        if ($this->authUser()) {
-            return ActionConstants::REFUSE_ACTION_NAME_FOR_USER;
-        }
-
-        return null;
+        return $this->authUser() ? ActionConstants::REFUSE_ACTION_NAME_FOR_USER : null;
     }
 
     public function getActionName(): string

@@ -10,11 +10,7 @@ class Cancel extends AbstractAction
 {
     public function getActionNameForUser(): ?string
     {
-        if ($this->authUser()) {
-            return ActionConstants::CANCEL_ACTION_NAME_FOR_USER;
-        }
-
-        return null;
+        return $this->authUser() ? ActionConstants::CANCEL_ACTION_NAME_FOR_USER : null;
     }
 
     public function getActionName(): string

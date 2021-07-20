@@ -7,10 +7,22 @@ use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 
+/**
+ * Class Task
+ *
+ * @package Components\Tasks
+ */
 class Task
 {
     public string $taskState = TaskConstants::NEW_TASK_STATUS_NAME;
 
+    /**
+     * Task constructor.
+     *
+     * @param int $user_id
+     * @param int $customer_id
+     * @param int $executor_id
+     */
     public function __construct(
         private int $user_id,
         private int $customer_id,
@@ -18,17 +30,33 @@ class Task
     ) {
     }
 
+    /**
+     * Получить карту статусов задачи
+     *
+     * @return array
+     */
     public function getStatusMap(): array
     {
         return TaskConstants::STATUS_MAP;
     }
 
+    /**
+     * Получить карту действий
+     *
+     * @return array
+     */
     public function getActionMap(): array
     {
         return ActionConstants::ACTION_MAP;
     }
 
+
     /**
+     * Получить доступные действия для задачи
+     *
+     * @param string $state текущее состояние задачи
+     *
+     * @return array доступные действия
      * @throws TaskStateException
      */
     public function getPossibleActions(string $state): array
@@ -44,6 +72,11 @@ class Task
     }
 
     /**
+     * Получить статус задачи после действия
+     *
+     * @param string $action действие
+     *
+     * @return string|null статус задачи после выполненного действия
      * @throws TaskActionException
      */
     public function getTaskStateAfterAction(string $action): string|null

@@ -7,6 +7,11 @@ namespace Components\Imports;
 use Components\Exceptions\CsvImportToSqlException;
 use SplFileObject;
 
+/**
+ * Class CsvImportToSql
+ *
+ * @package Components\Imports
+ */
 class CsvImportToSql
 {
     private object $importFile;
@@ -21,6 +26,11 @@ class CsvImportToSql
     }
 
     /**
+     * Импорт из данных файла CSV в файл с запросами SQL
+     *
+     * @param string $db имя базы данных
+     * @param string $table имя таблицы
+     *
      * @throws CsvImportToSqlException
      */
     public function import(string $db, string $table): void
@@ -55,12 +65,25 @@ class CsvImportToSql
         }
     }
 
-    public function createSqlFile(string $src, string $name): object
+    /**
+     * Создание SQL файла для импорта из CSV
+     *
+     * @param string $src путь к файлу
+     * @param string $name имя файла
+     *
+     * @return object spl объект файла
+     */
+    private function createSqlFile(string $src, string $name): object
     {
         return $this->sqlFile = new SplFileObject($src.$name, 'c+');
     }
 
-    public function getColumnsTitle(): ?array
+    /**
+     * Получить заголовки файла CSV
+     *
+     * @return array|null заголовки файла CSV
+     */
+    private function getColumnsTitle(): ?array
     {
         $this->importFile->rewind();
         if (!$this->importFile->eof()) {
@@ -70,6 +93,11 @@ class CsvImportToSql
         return null;
     }
 
+    /**
+     * Генератор получения новой строки из файла CSV
+     *
+     * @return iterable|null
+     */
     private function getNextLine(): ?iterable
     {
         while (!$this->importFile->eof()) {
@@ -79,7 +107,14 @@ class CsvImportToSql
         return null;
     }
 
-    private function columnsValidator($columns): bool
+    /**
+     * Валидация столбцов. Доложен быть хотя-бы один столбец, тип данных в столбце должен быть string
+     *
+     * @param array $columns массив со столбцами
+     *
+     * @return bool true если валидация пройдена успешно
+     */
+    private function columnsValidator(array $columns): bool
     {
         if (!count($columns)) {
             return false;
@@ -93,7 +128,16 @@ class CsvImportToSql
         return true;
     }
 
-    private function convertToSql($table, $headers, $values): string
+    /**
+     * Конвертация данных в запрос SQL
+     *
+     * @param string $table имя таблицы
+     * @param array $headers заголовки таблицы
+     * @param array $values значения столбцов
+     *
+     * @return string запрос SQL
+     */
+    private function convertToSql(string $table,array $headers,array $values): string
     {
         $valuesForSql = [];
 

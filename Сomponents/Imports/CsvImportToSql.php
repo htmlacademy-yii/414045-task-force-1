@@ -5,6 +5,7 @@ namespace Components\Imports;
 
 
 use Components\Exceptions\CsvImportToSqlException;
+use Components\GeoData\ConvertStringToGeoPoint;
 use SplFileObject;
 
 /**
@@ -18,10 +19,10 @@ class CsvImportToSql
     private object $sqlFile;
 
     public function __construct(
-        private string $importFileName,
         private string $importFileSrc,
-        private string $newSqlFileName,
-        private string $newSqlFileSrc
+        private string $importFileName,
+        private string $newSqlFileSrc,
+        private string $newSqlFileName
     ) {
     }
 
@@ -35,6 +36,8 @@ class CsvImportToSql
      */
     public function import(string $db, string $table): void
     {
+        $hasGeoPoint = false;
+
         if (!file_exists($this->importFileSrc.$this->importFileName)) {
             throw new CsvImportToSqlException('Не удалось открыть файл. Возможно директория или файл не существуют или указаны не верно.');
         }
@@ -54,9 +57,14 @@ class CsvImportToSql
         if (!$writeFirstString) {
             throw new CsvImportToSqlException('Ошибка записи в SQL файл');
         }
+
+        if ($this->hasGeoPoint($headers)){
+            $hasGeoPoint = true;
+        }
+
         foreach ($this->getNextLine() as $line) {
             if ($this->columnsValidator($line)) {
-                $sql = $this->convertToSql($table, $headers, $line);
+                $sql = $this->convertToSql($table, $headers, $line, $hasGeoPoint);
                 $writeString = $this->sqlFile->fwrite($sql);
                 if (!$writeString) {
                     throw new CsvImportToSqlException('Ошибка записи в SQL файл');
@@ -91,6 +99,16 @@ class CsvImportToSql
         }
 
         return null;
+    }
+
+    private function hasGeoPoint(array $headers): bool
+    {
+        foreach ($headers as $header){
+            if ($header === 'lat' || $header === 'long'){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -137,8 +155,18 @@ class CsvImportToSql
      *
      * @return string запрос SQL
      */
-    private function convertToSql(string $table,array $headers,array $values): string
+    private function convertToSql(string $table,array $headers,array $values, bool $has_geoPoint): string
     {
+        if ($has_geoPoint) {
+            $indexLat = array_search('lat', $headers, true);
+            $indexLong = array_search('long', $headers, true);
+            $convertToGeoPoint = new ConvertStringToGeoPoint($values[$indexLat], $values[$indexLong]);
+            $geoPointForSql = $convertToGeoPoint->getGeoStringForSql();
+            unset($headers[$indexLat], $headers[$indexLong], $values[$indexLat], $values[$indexLong]);
+            $headers[] = 'location';
+            $values['location'] = $geoPointForSql;
+        }
+
         $valuesForSql = [];
 
         foreach ($values as $value) {

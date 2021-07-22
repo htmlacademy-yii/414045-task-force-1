@@ -21,6 +21,7 @@ CREATE TABLE users
     city_id        int          NOT NULL,
     full_address   varchar(256),
     birthday       date,
+    about          text,
     avatar_src     varchar(128),
     phone          varchar(20),
     skype          varchar(128),
@@ -31,7 +32,7 @@ CREATE TABLE users
     FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
-CREATE TABLE specialties
+CREATE TABLE categories
 (
     id    int PRIMARY KEY AUTO_INCREMENT,
     title varchar(64) NOT NULL
@@ -41,9 +42,9 @@ CREATE TABLE users_specialty
 (
     id           int PRIMARY KEY AUTO_INCREMENT,
     user_id      int NOT NULL,
-    specialty_id int NOT NULL,
+    categoriy_id int NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (specialty_id) REFERENCES specialties (id)
+    FOREIGN KEY (categoriy_id) REFERENCES categories (id)
 );
 
 CREATE TABLE portfolio
@@ -69,12 +70,13 @@ CREATE TABLE user_settings
 CREATE TABLE tasks
 (
     id              int PRIMARY KEY AUTO_INCREMENT,
-    customer_id     int UNIQUE  NOT NULL,
-    executor_id     int UNIQUE,
+    customer_id     int         NOT NULL,
+    executor_id     int,
     title           varchar(64) NOT NULL,
-    speciality_id   int         NOT NULL,
-    state           varchar(10) NOT NULL,
-    price           int         NOT NULL,
+    description     text,
+    category_id     int         NOT NULL,
+    state           varchar(10),
+    price           int,
     deadline        date,
     attachment_src  varchar(256),
     city_id         int,
@@ -84,7 +86,7 @@ CREATE TABLE tasks
     updated_at      datetime,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
-    FOREIGN KEY (speciality_id) REFERENCES specialties (id),
+    FOREIGN KEY (category_id) REFERENCES categories (id),
     FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
@@ -115,7 +117,7 @@ CREATE TABLE reviews
     sender_id    int        NOT NULL,
     addressee_id int        NOT NULL,
     task_id      int UNIQUE NOT NULL,
-    rating       int    NOT NULL,
+    rating       int        NOT NULL,
     content      text       NOT NULL,
     created_at   datetime,
     FOREIGN KEY (sender_id) REFERENCES users (id),
@@ -126,8 +128,9 @@ CREATE TABLE reviews
 CREATE TABLE responses
 (
     id         int PRIMARY KEY AUTO_INCREMENT,
-    task_id    int UNIQUE NOT NULL,
-    user_id    int        NOT NULL,
+    task_id    int NOT NULL,
+    user_id    int NOT NULL,
+    content    text,
     created_at datetime,
     updated_at datetime,
     FOREIGN KEY (task_id) REFERENCES tasks (id),

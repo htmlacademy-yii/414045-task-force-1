@@ -22,19 +22,19 @@ class CsvImportToSql
         private string $importFileSrc,
         private string $importFileName,
         private string $newSqlFileSrc,
-        private string $newSqlFileName
+        private string $newSqlFileName,
+        private string $newSqlFilePrefix = ''
     ) {
     }
 
     /**
      * Импорт из данных файла CSV в файл с запросами SQL
      *
-     * @param string $db    имя базы данных
      * @param string $table имя таблицы
      *
      * @throws CsvImportToSqlException
      */
-    public function import(string $db, string $table): void
+    public function import(string $table): void
     {
         $hasGeoPoint = false;
 
@@ -54,13 +54,12 @@ class CsvImportToSql
             );
         }
 
-        $this->createSqlFile($this->newSqlFileSrc, $this->newSqlFileName);
+        $this->sqlFile = $this->createSqlFile(
+            $this->newSqlFileSrc,
+            $this->newSqlFileName,
+            $this->newSqlFilePrefix
+        );
         $headers = $this->getColumnsTitle();
-
-        $writeFirstString = $this->sqlFile->fwrite('USE '.$db.";".PHP_EOL);
-        if (!$writeFirstString) {
-            throw new CsvImportToSqlException('Ошибка записи в SQL файл');
-        }
 
         if ($this->hasGeoPoint()) {
             $hasGeoPoint = true;
@@ -89,12 +88,16 @@ class CsvImportToSql
      *
      * @param string $src  путь к файлу
      * @param string $name имя файла
+     * @param string $prefix префикс имени файла
      *
-     * @return object spl объект файла
+     * @return SplFileObject spl объект файла
      */
-    private function createSqlFile(string $src, string $name): object
-    {
-        return $this->sqlFile = new SplFileObject($src.$name, 'c+');
+    private function createSqlFile(
+        string $src,
+        string $name,
+        string $prefix
+    ): SplFileObject {
+        return new SplFileObject($src.$prefix.$name, 'c+');
     }
 
     /**
@@ -184,8 +187,11 @@ class CsvImportToSql
         if ($has_geoPoint) {
             $indexLat = array_search('lat', $headers, true);
             $indexLong = array_search('long', $headers, true);
-            $convertToGeoPoint = new ConvertStringToGeoPoint($values[$indexLat], $values[$indexLong]);
-            $geoPointForSql = ', ' . $convertToGeoPoint->getGeoStringForSql();
+            $convertToGeoPoint = new ConvertStringToGeoPoint(
+                $values[$indexLat],
+                $values[$indexLong]
+            );
+            $geoPointForSql = ', '.$convertToGeoPoint->getGeoStringForSql();
             unset($headers[$indexLat], $headers[$indexLong], $values[$indexLat], $values[$indexLong]);
             $headers[] = 'location';
         }

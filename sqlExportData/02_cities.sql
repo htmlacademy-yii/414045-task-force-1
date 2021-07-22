@@ -1,4 +1,3 @@
-USE taskforce;
 INSERT INTO cities (title, location) VALUE ('Абаза', ST_GeomFromText('POINT(52.6517296 90.0885929)'));
 INSERT INTO cities (title, location) VALUE ('Абакан', ST_GeomFromText('POINT(53.7223661 91.4437792)'));
 INSERT INTO cities (title, location) VALUE ('Абдулино', ST_GeomFromText('POINT(53.6778096 53.6473115)'));

@@ -1,4 +1,3 @@
-USE taskforce;
 INSERT INTO responses (created_at, task_id, content, user_id) VALUE ('2019-05-09','1','Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.
 
 Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.

@@ -1,4 +1,3 @@
-USE taskforce;
 INSERT INTO reviews (addressee_id, sender_id, created_at, rating, content, task_id) VALUE ('3','2','2019-08-19','3','Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
 
 Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.

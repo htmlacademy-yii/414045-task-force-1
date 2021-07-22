@@ -1,4 +1,3 @@
-USE taskforce;
 INSERT INTO tasks (city_id, executor_id, customer_id, created_at, category_id, description, deadline, title, address, price) VALUE ('21','3','2','2019-03-09','2','Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.','2019-11-15','enable impactful technologies','1 Eagan Crossing','6587');
 INSERT INTO tasks (city_id, executor_id, customer_id, created_at, category_id, description, deadline, title, address, price) VALUE ('11','5','4','2019-07-03','3','Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.
 

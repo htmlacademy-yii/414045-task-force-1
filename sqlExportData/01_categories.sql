@@ -1,4 +1,3 @@
-USE taskforce;
 INSERT INTO categories (title) VALUE ('Переводы');
 INSERT INTO categories (title) VALUE ('Уборка');
 INSERT INTO categories (title) VALUE ('Переезды');

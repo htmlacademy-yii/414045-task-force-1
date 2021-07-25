@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "reviews".
@@ -19,12 +20,12 @@ use Yii;
  * @property User $addressee
  * @property Task $task
  */
-class Review extends \yii\db\ActiveRecord
+class Review extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'reviews';
     }
@@ -32,24 +33,46 @@ class Review extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['sender_id', 'addressee_id', 'task_id', 'rating', 'content'], 'required'],
-            [['sender_id', 'addressee_id', 'task_id', 'rating'], 'integer'],
+            [
+                ['sender_id', 'addressee_id', 'task_id', 'rating', 'content'],
+                'required',
+            ],
+            [['sender_id', 'addressee_id', 'task_id'], 'integer'],
+            [['rating'], 'integer', 'min' => 0, 'max' => 500],
             [['content'], 'string'],
             [['created_at'], 'safe'],
             [['task_id'], 'unique'],
-            [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['sender_id' => 'id']],
-            [['addressee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['addressee_id' => 'id']],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
+            [
+                ['sender_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['sender_id' => 'id'],
+            ],
+            [
+                ['addressee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['addressee_id' => 'id'],
+            ],
+            [
+                ['task_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Task::class,
+                'targetAttribute' => ['task_id' => 'id'],
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -65,9 +88,9 @@ class Review extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Sender]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSender()
+    public function getSender(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'sender_id']);
     }
@@ -75,9 +98,9 @@ class Review extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Addressee]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getAddressee()
+    public function getAddressee(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'addressee_id']);
     }
@@ -85,9 +108,9 @@ class Review extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Task]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTask()
+    public function getTask(): ActiveQuery
     {
         return $this->hasOne(Task::class, ['id' => 'task_id']);
     }

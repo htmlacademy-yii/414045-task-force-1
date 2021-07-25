@@ -2,24 +2,25 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "users_specialty".
  *
  * @property int $id
  * @property int $user_id
- * @property int $categoriy_id
+ * @property int $category_id
  *
  * @property User $user
- * @property Category $categoriy
+ * @property Category $category
  */
-class UsersSpecialty extends \yii\db\ActiveRecord
+class UsersSpecialty extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'users_specialty';
     }
@@ -27,45 +28,57 @@ class UsersSpecialty extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['user_id', 'categoriy_id'], 'required'],
-            [['user_id', 'categoriy_id'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['categoriy_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['categoriy_id' => 'id']],
+            [['user_id', 'category_id'], 'required'],
+            [['user_id', 'category_id'], 'integer'],
+            [
+                ['user_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['user_id' => 'id'],
+            ],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::class,
+                'targetAttribute' => ['category_id' => 'id'],
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'categoriy_id' => 'Categoriy ID',
+            'category_id' => 'Category ID',
         ];
     }
 
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     /**
-     * Gets query for [[Categoriy]].
+     * Gets query for [[Category]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCategoriy()
+    public function getCategory(): ActiveQuery
     {
-        return $this->hasOne(Category::class, ['id' => 'categoriy_id']);
+        return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
 }

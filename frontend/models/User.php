@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "users".
@@ -24,24 +25,21 @@ use Yii;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
- * @property Message[] $messages
- * @property Message[] $messages0
- * @property Portfolio[] $portfolios
- * @property Response[] $responses
- * @property Review[] $reviews
- * @property Review[] $reviews0
- * @property Task[] $tasks
- * @property Task[] $tasks0
+ * @property Message $messages
+ * @property Portfolio $portfolios
+ * @property Response $responses
+ * @property Review $reviews
+ * @property Task $tasks
  * @property UserSetting $userSetting
  * @property City $city
- * @property UsersSpecialty[] $usersSpecialties
+ * @property UsersSpecialty $usersSpecialties
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'users';
     }
@@ -49,25 +47,55 @@ class User extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['role', 'city_id', 'rating'], 'integer'],
+            [['city_id'], 'integer'],
+            [['rating'], 'integer', 'min' => 0, 'max' => 500],
+            [['role'], 'in', [0, 1]],
             [['name', 'email', 'password', 'city_id'], 'required'],
-            [['birthday', 'created_at', 'updated_at'], 'safe'],
             [['about'], 'string'],
-            [['name', 'password', 'avatar_src', 'skype', 'over_messenger'], 'string', 'max' => 128],
+            [
+                ['name', 'password', 'avatar_src', 'skype', 'over_messenger'],
+                'string',
+                'max' => 128,
+            ],
             [['email'], 'string', 'max' => 64],
+            [['email'], 'email'],
             [['full_address'], 'string', 'max' => 256],
             [['phone'], 'string', 'max' => 20],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['created_at', 'updated_at'], 'datetime'],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::class,
+                'targetAttribute' => ['city_id' => 'id'],
+            ],
+            [
+                [
+                    'name',
+                    'city_id',
+                    'full_address',
+                    'birthday',
+                    'about',
+                    'avatar_src',
+                    'phone',
+                    'skype',
+                    'over_messenger',
+                    'rating',
+                    'created_at',
+                    'updated_at',
+                ],
+                'safe',
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -92,29 +120,20 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Messages]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getMessages()
+    public function getMessages(): ActiveQuery
     {
         return $this->hasMany(Message::class, ['sender_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Messages0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMessages0()
-    {
-        return $this->hasMany(Message::class, ['addressee_id' => 'id']);
-    }
 
     /**
      * Gets query for [[Portfolios]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getPortfolios()
+    public function getPortfolios(): ActiveQuery
     {
         return $this->hasMany(Portfolio::class, ['user_id' => 'id']);
     }
@@ -122,9 +141,9 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Responses]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getResponses()
+    public function getResponses(): ActiveQuery
     {
         return $this->hasMany(Response::class, ['user_id' => 'id']);
     }
@@ -132,49 +151,31 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Reviews]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getReviews()
+    public function getReviews(): ActiveQuery
     {
         return $this->hasMany(Review::class, ['sender_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Reviews0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getReviews0()
-    {
-        return $this->hasMany(Review::class, ['addressee_id' => 'id']);
-    }
 
     /**
      * Gets query for [[Tasks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTasks()
+    public function getTasks(): ActiveQuery
     {
         return $this->hasMany(Task::class, ['customer_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Tasks0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTasks0()
-    {
-        return $this->hasMany(Task::class, ['executor_id' => 'id']);
-    }
 
     /**
      * Gets query for [[UserSetting]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUserSetting()
+    public function getUserSetting(): ActiveQuery
     {
         return $this->hasOne(UserSetting::class, ['user_id' => 'id']);
     }
@@ -182,9 +183,9 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[City]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCity()
+    public function getCity(): ActiveQuery
     {
         return $this->hasOne(City::class, ['id' => 'city_id']);
     }
@@ -192,9 +193,9 @@ class User extends \yii\db\ActiveRecord
     /**
      * Gets query for [[UsersSpecialties]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUsersSpecialties()
+    public function getUsersSpecialties(): ActiveQuery
     {
         return $this->hasMany(UsersSpecialty::class, ['user_id' => 'id']);
     }

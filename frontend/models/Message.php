@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "messages".
@@ -16,12 +17,12 @@ use Yii;
  * @property User $sender
  * @property User $addressee
  */
-class Message extends \yii\db\ActiveRecord
+class Message extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'messages';
     }
@@ -29,22 +30,34 @@ class Message extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['sender_id', 'addressee_id', 'content'], 'required'],
             [['sender_id', 'addressee_id'], 'integer'],
             [['content'], 'string'],
-            [['created_at'], 'safe'],
-            [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['sender_id' => 'id']],
-            [['addressee_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['addressee_id' => 'id']],
+            [['sender_id', 'addressee_id', 'content', 'created_at'], 'safe'],
+            [
+                ['sender_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['sender_id' => 'id'],
+            ],
+            [
+                ['addressee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['addressee_id' => 'id'],
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -58,9 +71,9 @@ class Message extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Sender]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSender()
+    public function getSender(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'sender_id']);
     }
@@ -68,9 +81,9 @@ class Message extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Addressee]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getAddressee()
+    public function getAddressee(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'addressee_id']);
     }

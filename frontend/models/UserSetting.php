@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "user_settings".
@@ -17,12 +18,12 @@ use Yii;
  *
  * @property User $user
  */
-class UserSetting extends \yii\db\ActiveRecord
+class UserSetting extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'user_settings';
     }
@@ -30,20 +31,67 @@ class UserSetting extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['user_id', 'is_message_ntf_enabled', 'is_action_ntf_enabled', 'is_new_review_ntf_enabled', 'is_hidden', 'is_active'], 'required'],
-            [['user_id', 'is_message_ntf_enabled', 'is_action_ntf_enabled', 'is_new_review_ntf_enabled', 'is_hidden', 'is_active'], 'integer'],
+            [
+                [
+                    'user_id',
+                    'is_message_ntf_enabled',
+                    'is_action_ntf_enabled',
+                    'is_new_review_ntf_enabled',
+                    'is_hidden',
+                    'is_active',
+                ],
+                'required',
+            ],
+            [
+                [
+                    'user_id',
+                    'is_message_ntf_enabled',
+                    'is_action_ntf_enabled',
+                    'is_new_review_ntf_enabled',
+                    'is_hidden',
+                    'is_active',
+                ],
+                'integer',
+            ],
+            [
+                [
+                    'user_id',
+                    'is_message_ntf_enabled',
+                    'is_action_ntf_enabled',
+                    'is_new_review_ntf_enabled',
+                    'is_hidden',
+                    'is_active',
+                ],
+                'boolean',
+            ],
             [['user_id'], 'unique'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [
+                ['user_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['user_id' => 'id'],
+            ],
+            [
+                [
+                    'is_message_ntf_enabled',
+                    'is_action_ntf_enabled',
+                    'is_new_review_ntf_enabled',
+                    'is_hidden',
+                    'is_active',
+                ],
+                'safe',
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -59,9 +107,9 @@ class UserSetting extends \yii\db\ActiveRecord
     /**
      * Gets query for [[User]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUser()
+    public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }

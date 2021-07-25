@@ -42,9 +42,9 @@ CREATE TABLE users_specialty
 (
     id           int PRIMARY KEY AUTO_INCREMENT,
     user_id      int NOT NULL,
-    categoriy_id int NOT NULL,
+    category_id int NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (categoriy_id) REFERENCES categories (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
 CREATE TABLE portfolio

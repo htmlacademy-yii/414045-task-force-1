@@ -5,10 +5,11 @@
  *
  * @deprecated
  */
+
 namespace frontend\controllers;
 
-use yii\web\Controller;
 use frontend\models\Category;
+use yii\web\Controller;
 
 class TestModelController extends Controller
 {
@@ -16,14 +17,14 @@ class TestModelController extends Controller
     {
         $category = new Category();
         $category->title = 'New category';
-
         $category->save();
     }
 
-    public function actionShow(){
+    public function actionShow()
+    {
         $category = Category::find()->one();
-        if
-        ($category){
+        if ($category
+        ) {
             return $this->render(
                 'showCategory',
                 ['categoryTitle' => $category->title]

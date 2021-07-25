@@ -2,7 +2,8 @@
 
 namespace frontend\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "categories".
@@ -10,15 +11,13 @@ use Yii;
  * @property int $id
  * @property string $title
  *
- * @property Task[] $tasks
- * @property UsersSpecialty[] $usersSpecialties
  */
-class Category extends \yii\db\ActiveRecord
+class Category extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'categories';
     }
@@ -26,7 +25,7 @@ class Category extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['title'], 'required'],
@@ -37,7 +36,7 @@ class Category extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -48,9 +47,9 @@ class Category extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Tasks]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTasks()
+    public function getTasks(): ActiveQuery
     {
         return $this->hasMany(Task::class, ['category_id' => 'id']);
     }
@@ -58,10 +57,10 @@ class Category extends \yii\db\ActiveRecord
     /**
      * Gets query for [[UsersSpecialties]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getUsersSpecialties()
+    public function getUsersSpecialties(): ActiveQuery
     {
-        return $this->hasMany(UsersSpecialty::class, ['categoriy_id' => 'id']);
+        return $this->hasMany(UsersSpecialty::class, ['category_id' => 'id']);
     }
 }

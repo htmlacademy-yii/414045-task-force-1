@@ -2,7 +2,9 @@
 
 namespace frontend\models;
 
-use Yii;
+use Components\Constants\TaskConstants;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "tasks".
@@ -23,20 +25,20 @@ use Yii;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
- * @property Response[] $responses
+ * @property Response $responses
  * @property Review $review
- * @property TaskAttachment[] $taskAttachments
+ * @property TaskAttachment $taskAttachments
  * @property User $customer
  * @property User $executor
  * @property Category $category
  * @property City $city
  */
-class Task extends \yii\db\ActiveRecord
+class Task extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'tasks';
     }
@@ -44,27 +46,68 @@ class Task extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [['customer_id', 'title', 'category_id', 'state', 'price'], 'required'],
-            [['customer_id', 'executor_id', 'category_id', 'price', 'city_id'], 'integer'],
+            [
+                ['customer_id', 'title', 'category_id', 'state', 'price'],
+                'required',
+            ],
+            [
+                [
+                    'customer_id',
+                    'executor_id',
+                    'category_id',
+                    'city_id',
+                ],
+                'integer',
+            ],
+            [['price'], 'integer', 'min' => 0],
             [['description'], 'string'],
+            [['deadline', 'created_at', 'updated_at'], 'datetime'],
             [['deadline', 'created_at', 'updated_at'], 'safe'],
             [['title'], 'string', 'max' => 64],
-            [['state'], 'string', 'max' => 10],
-            [['attachment_src', 'address', 'address_comment'], 'string', 'max' => 256],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['customer_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [['state'], 'in', TaskConstants::STATUS_MAP],
+            [
+                ['attachment_src', 'address', 'address_comment'],
+                'string',
+                'max' => 256,
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['customer_id' => 'id'],
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::class,
+                'targetAttribute' => ['executor_id' => 'id'],
+            ],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::class,
+                'targetAttribute' => ['category_id' => 'id'],
+            ],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::class,
+                'targetAttribute' => ['city_id' => 'id'],
+            ],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -88,9 +131,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Responses]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getResponses()
+    public function getResponses(): ActiveQuery
     {
         return $this->hasMany(Response::class, ['task_id' => 'id']);
     }
@@ -98,9 +141,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Review]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getReview()
+    public function getReview(): ActiveQuery
     {
         return $this->hasOne(Review::class, ['task_id' => 'id']);
     }
@@ -108,9 +151,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[TaskAttachments]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getTaskAttachments()
+    public function getTaskAttachments(): ActiveQuery
     {
         return $this->hasMany(TaskAttachment::class, ['task_id' => 'id']);
     }
@@ -118,9 +161,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Customer]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCustomer()
+    public function getCustomer(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'customer_id']);
     }
@@ -128,9 +171,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Executor]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getExecutor()
+    public function getExecutor(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'executor_id']);
     }
@@ -138,9 +181,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[Category]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCategory()
+    public function getCategory(): ActiveQuery
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
@@ -148,9 +191,9 @@ class Task extends \yii\db\ActiveRecord
     /**
      * Gets query for [[City]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCity()
+    public function getCity(): ActiveQuery
     {
         return $this->hasOne(City::class, ['id' => 'city_id']);
     }

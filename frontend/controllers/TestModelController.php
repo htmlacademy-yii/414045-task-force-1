@@ -17,8 +17,7 @@ class TestModelController extends Controller
         $category->title = 'New category';
         $category->save();
     }
-    public function actionShow()
-    {
+    public function actionShow(){
         $category = Category::find()->one();
         if ($category){
             return $this->render('showCategory', ['categoryTitle' => $category->title]);

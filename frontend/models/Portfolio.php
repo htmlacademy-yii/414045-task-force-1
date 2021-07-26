@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $user_id
  * @property string $img_src
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property User $user
  */
@@ -31,8 +33,8 @@ class Portfolio extends ActiveRecord
     {
         return [
             [['user_id', 'img_src'], 'required'],
-            [['user_id'], 'integer'],
             [['img_src'], 'string', 'max' => 256],
+            [['created_at', 'updated_at'], 'datetime'],
             [
                 ['user_id'],
                 'exist',
@@ -40,6 +42,7 @@ class Portfolio extends ActiveRecord
                 'targetClass' => User::class,
                 'targetAttribute' => ['user_id' => 'id'],
             ],
+            [['img_src', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -52,6 +55,8 @@ class Portfolio extends ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'img_src' => 'Img Src',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

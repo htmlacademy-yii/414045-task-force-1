@@ -11,6 +11,8 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $title
  * @property string $location
+ * @property string $created_at
+ * @property string $updated_at
  *
  */
 class City extends ActiveRecord
@@ -32,7 +34,8 @@ class City extends ActiveRecord
             [['title', 'location'], 'required'],
             [['location'], 'string'],
             [['title'], 'string', 'max' => 64],
-            [['title', 'location'], 'safe'],
+            [['created_at', 'updated_at'], 'datetime'],
+            [['title', 'location', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -45,6 +48,8 @@ class City extends ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'location' => 'Location',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

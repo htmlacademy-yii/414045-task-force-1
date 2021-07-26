@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property int $addressee_id
  * @property string $content
  * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property User $sender
  * @property User $addressee
@@ -34,9 +35,8 @@ class Message extends ActiveRecord
     {
         return [
             [['sender_id', 'addressee_id', 'content'], 'required'],
-            [['sender_id', 'addressee_id'], 'integer'],
             [['content'], 'string'],
-            [['sender_id', 'addressee_id', 'content', 'created_at'], 'safe'],
+            [['created_at', 'updated_at'], 'datetime'],
             [
                 ['sender_id'],
                 'exist',
@@ -50,6 +50,16 @@ class Message extends ActiveRecord
                 'skipOnError' => true,
                 'targetClass' => User::class,
                 'targetAttribute' => ['addressee_id' => 'id'],
+            ],
+            [
+                [
+                    'sender_id',
+                    'addressee_id',
+                    'content',
+                    'created_at',
+                    'updated_at',
+                ],
+                'safe',
             ],
         ];
     }
@@ -65,6 +75,7 @@ class Message extends ActiveRecord
             'addressee_id' => 'Addressee ID',
             'content' => 'Content',
             'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

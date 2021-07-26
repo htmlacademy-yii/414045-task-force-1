@@ -23,8 +23,7 @@ class TestModelController extends Controller
     public function actionShow()
     {
         $category = Category::find()->one();
-        if ($category
-        ) {
+        if ($category) {
             return $this->render(
                 'showCategory',
                 ['categoryTitle' => $category->title]

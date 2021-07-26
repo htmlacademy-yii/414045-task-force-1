@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
  * @property string $file_type
  * @property string $file_name
  * @property string $file_src
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property Task $task
  */
@@ -33,17 +35,26 @@ class TaskAttachment extends ActiveRecord
     {
         return [
             [['task_id', 'file_type', 'file_name', 'file_src'], 'required'],
-            [['file_type', 'file_name', 'file_src'], 'safe'],
-            [['task_id'], 'integer'],
             [['file_type'], 'string', 'max' => 32],
             [['file_name'], 'string', 'max' => 64],
             [['file_src'], 'string', 'max' => 256],
+            [['created_at', 'updated_at'], 'datetime'],
             [
                 ['task_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Task::class,
                 'targetAttribute' => ['task_id' => 'id'],
+            ],
+            [
+                [
+                    'file_type',
+                    'file_name',
+                    'file_src',
+                    'created_at',
+                    'updated_at',
+                ],
+                'safe',
             ],
         ];
     }
@@ -59,6 +70,8 @@ class TaskAttachment extends ActiveRecord
             'file_type' => 'File Type',
             'file_name' => 'File Name',
             'file_src' => 'File Src',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

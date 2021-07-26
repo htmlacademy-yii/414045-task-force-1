@@ -47,18 +47,6 @@ class UserSetting extends ActiveRecord
             ],
             [
                 [
-                    'user_id',
-                    'is_message_ntf_enabled',
-                    'is_action_ntf_enabled',
-                    'is_new_review_ntf_enabled',
-                    'is_hidden',
-                    'is_active',
-                ],
-                'integer',
-            ],
-            [
-                [
-                    'user_id',
                     'is_message_ntf_enabled',
                     'is_action_ntf_enabled',
                     'is_new_review_ntf_enabled',
@@ -67,6 +55,7 @@ class UserSetting extends ActiveRecord
                 ],
                 'boolean',
             ],
+            [['created_at', 'updated_at'], 'datetime'],
             [['user_id'], 'unique'],
             [
                 ['user_id'],
@@ -101,6 +90,8 @@ class UserSetting extends ActiveRecord
             'is_new_review_ntf_enabled' => 'Is New Review Ntf Enabled',
             'is_hidden' => 'Is Hidden',
             'is_active' => 'Is Active',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

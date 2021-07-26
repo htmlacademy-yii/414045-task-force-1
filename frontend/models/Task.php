@@ -53,19 +53,9 @@ class Task extends ActiveRecord
                 ['customer_id', 'title', 'category_id', 'state', 'price'],
                 'required',
             ],
-            [
-                [
-                    'customer_id',
-                    'executor_id',
-                    'category_id',
-                    'city_id',
-                ],
-                'integer',
-            ],
             [['price'], 'integer', 'min' => 0],
             [['description'], 'string'],
             [['deadline', 'created_at', 'updated_at'], 'datetime'],
-            [['deadline', 'created_at', 'updated_at'], 'safe'],
             [['title'], 'string', 'max' => 64],
             [['state'], 'in', TaskConstants::STATUS_MAP],
             [
@@ -100,6 +90,21 @@ class Task extends ActiveRecord
                 'skipOnError' => true,
                 'targetClass' => City::class,
                 'targetAttribute' => ['city_id' => 'id'],
+            ],
+            [
+                [
+                    'title',
+                    'description',
+                    'state',
+                    'price',
+                    'deadline',
+                    'attachment_src',
+                    'address',
+                    'address_comment',
+                    'created_at',
+                    'updated_at',
+                ],
+                'safe',
             ],
         ];
     }

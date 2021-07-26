@@ -10,6 +10,8 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property string $title
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  */
 class Category extends ActiveRecord
@@ -30,6 +32,8 @@ class Category extends ActiveRecord
         return [
             [['title'], 'required'],
             [['title'], 'string', 'max' => 64],
+            [['created_at', 'updated_at'], 'datetime'],
+            [['title', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,6 +45,8 @@ class Category extends ActiveRecord
         return [
             'id' => 'ID',
             'title' => 'Title',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 

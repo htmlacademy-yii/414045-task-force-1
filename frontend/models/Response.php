@@ -35,9 +35,8 @@ class Response extends ActiveRecord
     {
         return [
             [['task_id', 'user_id'], 'required'],
-            [['task_id', 'user_id'], 'integer'],
             [['content'], 'string'],
-            [['content', 'created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at'], 'datetime'],
             [
                 ['task_id'],
                 'exist',
@@ -52,6 +51,7 @@ class Response extends ActiveRecord
                 'targetClass' => User::class,
                 'targetAttribute' => ['user_id' => 'id'],
             ],
+            [['content', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 

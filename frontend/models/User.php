@@ -50,7 +50,6 @@ class User extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['city_id'], 'integer'],
             [['rating'], 'integer', 'min' => 0, 'max' => 500],
             [['role'], 'in', [0, 1]],
             [['name', 'email', 'password', 'city_id'], 'required'],

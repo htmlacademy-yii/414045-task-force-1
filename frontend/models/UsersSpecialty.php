@@ -32,7 +32,6 @@ class UsersSpecialty extends ActiveRecord
     {
         return [
             [['user_id', 'category_id'], 'required'],
-            [['user_id', 'category_id'], 'integer'],
             [
                 ['user_id'],
                 'exist',

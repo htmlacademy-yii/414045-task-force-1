@@ -14,6 +14,8 @@ use yii\db\ActiveRecord;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property Task[] $tasks
+ * @property User[] $users
  */
 class City extends ActiveRecord
 {

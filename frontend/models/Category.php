@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
+ * @property Task[] $tasks
+ * @property UsersSpecialty[] $usersSpecialties;
  */
 class Category extends ActiveRecord
 {

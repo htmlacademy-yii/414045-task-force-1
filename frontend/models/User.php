@@ -25,14 +25,14 @@ use yii\db\ActiveRecord;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
- * @property Message $messages
- * @property Portfolio $portfolios
- * @property Response $responses
- * @property Review $reviews
- * @property Task $tasks
+ * @property Message[] $messages
+ * @property Portfolio[] $portfolios
+ * @property Response[] $responses
+ * @property Review[] $reviews
+ * @property Task[] $tasks
  * @property UserSetting $userSetting
  * @property City $city
- * @property UsersSpecialty $usersSpecialties
+ * @property UsersSpecialty[] $usersSpecialties
  */
 class User extends ActiveRecord
 {

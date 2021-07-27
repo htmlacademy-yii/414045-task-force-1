@@ -25,9 +25,9 @@ use yii\db\ActiveRecord;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
- * @property Response $responses
+ * @property Response[] $responses
  * @property Review $review
- * @property TaskAttachment $taskAttachments
+ * @property TaskAttachment[] $taskAttachments
  * @property User $customer
  * @property User $executor
  * @property Category $category

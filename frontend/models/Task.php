@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Components\Constants\TaskConstants;
+use Components\Time\TimeDifferent;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -35,6 +36,12 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord
 {
+    public function getTimeDif()
+    {
+        $timeDif = new TimeDifferent($this->created_at);
+        return $timeDif->getHoursDif();
+    }
+
     /**
      * {@inheritdoc}
      */

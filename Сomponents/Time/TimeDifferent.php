@@ -4,6 +4,10 @@
 namespace Components\Time;
 
 
+use Components\Exceptions\TimeException;
+use DateTime;
+use Exception;
+
 class TimeDifferent extends Time
 {
     public array $errors;
@@ -14,9 +18,20 @@ class TimeDifferent extends Time
     ) {
     }
 
-    public function getDif($param): int
+    /**
+     * Метод возвращает разницу во времени между двумя DateTime.
+     *
+     * @param string $unitOfMeasurement параметр отвечающий за единицу измерения возвращаемого значения.
+     * Доступны: 'year', 'month', 'week', 'day', 'hour', 'minute', 'second'
+     * @param  string  $roundType тип округления
+     *
+     * @return int
+     * @throws TimeException
+     * @throws Exception
+     */
+    public function getDif(string $unitOfMeasurement, string $roundType = 'down'): int
     {
-        $paramMap = [
+        $unitOfMeasurementMap = [
             'year' => 31536000,
             'month' => 18144000,
             'week' => 604800,
@@ -26,17 +41,30 @@ class TimeDifferent extends Time
             'second' => 1,
         ];
 
-        if (!array_key_exists($param, $paramMap)) {
-            return $this->errors['getDif'] = 'invalid param';
+        $roundTypeMap = [
+            'up' => PHP_ROUND_HALF_UP,
+            'down' => PHP_ROUND_HALF_DOWN
+        ];
+
+        if (!array_key_exists($unitOfMeasurement, $unitOfMeasurementMap)) {
+            $this->errors['getDif'] = 'invalid param unitOfMeasurement';
+            throw new TimeException('Неверный параметр единицы измерения, метода получения разницы во времени');
         }
 
-        $firstTimePoint = new \DateTime($this->firstDateTimeStringPoint);
+        if (!array_key_exists($roundType, $roundTypeMap)) {
+            $this->errors['getDif'] = 'invalid param roundType';
+            throw new TimeException('Неверный параметр типа округления, метода получения разницы во времени');
+        }
+
+
+
+        $firstTimePoint = new DateTime($this->firstDateTimeStringPoint);
         $firstTimePoint = $firstTimePoint->getTimestamp();
-        $secondTimePoint = new \DateTime($this->secondDateTimeStringPoint);
+        $secondTimePoint = new DateTime($this->secondDateTimeStringPoint);
         $secondTimePoint = $secondTimePoint->getTimestamp();
 
-        $difTime = ($secondTimePoint - $firstTimePoint) / $param;
+        $difTime = ($secondTimePoint - $firstTimePoint) / $unitOfMeasurementMap[$unitOfMeasurement];
 
-        return round($difTime);
+        return round($difTime, 0, $roundTypeMap[$roundType]);
     }
 }

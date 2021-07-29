@@ -4,14 +4,14 @@
 namespace Components\Time;
 
 
+use Components\Constants\TimeConstants;
 use Components\Exceptions\TimeException;
+use DateInterval;
 use DateTime;
 use Exception;
 
 class TimeDifferent extends Time
 {
-    public array $errors;
-
     public function __construct(
         protected string $firstDateTimeStringPoint,
         protected string|null $secondDateTimeStringPoint = null
@@ -19,52 +19,86 @@ class TimeDifferent extends Time
     }
 
     /**
-     * Метод возвращает разницу во времени между двумя DateTime.
+     * Метод возвращает количество лет/месяцев/дней/часов/минут в виде строки,
+     * в зависимости от параметра timeUnits, где указывается единицы измерений и шаблон для вывода
      *
-     * @param string $unitOfMeasurement параметр отвечающий за единицу измерения возвращаемого значения.
-     * Доступны: 'year', 'month', 'week', 'day', 'hour', 'minute', 'second'
-     * @param  string  $roundType тип округления
+     * @param  array  $timeUnits  массив с единицами измерений и их шаблонами, например ['hour' => '%h'].
+     * Доступные единицы измерений и шаблоны:
      *
-     * @return int
+     * year / 'Y', 'y'
+     * month / 'M', 'm'
+     * day / 'D', 'd', 'a'
+     * hour/ 'H', 'h'
+     * minute/ 'I', 'i'
+     *
+     * @return string
      * @throws TimeException
      * @throws Exception
      */
-    public function getDif(string $unitOfMeasurement, string $roundType = 'down'): int
+    public function getCountTimeUnits(array $timeUnits): string
     {
-        $unitOfMeasurementMap = [
-            'year' => 31536000,
-            'month' => 18144000,
-            'week' => 604800,
-            'day' => 86400,
-            'hour' => 3600,
-            'minute' => 60,
-            'second' => 1,
+        $result = '';
+        $format = '';
+        $timeInterval = $this->getDif();
+        $timeUnitsMap = [
+            'year' => [
+                'formatChars' => ['Y', 'y'],
+                'endings' => TimeConstants::ENDINGS_FOR_YEAR,
+                'count' => $timeInterval->y,
+            ],
+            'month' => [
+                'formatChars' => ['M', 'm'],
+                'endings' => TimeConstants::ENDINGS_FOR_MONTH,
+                'count' => $timeInterval->m,
+            ],
+            'day' => [
+                'formatChars' => ['D', 'd', 'a'],
+                'endings' => TimeConstants::ENDINGS_FOR_DAY,
+                'count' => $timeInterval->d,
+            ],
+            'hour' => [
+                'formatChars' => ['H', 'h'],
+                'endings' => TimeConstants::ENDINGS_FOR_HOUR,
+                'count' => $timeInterval->h,
+            ],
+            'minute' => [
+                'formatChars' => ['I', 'i'],
+                'endings' => TimeConstants::ENDINGS_FOR_MINUTE,
+                'count' => $timeInterval->i,
+            ],
         ];
 
-        $roundTypeMap = [
-            'up' => PHP_ROUND_HALF_UP,
-            'down' => PHP_ROUND_HALF_DOWN
-        ];
 
-        if (!array_key_exists($unitOfMeasurement, $unitOfMeasurementMap)) {
-            $this->errors['getDif'] = 'invalid param unitOfMeasurement';
-            throw new TimeException('Неверный параметр единицы измерения, метода получения разницы во времени');
+        foreach ($timeUnits as $timeUnit => $formatChar) {
+            if (!array_key_exists($timeUnit, $timeUnitsMap)) {
+                throw new TimeException(
+                    'Неверный параметр timeUnits, метода getCountTimeUnits'
+                );
+            }
+            $timeUnitName = new TimeNumEnding();
+            $countTimeUnit = $timeUnitsMap[$timeUnit]['count'];
+            $timeUnitName = $timeUnitName->getEnding(
+                $countTimeUnit,
+                $timeUnitsMap[$timeUnit]['endings']
+            );
+            $format .= '%'.$formatChar.' ';
+            $result .= $countTimeUnit.' '.$timeUnitName.' ';
         }
 
-        if (!array_key_exists($roundType, $roundTypeMap)) {
-            $this->errors['getDif'] = 'invalid param roundType';
-            throw new TimeException('Неверный параметр типа округления, метода получения разницы во времени');
-        }
+        return $result;
+    }
 
-
-
+    /**
+     * Метод возвращает разницу во времени между двумя DateTime.
+     *
+     * @return DateInterval|false
+     * @throws Exception
+     */
+    public function getDif(): DateInterval|bool
+    {
         $firstTimePoint = new DateTime($this->firstDateTimeStringPoint);
-        $firstTimePoint = $firstTimePoint->getTimestamp();
         $secondTimePoint = new DateTime($this->secondDateTimeStringPoint);
-        $secondTimePoint = $secondTimePoint->getTimestamp();
 
-        $difTime = ($secondTimePoint - $firstTimePoint) / $unitOfMeasurementMap[$unitOfMeasurement];
-
-        return round($difTime, 0, $roundTypeMap[$roundType]);
+        return $firstTimePoint->diff($secondTimePoint);
     }
 }

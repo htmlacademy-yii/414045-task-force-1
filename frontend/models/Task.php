@@ -3,10 +3,8 @@
 namespace frontend\models;
 
 use Components\Constants\TaskConstants;
-use Components\Constants\TimeConstants;
-use Components\Exceptions\TimeException;
 use Components\Time\TimeDifferent;
-use Components\Time\TimeNumEnding;
+use Exception;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -40,16 +38,15 @@ use yii\db\ActiveRecord;
 class Task extends ActiveRecord
 {
 
+
     /**
-     * @throws TimeException
+     * @throws Exception
      */
     public function getTimeDif(): string
     {
         $timeDif = new TimeDifferent($this->created_at);
-        $timeDif = $timeDif->getDif('hour');
-        $unitOfMeasurement = new TimeNumEnding();
 
-        return $timeDif . ' ' . $unitOfMeasurement->getEnding($timeDif, TimeConstants::ENDINGS_FOR_HOUR);
+        return $timeDif->getCountTimeUnits(['day' => '%a','hour' => '%h','minute' => '%i']) . ' назад';
     }
 
     /**

@@ -5,7 +5,8 @@ use yii\db\Migration;
 /**
  * Handles adding columns to table `{{%user_settings}}`.
  */
-class m210726_091710_add_created_at_column_updated_at_column_to_user_settings_table extends Migration
+class m210726_091710_add_created_at_column_updated_at_column_to_user_settings_table extends
+    Migration
 {
     /**
      * {@inheritdoc}

@@ -19,9 +19,9 @@ class Task
     /**
      * Task constructor.
      *
-     * @param int $user_id
-     * @param int $customer_id
-     * @param int $executor_id
+     * @param  int  $user_id
+     * @param  int  $customer_id
+     * @param  int  $executor_id
      */
     public function __construct(
         private int $user_id,
@@ -54,18 +54,22 @@ class Task
     /**
      * Получить доступные действия для задачи
      *
-     * @param string $state текущее состояние задачи
+     * @param  string  $state  текущее состояние задачи
      *
      * @return array доступные действия
      * @throws TaskStateException
      */
     public function getPossibleActions(string $state): array
     {
-        if (!array_key_exists($state, TaskConstants::STATUS_MAP)){
-            throw new TaskStateException('Выбранного состояния задания не существует');
+        if (!array_key_exists($state, TaskConstants::STATUS_MAP)) {
+            throw new TaskStateException(
+                'Выбранного состояния задания не существует'
+            );
         }
-        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)){
-            throw new TaskStateException('Для выбранного статуса задания нет доступных действий');
+        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)) {
+            throw new TaskStateException(
+                'Для выбранного статуса задания нет доступных действий'
+            );
         }
 
         return TaskConstants::TRANSFER_MAP[$state];
@@ -74,16 +78,17 @@ class Task
     /**
      * Получить статус задачи после действия
      *
-     * @param string $action действие
+     * @param  string  $action  действие
      *
      * @return string|null статус задачи после выполненного действия
      * @throws TaskActionException
      */
     public function getTaskStateAfterAction(string $action): string|null
     {
-        if (in_array($action, ActionConstants::ACTION_MAP)){
+        if (in_array($action, ActionConstants::ACTION_MAP)) {
             throw new TaskActionException('Указанного действия не существует');
         }
+
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
     }
 }

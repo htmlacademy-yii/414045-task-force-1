@@ -23,21 +23,24 @@ class TaskConstants
     public const DONE_TASK_STATUS_NAME_FOR_USER = 'Выполнено';
     public const FAILED_TASK_STATUS_NAME_FOR_USER = 'Провалено';
 
-    public const TRANSFER_MAP = [
-        self::NEW_TASK_STATUS_NAME => [Cancel::class, Respond::class],
-        self::IN_WORK_TASK_STATUS_NAME => [Done::class, Refuse::class]
-    ];
-    public const STATUS_MAP = [
-        TaskConstants::NEW_TASK_STATUS_NAME => TaskConstants::NEW_TASK_STATUS_NAME_FOR_USER,
-        TaskConstants::CANCELED_TASK_STATUS_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME_FOR_USER,
-        TaskConstants::IN_WORK_TASK_STATUS_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME_FOR_USER,
-        TaskConstants::DONE_TASK_STATUS_NAME => TaskConstants::DONE_TASK_STATUS_NAME_FOR_USER,
-        TaskConstants::FAILED_TASK_STATUS_NAME => TaskConstants::FAILED_TASK_STATUS_NAME_FOR_USER,
-    ];
-    public const STATE_AFTER_ACTION = [
-        ActionConstants::CANCEL_ACTION_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME,
-        ActionConstants::RESPOND_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
-        ActionConstants::DONE_ACTION_NAME => TaskConstants::DONE_TASK_STATUS_NAME,
-        ActionConstants::REFUSE_ACTION_NAME => TaskConstants::FAILED_TASK_STATUS_NAME,
-    ];
+    public const TRANSFER_MAP
+        = [
+            self::NEW_TASK_STATUS_NAME => [Cancel::class, Respond::class],
+            self::IN_WORK_TASK_STATUS_NAME => [Done::class, Refuse::class],
+        ];
+    public const STATUS_MAP
+        = [
+            TaskConstants::NEW_TASK_STATUS_NAME => TaskConstants::NEW_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::CANCELED_TASK_STATUS_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::IN_WORK_TASK_STATUS_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::DONE_TASK_STATUS_NAME => TaskConstants::DONE_TASK_STATUS_NAME_FOR_USER,
+            TaskConstants::FAILED_TASK_STATUS_NAME => TaskConstants::FAILED_TASK_STATUS_NAME_FOR_USER,
+        ];
+    public const STATE_AFTER_ACTION
+        = [
+            ActionConstants::CANCEL_ACTION_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME,
+            ActionConstants::RESPOND_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
+            ActionConstants::DONE_ACTION_NAME => TaskConstants::DONE_TASK_STATUS_NAME,
+            ActionConstants::REFUSE_ACTION_NAME => TaskConstants::FAILED_TASK_STATUS_NAME,
+        ];
 }

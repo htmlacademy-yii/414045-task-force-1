@@ -30,7 +30,7 @@ class CsvImportToSql
     /**
      * Импорт из данных файла CSV в файл с запросами SQL
      *
-     * @param string $table имя таблицы
+     * @param  string  $table  имя таблицы
      *
      * @throws CsvImportToSqlException
      */
@@ -86,9 +86,9 @@ class CsvImportToSql
     /**
      * Создание SQL файла для импорта из CSV
      *
-     * @param string $src  путь к файлу
-     * @param string $name имя файла
-     * @param string $prefix префикс имени файла
+     * @param  string  $src  путь к файлу
+     * @param  string  $name  имя файла
+     * @param  string  $prefix  префикс имени файла
      *
      * @return SplFileObject spl объект файла
      */
@@ -149,7 +149,7 @@ class CsvImportToSql
     /**
      * Валидация столбцов. Доложен быть хотя-бы один столбец, тип данных в столбце должен быть string
      *
-     * @param array|null $columns массив со столбцами
+     * @param  array|null  $columns  массив со столбцами
      *
      * @return bool true если валидация пройдена успешно
      */
@@ -170,9 +170,9 @@ class CsvImportToSql
     /**
      * Конвертация данных в запрос SQL
      *
-     * @param string $table   имя таблицы
-     * @param array  $headers заголовки таблицы
-     * @param array  $values  значения столбцов
+     * @param  string  $table  имя таблицы
+     * @param  array  $headers  заголовки таблицы
+     * @param  array  $values  значения столбцов
      *
      * @return string запрос SQL
      */

@@ -40,21 +40,23 @@ class Task extends ActiveRecord
 
 
     /**
+     * {@inheritdoc}
+     */
+    public static function tableName(): string
+    {
+        return 'tasks';
+    }
+
+    /**
      * @throws Exception
      */
     public function getTimeDif(): string
     {
         $timeDif = new TimeDifferent($this->created_at);
 
-        return $timeDif->getCountTimeUnits(['day' => '%a','hour' => '%h','minute' => '%i']) . ' назад';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName(): string
-    {
-        return 'tasks';
+        return $timeDif->getCountTimeUnits(
+                ['day' => 'a', 'hour' => 'h', 'minute' => 'i']
+            ).' назад';
     }
 
     /**

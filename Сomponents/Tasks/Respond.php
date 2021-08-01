@@ -22,17 +22,8 @@ class Respond extends AbstractAction
      */
     public function getActionNameForUser(): string|null
     {
-        return $this->authUser() ? ActionConstants::RESPOND_ACTION_NAME_FOR_USER : null;
-    }
-
-    /**
-     * Возвращает внутреннее имя действия
-     *
-     * @return string
-     */
-    public function getActionName(): string
-    {
-        return ActionConstants::RESPOND_ACTION_NAME;
+        return $this->authUser() ? ActionConstants::RESPOND_ACTION_NAME_FOR_USER
+            : null;
     }
 
     /**
@@ -43,5 +34,15 @@ class Respond extends AbstractAction
     public function authUser(): bool
     {
         return $this->user_id === $this->executor_id;
+    }
+
+    /**
+     * Возвращает внутреннее имя действия
+     *
+     * @return string
+     */
+    public function getActionName(): string
+    {
+        return ActionConstants::RESPOND_ACTION_NAME;
     }
 }

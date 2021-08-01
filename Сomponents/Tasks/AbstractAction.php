@@ -15,11 +15,12 @@ abstract class AbstractAction
         protected int $user_id,
         protected int $customer_id,
         protected int $executor_id
-    )
-    {
+    ) {
     }
 
     abstract public function getActionNameForUser();
+
     abstract public function getActionName();
+
     abstract public function authUser();
 }

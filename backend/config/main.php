@@ -1,9 +1,10 @@
 <?php
+
 $params = array_merge(
-    require __DIR__ . '/../../common/config/params.php',
-    require __DIR__ . '/../../common/config/params-local.php',
-    require __DIR__ . '/params.php',
-    require __DIR__ . '/params-local.php'
+    require __DIR__.'/../../common/config/params.php',
+    require __DIR__.'/../../common/config/params-local.php',
+    require __DIR__.'/params.php',
+    require __DIR__.'/params-local.php'
 );
 
 return [
@@ -19,7 +20,10 @@ return [
         'user' => [
             'identityClass' => \common\models\User::class,
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'identityCookie' => [
+                'name' => '_identity-backend',
+                'httpOnly' => true,
+            ],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend

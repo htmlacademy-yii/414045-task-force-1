@@ -13,18 +13,17 @@ namespace Components\Time;
 class TimeNumEnding extends Time
 {
     /**
-     * @param  int  $number числительное для которого нужно существительное в правильном склонении
-     * @param  array  $endingArray массив со склоненными существительными
+     * @param  int  $number  числительное для которого нужно существительное в правильном склонении
+     * @param  array  $endingArray  массив со склоненными существительными
      *
      * @return string
      */
     public function getEnding(int $number, array $endingArray): string
     {
         $number %= 100;
-        if ($number>=11 && $number<=19) {
-            $ending=$endingArray[2];
-        }
-        else {
+        if ($number >= 11 && $number <= 19) {
+            $ending = $endingArray[2];
+        } else {
             $i = $number % 10;
             $ending = match ($i) {
                 1 => $endingArray[0],
@@ -32,6 +31,7 @@ class TimeNumEnding extends Time
                 default => $endingArray[2],
             };
         }
+
         return $ending;
     }
 }

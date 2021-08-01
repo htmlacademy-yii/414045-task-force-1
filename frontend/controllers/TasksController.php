@@ -4,16 +4,19 @@
 namespace frontend\controllers;
 
 
+use Components\Constants\TaskConstants;
 use frontend\models\Task;
 use yii\web\Controller;
-use Components\Constants\TaskConstants;
 
 
 class TasksController extends Controller
 {
     public function actionIndex(): string
     {
-        $tasks = Task::findAll(['state' => TaskConstants::NEW_TASK_STATUS_NAME]);
+        $tasks = Task::find()->where(
+            ['state' => TaskConstants::NEW_TASK_STATUS_NAME]
+        )->orderBy(['created_at' => SORT_DESC])->all();
+
         return $this->render('index', ['tasks' => $tasks]);
     }
 }

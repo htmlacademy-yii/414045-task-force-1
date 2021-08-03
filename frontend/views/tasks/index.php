@@ -10,7 +10,8 @@ use frontend\models\Task;
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?php foreach ($tasks as $task) : ?>
+        <?php
+        foreach ($tasks as $task) : ?>
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="view.html" class="link-regular">
@@ -25,7 +26,8 @@ use frontend\models\Task;
                 <p class="new-task__place"><?= $task->address ?></p>
                 <span class="new-task__time"><?= $task->getTimeDif() ?></span>
             </div>
-        <?php endforeach; ?>
+        <?php
+        endforeach; ?>
     </div>
     <div class="new-task__pagination">
         <ul class="new-task__pagination-list">

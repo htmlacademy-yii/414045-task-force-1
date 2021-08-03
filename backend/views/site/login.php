@@ -16,7 +16,8 @@ $this->title = 'Login';
 
     <p>Please fill out the following fields to login:</p>
 
-    <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+    <?php
+    $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
@@ -33,5 +34,6 @@ $this->title = 'Login';
         ) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <?php
+    ActiveForm::end(); ?>
 </div>

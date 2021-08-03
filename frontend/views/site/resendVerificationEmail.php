@@ -18,7 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(
+            <?php
+            $form = ActiveForm::begin(
                 ['id' => 'resend-verification-email-form']
             ); ?>
 
@@ -30,7 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 ) ?>
             </div>
 
-            <?php ActiveForm::end(); ?>
+            <?php
+            ActiveForm::end(); ?>
         </div>
     </div>
 </div>

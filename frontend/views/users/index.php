@@ -9,7 +9,8 @@ use frontend\models\User;
 ?>
 
 <section class="user__search">
-    <?php foreach ($users as $user) : ?>
+    <?php
+    foreach ($users as $user) : ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
@@ -22,17 +23,22 @@ use frontend\models\User;
                     <p class="link-name"><a href="user.html"
                                             class="link-regular"><?= $user->name ?></a>
                     </p>
-                    <?php for (
+                    <?php
+                    for (
                         $i = 1;
                         $i <= 5;
                         $i++
                     ) : ?>
-                        <?php if ($user->rating > $i * 100) : ?>
+                        <?php
+                        if ($user->rating > $i * 100) : ?>
                             <span></span>
-                        <?php else: ?>
+                        <?php
+                        else: ?>
                             <span class="star-disabled"></span>
-                        <?php endif; ?>
-                    <?php endfor; ?>
+                        <?php
+                        endif; ?>
+                    <?php
+                    endfor; ?>
                     <b><?= $user->rating / 100 ?></b>
                     <p class="user__search-content">
                         <?= $user->about ?>
@@ -41,13 +47,16 @@ use frontend\models\User;
                 <span class="new-task__time">Был на сайте 25 минут назад</span>
             </div>
             <div class="link-specialization user__search-link--bottom">
-                <?php foreach ($user->categories as $category) : ?>
+                <?php
+                foreach ($user->categories as $category) : ?>
                     <a href="browse.html"
                        class="link-regular"><?= $category->title ?></a>
-                <?php endforeach; ?>
+                <?php
+                endforeach; ?>
             </div>
         </div>
-    <?php endforeach; ?>
+    <?php
+    endforeach; ?>
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">

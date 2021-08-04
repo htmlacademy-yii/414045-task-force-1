@@ -17,9 +17,7 @@ class AppAsset extends AssetBundle
         = [
             'css/site.css',
         ];
-    public $js
-        = [
-        ];
+    public $js = [];
     public $depends
         = [
             YiiAsset::class,

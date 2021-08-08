@@ -21,7 +21,7 @@ class PasswordResetRequestFormTest extends \Codeception\Test\Unit
                                         'user' => [
                                             'class' => UserFixture::className(),
                                             'dataFile' => codecept_data_dir()
-                                                .'user.php',
+                                                . 'user.php',
                                         ],
                                     ]);
     }

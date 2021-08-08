@@ -25,7 +25,7 @@ class LoginFormTest extends \Codeception\Test\Unit
         return [
             'user' => [
                 'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir().'user.php',
+                'dataFile' => codecept_data_dir() . 'user.php',
             ],
         ];
     }
@@ -38,8 +38,7 @@ class LoginFormTest extends \Codeception\Test\Unit
                                ]);
 
         expect('model should not login user', $model->login())->false();
-        expect('user should not be logged in', Yii::$app->user->isGuest)->true(
-        );
+        expect('user should not be logged in', Yii::$app->user->isGuest)->true();
     }
 
     public function testLoginWrongPassword()
@@ -53,8 +52,7 @@ class LoginFormTest extends \Codeception\Test\Unit
         expect('error message should be set', $model->errors)->hasKey(
             'password'
         );
-        expect('user should not be logged in', Yii::$app->user->isGuest)->true(
-        );
+        expect('user should not be logged in', Yii::$app->user->isGuest)->true();
     }
 
     public function testLoginCorrect()

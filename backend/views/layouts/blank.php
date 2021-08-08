@@ -5,27 +5,22 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use yii\helpers\Html;
 
 AppAsset::register($this);
 ?>
-<?php
-$this->beginPage() ?>
+<?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php
-    $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php
-    $this->head() ?>
+    <?php $this->registerCsrfMetaTags() ?>
+    <title><?= encode($this->title) ?></title>
+    <?php $this->head() ?>
 </head>
 <body class="blank">
-<?php
-$this->beginBody() ?>
+<?php $this->beginBody() ?>
 
 <div class="container">
 
@@ -35,9 +30,7 @@ $this->beginBody() ?>
 
 </div>
 
-<?php
-$this->endBody() ?>
+<?php $this->endBody() ?>
 </body>
 </html>
-<?php
-$this->endPage() ?>
+<?php $this->endPage() ?>

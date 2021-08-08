@@ -10,10 +10,10 @@ use DateInterval;
 use DateTime;
 use Exception;
 
-class TimeDifferent extends Time
+class TimeDifference extends Time
 {
     public function __construct(
-        protected string $firstDateTimeStringPoint,
+        protected string      $firstDateTimeStringPoint,
         protected string|null $secondDateTimeStringPoint = null
     ) {
     }
@@ -22,7 +22,7 @@ class TimeDifferent extends Time
      * Метод возвращает количество лет/месяцев/дней/часов/минут в виде строки,
      * в зависимости от параметра timeUnits, где указывается единицы измерений и шаблон для вывода
      *
-     * @param  array  $timeUnits  массив с единицами измерений и их шаблонами, например ['hour' => '%h'].
+     * @param array $timeUnits массив с единицами измерений и их шаблонами, например ['hour' => '%h'].
      * Доступные единицы измерений и шаблоны:
      *
      * year / 'Y', 'y'
@@ -39,7 +39,7 @@ class TimeDifferent extends Time
     {
         $result = '';
         $format = '';
-        $timeInterval = $this->getDif();
+        $timeInterval = $this->getDiff();
         $timeUnitsMap = [
             'year' => [
                 'formatChars' => ['Y', 'y'],
@@ -81,8 +81,8 @@ class TimeDifferent extends Time
                 $countTimeUnit,
                 $timeUnitsMap[$timeUnit]['endings']
             );
-            $format .= '%'.$formatChar.' ';
-            $result .= $countTimeUnit.' '.$timeUnitName.' ';
+            $format .= '%' . $formatChar . ' ';
+            $result .= $countTimeUnit . ' ' . $timeUnitName . ' ';
         }
 
         return $result;
@@ -94,7 +94,7 @@ class TimeDifferent extends Time
      * @return DateInterval|false
      * @throws Exception
      */
-    public function getDif(): DateInterval|bool
+    public function getDiff(): DateInterval|bool
     {
         $firstTimePoint = new DateTime($this->firstDateTimeStringPoint);
         $secondTimePoint = new DateTime($this->secondDateTimeStringPoint);

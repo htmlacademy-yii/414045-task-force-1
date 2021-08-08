@@ -13,8 +13,8 @@ namespace Components\Time;
 class TimeNumEnding extends Time
 {
     /**
-     * @param  int  $number  числительное для которого нужно существительное в правильном склонении
-     * @param  array  $endingArray  массив со склоненными существительными
+     * @param int $number числительное для которого нужно существительное в правильном склонении
+     * @param array $endingArray массив со склоненными существительными
      *
      * @return string
      */

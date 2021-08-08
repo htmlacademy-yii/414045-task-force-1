@@ -14,8 +14,8 @@ class ConvertStringToGeoPoint
     /**
      * ConvertStringToGeoPoint constructor.
      *
-     * @param  string  $latitude
-     * @param  string  $longitude
+     * @param string $latitude
+     * @param string $longitude
      */
     public function __construct(
         private string $latitude,
@@ -30,7 +30,7 @@ class ConvertStringToGeoPoint
      */
     public function getGeoStringForSql(): string
     {
-        return "ST_GeomFromText('POINT(".$this->latitude." ".$this->longitude
-            .")')";
+        return "ST_GeomFromText('POINT(" . $this->latitude . " " . $this->longitude
+            . ")')";
     }
 }

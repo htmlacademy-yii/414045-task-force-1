@@ -23,13 +23,13 @@ class LoginCest
         return [
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir().'login_data.php',
+                'dataFile' => codecept_data_dir() . 'login_data.php',
             ],
         ];
     }
 
     /**
-     * @param  FunctionalTester  $I
+     * @param FunctionalTester $I
      */
     public function loginUser(FunctionalTester $I)
     {

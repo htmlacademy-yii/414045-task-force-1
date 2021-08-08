@@ -30,7 +30,7 @@ class CsvImportToSql
     /**
      * Импорт из данных файла CSV в файл с запросами SQL
      *
-     * @param  string  $table  имя таблицы
+     * @param string $table имя таблицы
      *
      * @throws CsvImportToSqlException
      */
@@ -38,14 +38,14 @@ class CsvImportToSql
     {
         $hasGeoPoint = false;
 
-        if (!file_exists($this->importFileSrc.$this->importFileName)) {
+        if (!file_exists($this->importFileSrc . $this->importFileName)) {
             throw new CsvImportToSqlException(
                 'Не удалось открыть файл. Возможно директория или файл не существуют или указаны не верно.'
             );
         }
 
         $this->importFile = new SplFileObject(
-            $this->importFileSrc.$this->importFileName
+            $this->importFileSrc . $this->importFileName
         );
 
         if (!file_exists($this->newSqlFileSrc)) {
@@ -86,9 +86,9 @@ class CsvImportToSql
     /**
      * Создание SQL файла для импорта из CSV
      *
-     * @param  string  $src  путь к файлу
-     * @param  string  $name  имя файла
-     * @param  string  $prefix  префикс имени файла
+     * @param string $src путь к файлу
+     * @param string $name имя файла
+     * @param string $prefix префикс имени файла
      *
      * @return SplFileObject spl объект файла
      */
@@ -97,7 +97,7 @@ class CsvImportToSql
         string $name,
         string $prefix
     ): SplFileObject {
-        return new SplFileObject($src.$prefix.$name, 'c+');
+        return new SplFileObject($src . $prefix . $name, 'c+');
     }
 
     /**
@@ -149,7 +149,7 @@ class CsvImportToSql
     /**
      * Валидация столбцов. Доложен быть хотя-бы один столбец, тип данных в столбце должен быть string
      *
-     * @param  array|null  $columns  массив со столбцами
+     * @param array|null $columns массив со столбцами
      *
      * @return bool true если валидация пройдена успешно
      */
@@ -170,17 +170,17 @@ class CsvImportToSql
     /**
      * Конвертация данных в запрос SQL
      *
-     * @param  string  $table  имя таблицы
-     * @param  array  $headers  заголовки таблицы
-     * @param  array  $values  значения столбцов
+     * @param string $table имя таблицы
+     * @param array $headers заголовки таблицы
+     * @param array $values значения столбцов
      *
      * @return string запрос SQL
      */
     private function convertToSql(
         string $table,
-        array $headers,
-        array $values,
-        bool $has_geoPoint
+        array  $headers,
+        array  $values,
+        bool   $has_geoPoint
     ): string {
         $geoPointForSql = '';
 
@@ -191,7 +191,7 @@ class CsvImportToSql
                 $values[$indexLat],
                 $values[$indexLong]
             );
-            $geoPointForSql = ', '.$convertToGeoPoint->getGeoStringForSql();
+            $geoPointForSql = ', ' . $convertToGeoPoint->getGeoStringForSql();
             unset($headers[$indexLat], $headers[$indexLong], $values[$indexLat], $values[$indexLong]);
             $headers[] = 'location';
         }
@@ -199,14 +199,14 @@ class CsvImportToSql
         $valuesForSql = [];
 
         foreach ($values as $value) {
-            $valuesForSql[] = "'".$value."'";
+            $valuesForSql[] = "'" . $value . "'";
         }
 
         $values = implode(',', $valuesForSql);
         $headers = implode(', ', $headers);
 
-        return 'INSERT INTO '.$table.' ('.$headers.') VALUE ('.$values
-            .$geoPointForSql.');'
-            .PHP_EOL;
+        return 'INSERT INTO ' . $table . ' (' . $headers . ') VALUE (' . $values
+            . $geoPointForSql . ');'
+            . PHP_EOL;
     }
 }

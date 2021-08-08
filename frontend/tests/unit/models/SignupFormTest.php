@@ -19,7 +19,7 @@ class SignupFormTest extends \Codeception\Test\Unit
                                         'user' => [
                                             'class' => UserFixture::className(),
                                             'dataFile' => codecept_data_dir()
-                                                .'user.php',
+                                                . 'user.php',
                                         ],
                                     ]);
     }
@@ -50,7 +50,7 @@ class SignupFormTest extends \Codeception\Test\Unit
         expect($mail->getTo())->hasKey('some_email@example.com');
         expect($mail->getFrom())->hasKey(\Yii::$app->params['supportEmail']);
         expect($mail->getSubject())->equals(
-            'Account registration at '.\Yii::$app->name
+            'Account registration at ' . \Yii::$app->name
         );
         expect($mail->toString())->stringContainsString(
             $user->verification_token

@@ -16,6 +16,6 @@ class UsersController extends Controller
             ['role' => UserConstants::USER_ROLE_EXECUTOR]
         )->joinWith(['responses', 'tasks', 'categories'])->all();
 
-        return $this->render('index', ['users' => $users]);
+        return $this->render('index', compact('users'));
     }
 }

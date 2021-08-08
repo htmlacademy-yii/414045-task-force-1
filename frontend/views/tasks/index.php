@@ -24,7 +24,7 @@ use frontend\models\Task;
                 <b class="new-task__price new-task__price--translation"><?= $task->price ?>
                     <b> ₽</b></b>
                 <p class="new-task__place"><?= $task->address ?></p>
-                <span class="new-task__time"><?= $task->getTimeDif() ?></span>
+                <span class="new-task__time"><?= $task->getTimeDiff() ?></span>
             </div>
         <?php
         endforeach; ?>

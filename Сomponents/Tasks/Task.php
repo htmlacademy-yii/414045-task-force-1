@@ -19,9 +19,9 @@ class Task
     /**
      * Task constructor.
      *
-     * @param  int  $user_id
-     * @param  int  $customer_id
-     * @param  int  $executor_id
+     * @param int $user_id
+     * @param int $customer_id
+     * @param int $executor_id
      */
     public function __construct(
         private int $user_id,
@@ -54,7 +54,7 @@ class Task
     /**
      * Получить доступные действия для задачи
      *
-     * @param  string  $state  текущее состояние задачи
+     * @param string $state текущее состояние задачи
      *
      * @return array доступные действия
      * @throws TaskStateException
@@ -78,7 +78,7 @@ class Task
     /**
      * Получить статус задачи после действия
      *
-     * @param  string  $action  действие
+     * @param string $action действие
      *
      * @return string|null статус задачи после выполненного действия
      * @throws TaskActionException

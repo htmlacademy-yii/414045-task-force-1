@@ -54,7 +54,7 @@ class Alert extends \yii\bootstrap\Widget
         $session = Yii::$app->session;
         $flashes = $session->getAllFlashes();
         $appendClass = isset($this->options['class']) ? ' '
-            .$this->options['class'] : '';
+            . $this->options['class'] : '';
 
         foreach ($flashes as $type => $flash) {
             if (!isset($this->alertTypes[$type])) {
@@ -62,20 +62,21 @@ class Alert extends \yii\bootstrap\Widget
             }
 
             foreach ((array)$flash as $i => $message) {
-                echo \yii\bootstrap\Alert::widget([
-                                                      'body' => $message,
-                                                      'closeButton' => $this->closeButton,
-                                                      'options' => array_merge(
-                                                          $this->options,
-                                                          [
-                                                              'id' => $this->getId(
-                                                                  ).'-'.$type
-                                                                  .'-'.$i,
-                                                              'class' => $this->alertTypes[$type]
-                                                                  .$appendClass,
-                                                          ]
-                                                      ),
-                                                  ]);
+                echo \yii\bootstrap\Alert::widget(
+                    [
+                        'body' => $message,
+                        'closeButton' => $this->closeButton,
+                        'options' => array_merge(
+                            $this->options,
+                            [
+                                'id' => $this->getId() . '-' . $type
+                                    . '-' . $i,
+                                'class' => $this->alertTypes[$type]
+                                    . $appendClass,
+                            ]
+                        ),
+                    ]
+                );
             }
 
             $session->removeFlash($type);

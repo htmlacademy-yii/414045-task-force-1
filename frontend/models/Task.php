@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use Components\Constants\TaskConstants;
-use Components\Time\TimeDifferent;
+use Components\Time\TimeDifference;
 use Exception;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -50,13 +50,13 @@ class Task extends ActiveRecord
     /**
      * @throws Exception
      */
-    public function getTimeDif(): string
+    public function getTimeDiff(): string
     {
-        $timeDif = new TimeDifferent($this->created_at);
+        $timeDif = new TimeDifference($this->created_at);
 
         return $timeDif->getCountTimeUnits(
                 ['day' => 'a', 'hour' => 'h', 'minute' => 'i']
-            ).' назад';
+            ) . ' назад';
     }
 
     /**

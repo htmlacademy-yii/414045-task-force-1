@@ -17,6 +17,6 @@ class TasksController extends Controller
             ['state' => TaskConstants::NEW_TASK_STATUS_NAME]
         )->orderBy(['created_at' => SORT_DESC])->all();
 
-        return $this->render('index', ['tasks' => $tasks]);
+        return $this->render('index', compact('tasks'));
     }
 }

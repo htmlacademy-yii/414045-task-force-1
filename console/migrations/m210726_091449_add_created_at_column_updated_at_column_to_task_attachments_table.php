@@ -5,8 +5,7 @@ use yii\db\Migration;
 /**
  * Handles adding columns to table `{{%task_attachments}}`.
  */
-class m210726_091449_add_created_at_column_updated_at_column_to_task_attachments_table extends
-    Migration
+class m210726_091449_add_created_at_column_updated_at_column_to_task_attachments_table extends Migration
 {
     /**
      * {@inheritdoc}

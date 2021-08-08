@@ -5,8 +5,7 @@ use yii\db\Migration;
 /**
  * Handles adding columns to table `{{%cities}}`.
  */
-class m210726_085618_add_created_at_column_updated_at_column_to_cities_table extends
-    Migration
+class m210726_085618_add_created_at_column_updated_at_column_to_cities_table extends Migration
 {
     /**
      * {@inheritdoc}

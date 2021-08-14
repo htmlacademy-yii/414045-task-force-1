@@ -52,9 +52,9 @@ class Task extends ActiveRecord
      */
     public function getTimeDiff(): string
     {
-        $timeDif = new TimeDifference($this->created_at);
+        $timeDiff = new TimeDifference($this->created_at);
 
-        return $timeDif->getCountTimeUnits(
+        return $timeDiff->getCountTimeUnits(
                 ['day' => 'a', 'hour' => 'h', 'minute' => 'i']
             ) . ' назад';
     }

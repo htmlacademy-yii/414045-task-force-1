@@ -12,7 +12,11 @@ class m210726_090106_add_updated_at_column_to_messages_table extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%messages}}', 'updated_at', $this->datetime());
+        $this->addColumn(
+            '{{%messages}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

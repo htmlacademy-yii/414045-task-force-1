@@ -1,43 +1,44 @@
 <?php
 
 /**
- * @var Task[] $tasks
+ * @var dataProvider $dataProvider
  */
 
-use frontend\models\Task;
+use yii\widgets\ListView;
 
 ?>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
         <?php
-        foreach ($tasks as $task) : ?>
-            <div class="new-task__card">
-                <div class="new-task__title">
-                    <a href="view.html" class="link-regular">
-                        <h2><?= $task->title ?></h2></a>
-                    <a class="new-task__type link-regular" href="#"><p>
-                            <?= $task->category->title ?> </p></a>
-                </div>
-                <div class="new-task__icon new-task__icon--translation"></div>
-                <p class="new-task_description"> <?= $task->description ?> </p>
-                <b class="new-task__price new-task__price--translation"><?= $task->price ?>
-                    <b> ₽</b></b>
-                <p class="new-task__place"><?= $task->address ?></p>
-                <span class="new-task__time"><?= $task->getTimeDiff() ?></span>
-            </div>
-        <?php
-        endforeach; ?>
-    </div>
-    <div class="new-task__pagination">
-        <ul class="new-task__pagination-list">
-            <li class="pagination__item"><a href="#"></a></li>
-            <li class="pagination__item pagination__item--current">
-                <a>1</a></li>
-            <li class="pagination__item"><a href="#">2</a></li>
-            <li class="pagination__item"><a href="#">3</a></li>
-            <li class="pagination__item"><a href="#"></a></li>
-        </ul>
+        echo ListView::widget([
+            'dataProvider' => $dataProvider,
+            'itemView' => '_list',
+            'layout' => "{items}\n<div class='new-task__pagination'>{pager}</div>",
+            'itemOptions' => [
+                    'tag' => 'div',
+                    'class' => 'new-task__card',
+            ],
+            'pager' => [
+                'maxButtonCount' => 5,
+                'activePageCssClass' => 'pagination__item--current',
+                'prevPageCssClass' => 'pagination__item',
+                'nextPageCssClass' => 'pagination__item',
+                'pageCssClass' => 'pagination__item',
+                'prevPageLabel' => '',
+                'nextPageLabel' => '',
+                'options' => [
+                        'tag' => 'ul',
+                        'class' => 'new-task__pagination-list',
+                ]
+            ],
+            'emptyText' => 'Новых задач нет',
+            'emptyTextOptions' => [
+                'tag' => 'p'
+            ],
+
+        ]);
+        ?>
     </div>
 </section>
 <section class="search-task">

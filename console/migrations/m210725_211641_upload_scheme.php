@@ -24,19 +24,4 @@ class m210725_211641_upload_scheme extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m210725_211641_upload_scheme cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

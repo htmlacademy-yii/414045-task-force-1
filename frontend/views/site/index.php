@@ -4,3 +4,5 @@
 
 $this->title = 'TaskForce';
 
+Yii::$app->getResponse()->redirect(\Components\Routes\Route::getTasks());
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace Components\Route;
+namespace Components\Routes;
 
 use yii\helpers\Url;
 

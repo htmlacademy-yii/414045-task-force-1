@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var ActiveDataProvider $dataProvider;
+ * @var ActiveDataProvider $dataProvider ;
  */
 
 use yii\data\ActiveDataProvider;

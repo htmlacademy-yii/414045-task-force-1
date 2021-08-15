@@ -4,7 +4,7 @@
 
 /* @var $content string */
 
-use Components\Route\Route;
+use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
 
@@ -85,10 +85,10 @@ AppAsset::register($this);
             </div>
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
-                    <li class="site-list__item site-list__item--active">
+                    <li class="site-list__item <?= Yii::$app->request->get('r') === 'tasks' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Route::getTasks() ?>">Задания</a>
                     </li>
-                    <li class="site-list__item">
+                    <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Route::getUsers() ?>">Исполнители</a>
                     </li>
                     <li class="site-list__item">

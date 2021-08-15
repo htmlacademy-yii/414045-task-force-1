@@ -1,14 +1,11 @@
 <?php
 
-
 namespace frontend\controllers;
-
 
 use Components\Constants\TaskConstants;
 use frontend\models\Task;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
-
 
 class TasksController extends Controller
 {

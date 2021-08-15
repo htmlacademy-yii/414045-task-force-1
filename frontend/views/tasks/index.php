@@ -1,23 +1,27 @@
 <?php
 
 /**
- * @var dataProvider $dataProvider
+ * @var ActiveDataProvider $dataProvider;
  */
 
+use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
 
 ?>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?php
-        echo ListView::widget([
+        <?php echo ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '_list',
+            'options' => [
+                    'tag' => 'section',
+                    'class' => 'user__search'
+            ],
             'layout' => "{items}\n<div class='new-task__pagination'>{pager}</div>",
             'itemOptions' => [
-                    'tag' => 'div',
-                    'class' => 'new-task__card',
+                'tag' => 'div',
+                'class' => 'new-task__card',
             ],
             'pager' => [
                 'maxButtonCount' => 5,
@@ -28,8 +32,8 @@ use yii\widgets\ListView;
                 'prevPageLabel' => '',
                 'nextPageLabel' => '',
                 'options' => [
-                        'tag' => 'ul',
-                        'class' => 'new-task__pagination-list',
+                    'tag' => 'ul',
+                    'class' => 'new-task__pagination-list',
                 ]
             ],
             'emptyText' => 'Новых задач нет',

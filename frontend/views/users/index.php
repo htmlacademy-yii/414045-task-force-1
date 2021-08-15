@@ -1,63 +1,38 @@
 <?php
 
 /**
- * @var User[] $users
+ * @var ActiveDataProvider $dataProvider ;
  */
 
-use frontend\models\User;
+use yii\data\ActiveDataProvider;
+use yii\widgets\ListView;
 
-?>
-
-<section class="user__search">
-    <?php
-    foreach ($users as $user) : ?>
-        <div class="content-view__feedback-card user__search-wrapper">
-            <div class="feedback-card__top">
-                <div class="user__search-icon">
-                    <a href="user.html"><img src="<?= $user->avatar_src ?>"
-                                             width="65" height="65"></a>
-                    <span><?= count($user->tasks) ?> заданий</span>
-                    <span><?= count($user->responses) ?> отзывов</span>
-                </div>
-                <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="user.html"
-                                            class="link-regular"><?= $user->name ?></a>
-                    </p>
-                    <?php
-                    for (
-                        $i = 1;
-                        $i <= 5;
-                        $i++
-                    ) : ?>
-                        <?php
-                        if ($user->rating > $i * 100) : ?>
-                            <span></span>
-                        <?php
-                        else: ?>
-                            <span class="star-disabled"></span>
-                        <?php
-                        endif; ?>
-                    <?php
-                    endfor; ?>
-                    <b><?= $user->rating / 100 ?></b>
-                    <p class="user__search-content">
-                        <?= $user->about ?>
-                    </p>
-                </div>
-                <span class="new-task__time">Был на сайте 25 минут назад</span>
-            </div>
-            <div class="link-specialization user__search-link--bottom">
-                <?php
-                foreach ($user->categories as $category) : ?>
-                    <a href="browse.html"
-                       class="link-regular"><?= $category->title ?></a>
-                <?php
-                endforeach; ?>
-            </div>
-        </div>
-    <?php
-    endforeach; ?>
-</section>
+echo ListView::widget([
+    'dataProvider' => $dataProvider,
+    'itemView' => '_list',
+    'options' => [
+        'tag' => 'section',
+        'class' => 'user__search'
+    ],
+    'itemOptions' => [
+        'tag' => 'div',
+        'class' => 'content-view__feedback-card user__search-wrapper'
+    ],
+    'layout' => "{items}\n{pager}",
+    'pager' => [
+        'maxButtonCount' => 5,
+        'activePageCssClass' => 'pagination__item--current',
+        'prevPageCssClass' => 'pagination__item',
+        'nextPageCssClass' => 'pagination__item',
+        'pageCssClass' => 'pagination__item',
+        'prevPageLabel' => '',
+        'nextPageLabel' => '',
+        'options' => [
+            'tag' => 'ul',
+            'class' => 'new-task__pagination-list',
+        ]
+    ],
+]); ?>
 <section class="search-task">
     <div class="search-task__wrapper">
         <form class="search-task__form" name="users" method="post" action="#">

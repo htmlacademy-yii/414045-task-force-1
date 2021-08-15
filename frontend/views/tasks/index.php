@@ -14,10 +14,6 @@ use yii\widgets\ListView;
         <?php echo ListView::widget([
             'dataProvider' => $dataProvider,
             'itemView' => '_list',
-            'options' => [
-                    'tag' => 'section',
-                    'class' => 'user__search'
-            ],
             'layout' => "{items}\n<div class='new-task__pagination'>{pager}</div>",
             'itemOptions' => [
                 'tag' => 'div',

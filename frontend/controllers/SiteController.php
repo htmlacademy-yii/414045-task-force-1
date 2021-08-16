@@ -70,7 +70,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        Yii::$app->getResponse()->redirect(\Components\Routes\Route::getTasks());
     }
 
     /**

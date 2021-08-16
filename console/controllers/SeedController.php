@@ -21,7 +21,7 @@ class SeedController extends Controller
                 $files = FileHelper::findFiles($pathExportData, ['only' => ['*.sql']]);
                 if (!$files) {
                     echo 'В указанной директории нет SQL файлов!';
-                    exit;
+                    exit(1);
                 }
 
                 foreach ($files as $file) {
@@ -32,7 +32,7 @@ class SeedController extends Controller
 
                     if (!$db) {
                         echo 'Нет подключения к БД';
-                        exit;
+                        exit(1);
                     }
 
                     foreach ($files as $file) {
@@ -42,8 +42,6 @@ class SeedController extends Controller
 
                     echo 'БД наполнена';
                 }
-
-                exit;
             }
         }
     }

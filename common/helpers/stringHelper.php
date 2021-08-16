@@ -2,7 +2,9 @@
 
 use yii\helpers\Html;
 
-function encode($string): string
-{
-    return Html::encode($string);
+if (!function_exists('encode')) {
+    function encode($string): string
+    {
+        return Html::encode($string);
+    }
 }

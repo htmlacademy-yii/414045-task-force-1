@@ -12,8 +12,12 @@ class m210726_091710_add_created_at_column_updated_at_column_to_user_settings_ta
      */
     public function safeUp()
     {
-        $this->addColumn('{{%user_settings}}', 'created_at', $this->datetime());
-        $this->addColumn('{{%user_settings}}', 'updated_at', $this->datetime());
+        $this->addColumn('{{%user_settings}}', 'created_at', $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn(
+            '{{%user_settings}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

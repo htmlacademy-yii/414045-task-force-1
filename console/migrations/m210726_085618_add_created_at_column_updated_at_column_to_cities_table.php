@@ -12,8 +12,12 @@ class m210726_085618_add_created_at_column_updated_at_column_to_cities_table ext
      */
     public function safeUp()
     {
-        $this->addColumn('{{%cities}}', 'created_at', $this->datetime());
-        $this->addColumn('{{%cities}}', 'updated_at', $this->datetime());
+        $this->addColumn('{{%cities}}', 'created_at', $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn(
+            '{{%cities}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

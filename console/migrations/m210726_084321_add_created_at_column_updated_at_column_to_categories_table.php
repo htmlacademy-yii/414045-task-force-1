@@ -12,8 +12,12 @@ class m210726_084321_add_created_at_column_updated_at_column_to_categories_table
      */
     public function safeUp()
     {
-        $this->addColumn('{{%categories}}', 'created_at', $this->datetime());
-        $this->addColumn('{{%categories}}', 'updated_at', $this->datetime());
+        $this->addColumn('{{%categories}}', 'created_at', $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn(
+            '{{%categories}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace frontend\models;
 
+use Components\Constants\UserConstants;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -154,7 +156,11 @@ class User extends ActiveRecord
      */
     public function getReviews(): ActiveQuery
     {
-        return $this->hasMany(Review::class, ['sender_id' => 'id']);
+        if ($this->role === UserConstants::USER_ROLE_EXECUTOR) {
+            return $this->hasMany(Review::class, ['sender_id' => 'id']);
+        }
+
+        return $this->hasMany(Review::class, ['addressee_id' => 'id']);
     }
 
 
@@ -165,7 +171,11 @@ class User extends ActiveRecord
      */
     public function getTasks(): ActiveQuery
     {
-        return $this->hasMany(Task::class, ['customer_id' => 'id']);
+        if ($this->role === UserConstants::USER_ROLE_CUSTOMER) {
+            return $this->hasMany(Task::class, ['customer_id' => 'id']);
+        }
+
+        return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
 
 
@@ -193,9 +203,11 @@ class User extends ActiveRecord
      * Gets query for [[UsersSpecialties]].
      *
      * @return ActiveQuery
+     * @throws InvalidConfigException
      */
-    public function getUsersSpecialties(): ActiveQuery
+    public function getCategories(): ActiveQuery
     {
-        return $this->hasMany(UsersSpecialty::class, ['user_id' => 'id']);
+        return $this->hasMany(Category::class, ['id' => 'category_id'])
+            ->viaTable('users_specialty', ['user_id' => 'id']);
     }
 }

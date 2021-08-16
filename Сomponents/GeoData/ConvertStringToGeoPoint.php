@@ -28,9 +28,9 @@ class ConvertStringToGeoPoint
      *
      * @return string
      */
-    public function getGeoStringForSql():string
+    public function getGeoStringForSql(): string
     {
-        return "ST_GeomFromText('POINT(".$this->latitude." ".$this->longitude
-            .")')";
+        return "ST_GeomFromText('POINT(" . $this->latitude . " " . $this->longitude
+            . ")')";
     }
 }

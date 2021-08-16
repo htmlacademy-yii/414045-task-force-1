@@ -70,7 +70,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        Yii::$app->getResponse()->redirect(\Components\Routes\Route::getTasks());
     }
 
     /**
@@ -90,12 +90,7 @@ class SiteController extends Controller
         } else {
             $model->password = '';
 
-            return $this->render(
-                'login',
-                [
-                    'model' => $model,
-                ]
-            );
+            return $this->render('login', compact('model'));
         }
     }
 
@@ -134,12 +129,7 @@ class SiteController extends Controller
 
             return $this->refresh();
         } else {
-            return $this->render(
-                'contact',
-                [
-                    'model' => $model,
-                ]
-            );
+            return $this->render('contact', compact('model'));
         }
     }
 
@@ -170,12 +160,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render(
-            'signup',
-            [
-                'model' => $model,
-            ]
-        );
+        return $this->render('signup', compact('model'));
     }
 
     /**
@@ -202,18 +187,13 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render(
-            'requestPasswordResetToken',
-            [
-                'model' => $model,
-            ]
-        );
+        return $this->render('requestPasswordResetToken', compact('model'));
     }
 
     /**
      * Resets password.
      *
-     * @param  string  $token
+     * @param string $token
      *
      * @return mixed
      * @throws BadRequestHttpException
@@ -234,18 +214,13 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render(
-            'resetPassword',
-            [
-                'model' => $model,
-            ]
-        );
+        return $this->render('resetPassword', compact('model'));
     }
 
     /**
      * Verify email address
      *
-     * @param  string  $token
+     * @param string $token
      *
      * @return yii\web\Response
      * @throws BadRequestHttpException
@@ -299,11 +274,6 @@ class SiteController extends Controller
             );
         }
 
-        return $this->render(
-            'resendVerificationEmail',
-            [
-                'model' => $model,
-            ]
-        );
+        return $this->render('resendVerificationEmail', compact('model'));
     }
 }

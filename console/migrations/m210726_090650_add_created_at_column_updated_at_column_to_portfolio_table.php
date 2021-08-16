@@ -12,8 +12,12 @@ class m210726_090650_add_created_at_column_updated_at_column_to_portfolio_table 
      */
     public function safeUp()
     {
-        $this->addColumn('{{%portfolio}}', 'created_at', $this->datetime());
-        $this->addColumn('{{%portfolio}}', 'updated_at', $this->datetime());
+        $this->addColumn('{{%portfolio}}', 'created_at', $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn(
+            '{{%portfolio}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

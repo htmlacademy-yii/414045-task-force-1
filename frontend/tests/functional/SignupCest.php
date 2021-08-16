@@ -22,17 +22,16 @@ class SignupCest
         $I->seeValidationError('Username cannot be blank.');
         $I->seeValidationError('Email cannot be blank.');
         $I->seeValidationError('Password cannot be blank.');
-
     }
 
     public function signupWithWrongEmail(FunctionalTester $I)
     {
         $I->submitForm(
             $this->formId, [
-            'SignupForm[username]'  => 'tester',
-            'SignupForm[email]'     => 'ttttt',
-            'SignupForm[password]'  => 'tester_password',
-        ]
+                             'SignupForm[username]' => 'tester',
+                             'SignupForm[email]' => 'ttttt',
+                             'SignupForm[password]' => 'tester_password',
+                         ]
         );
         $I->dontSee('Username cannot be blank.', '.help-block');
         $I->dontSee('Password cannot be blank.', '.help-block');
@@ -50,10 +49,12 @@ class SignupCest
         $I->seeRecord('common\models\User', [
             'username' => 'tester',
             'email' => 'tester.email@example.com',
-            'status' => \common\models\User::STATUS_INACTIVE
+            'status' => \common\models\User::STATUS_INACTIVE,
         ]);
 
         $I->seeEmailIsSent();
-        $I->see('Thank you for registration. Please check your inbox for verification email.');
+        $I->see(
+            'Thank you for registration. Please check your inbox for verification email.'
+        );
     }
 }

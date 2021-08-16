@@ -12,8 +12,16 @@ class m210726_091449_add_created_at_column_updated_at_column_to_task_attachments
      */
     public function safeUp()
     {
-        $this->addColumn('{{%task_attachments}}', 'created_at', $this->datetime());
-        $this->addColumn('{{%task_attachments}}', 'updated_at', $this->datetime());
+        $this->addColumn(
+            '{{%task_attachments}}',
+            'created_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP')
+        );
+        $this->addColumn(
+            '{{%task_attachments}}',
+            'updated_at',
+            $this->datetime()->defaultExpression('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        );
     }
 
     /**

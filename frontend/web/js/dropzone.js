@@ -700,7 +700,7 @@ var Dropzone = function (_Emitter) {
 
 
         /*
-         Those functions register themselves to the events on init and handle all
+         Those helpers register themselves to the events on init and handle all
          the user interface specific stuff. Overwriting them won't break the upload
          but can break the way it's displayed.
          You can overwrite them if you don't like the default behavior. If you just

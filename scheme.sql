@@ -1,9 +1,3 @@
-CREATE DATABASE taskforce
-    DEFAULT CHARACTER SET utf8
-    DEFAULT COLLATE utf8_general_ci;
-
-USE taskforce;
-
 CREATE TABLE cities
 (
     id       int PRIMARY KEY AUTO_INCREMENT,
@@ -27,8 +21,8 @@ CREATE TABLE users
     skype          varchar(128),
     over_messenger varchar(128),
     rating         int,
-    created_at     datetime,
-    updated_at     datetime,
+    created_at     datetime default current_timestamp,
+    updated_at     datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
@@ -82,8 +76,8 @@ CREATE TABLE tasks
     city_id         int,
     address         varchar(256),
     address_comment varchar(256),
-    created_at      datetime,
-    updated_at      datetime,
+    created_at     datetime default current_timestamp,
+    updated_at     datetime default current_timestamp on update current_timestamp ,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (category_id) REFERENCES categories (id),
@@ -106,7 +100,7 @@ CREATE TABLE messages
     sender_id    int  NOT NULL,
     addressee_id int  NOT NULL,
     content      text NOT NULL,
-    created_at   datetime,
+    created_at     datetime default current_timestamp,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (addressee_id) REFERENCES users (id)
 );
@@ -119,7 +113,7 @@ CREATE TABLE reviews
     task_id      int UNIQUE NOT NULL,
     rating       int        NOT NULL,
     content      text       NOT NULL,
-    created_at   datetime,
+    created_at     datetime default current_timestamp,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (addressee_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id)
@@ -131,8 +125,8 @@ CREATE TABLE responses
     task_id    int NOT NULL,
     user_id    int NOT NULL,
     content    text,
-    created_at datetime,
-    updated_at datetime,
+    created_at     datetime default current_timestamp,
+    updated_at     datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );

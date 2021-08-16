@@ -61,11 +61,15 @@ class Task
      */
     public function getPossibleActions(string $state): array
     {
-        if (!array_key_exists($state, TaskConstants::STATUS_MAP)){
-            throw new TaskStateException('Выбранного состояния задания не существует');
+        if (!array_key_exists($state, TaskConstants::STATUS_MAP)) {
+            throw new TaskStateException(
+                'Выбранного состояния задания не существует'
+            );
         }
-        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)){
-            throw new TaskStateException('Для выбранного статуса задания нет доступных действий');
+        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)) {
+            throw new TaskStateException(
+                'Для выбранного статуса задания нет доступных действий'
+            );
         }
 
         return TaskConstants::TRANSFER_MAP[$state];
@@ -81,9 +85,10 @@ class Task
      */
     public function getTaskStateAfterAction(string $action): string|null
     {
-        if (in_array($action, ActionConstants::ACTION_MAP)){
+        if (in_array($action, ActionConstants::ACTION_MAP)) {
             throw new TaskActionException('Указанного действия не существует');
         }
+
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
     }
 }

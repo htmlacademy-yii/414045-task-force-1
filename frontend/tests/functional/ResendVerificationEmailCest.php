@@ -13,9 +13,10 @@ class ResendVerificationEmailCest
     /**
      * Load fixtures before db transaction begin
      * Called in _before()
-     * @see \Codeception\Module\Yii2::_before()
-     * @see \Codeception\Module\Yii2::loadFixtures()
+     *
      * @return array
+     * @see \Codeception\Module\Yii2::loadFixtures()
+     * @see \Codeception\Module\Yii2::_before()
      */
     public function _fixtures()
     {
@@ -32,23 +33,25 @@ class ResendVerificationEmailCest
         $I->amOnRoute('/site/resend-verification-email');
     }
 
-    protected function formParams($email)
-    {
-        return [
-            'ResendVerificationEmailForm[email]' => $email
-        ];
-    }
-
     public function checkPage(FunctionalTester $I)
     {
         $I->see('Resend verification email', 'h1');
-        $I->see('Please fill out your email. A verification email will be sent there.');
+        $I->see(
+            'Please fill out your email. A verification email will be sent there.'
+        );
     }
 
     public function checkEmptyField(FunctionalTester $I)
     {
         $I->submitForm($this->formId, $this->formParams(''));
         $I->seeValidationError('Email cannot be blank.');
+    }
+
+    protected function formParams($email)
+    {
+        return [
+            'ResendVerificationEmailForm[email]' => $email,
+        ];
     }
 
     public function checkWrongEmailFormat(FunctionalTester $I)
@@ -76,7 +79,7 @@ class ResendVerificationEmailCest
         $I->seeRecord('common\models\User', [
             'email' => 'test@mail.com',
             'username' => 'test.test',
-            'status' => \common\models\User::STATUS_INACTIVE
+            'status' => \common\models\User::STATUS_INACTIVE,
         ]);
         $I->see('Check your email for further instructions.');
     }

@@ -2,9 +2,13 @@
 
 /**
  * @var ActiveDataProvider $dataProvider ;
+ * @var TaskFilter $taskFilter ;
  */
 
+use frontend\models\TaskFilter;
 use yii\data\ActiveDataProvider;
+use yii\bootstrap\ActiveField;
+use yii\bootstrap\ActiveForm;
 use yii\widgets\ListView;
 
 ?>
@@ -16,7 +20,7 @@ use yii\widgets\ListView;
             'itemView' => '_list',
             'layout' => "{items}\n<div class='new-task__pagination'>{pager}</div>",
             'itemOptions' => [
-                'tag' => 'div',
+                'tag' => 'label',
                 'class' => 'new-task__card',
             ],
             'pager' => [
@@ -29,7 +33,7 @@ use yii\widgets\ListView;
                 'nextPageLabel' => '',
                 'options' => [
                     'tag' => 'ul',
-                    'class' => 'new-task__pagination-list',
+                    'class' => 'visually-hidden checkbox__input',
                 ]
             ],
             'emptyText' => 'Новых задач нет',
@@ -43,68 +47,37 @@ use yii\widgets\ListView;
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
-        <form class="search-task__form" name="test" method="post" action="#">
-            <fieldset class="search-task__categories">
-                <legend>Категории</legend>
-                <label class="checkbox__legend">
-                    <input class="visually-hidden checkbox__input"
-                           type="checkbox" name="" value="" checked>
-                    <span>Курьерские услуги</span>
-                </label>
-                <label class="checkbox__legend">
-                    <input class="visually-hidden checkbox__input"
-                           type="checkbox" name="" value="" checked>
-                    <span>Грузоперевозки</span>
-                </label>
-                <label class="checkbox__legend">
-                    <input class="visually-hidden checkbox__input"
-                           type="checkbox" name="" value="">
-                    <span>Переводы</span>
-                </label>
-                <label class="checkbox__legend">
-                    <input class="visually-hidden checkbox__input"
-                           type="checkbox" name="" value="">
-                    <span>Строительство и ремонт</span>
-                </label>
-                <label class="checkbox__legend">
-                    <input class="visually-hidden checkbox__input"
-                           type="checkbox" name="" value="">
-                    <span>Выгул животных</span>
-                </label>
-            </fieldset>
-            <fieldset class="search-task__categories">
-                <legend>Дополнительно</legend>
-                <div>
-                    <label class="checkbox__legend">
-                        <input class="visually-hidden checkbox__input"
-                               type="checkbox" name="" value="">
-                        <span>Без исполнителя</span>
-                    </label>
-                </div>
-                <div>
-                    <label class="checkbox__legend">
-                        <input class="visually-hidden checkbox__input" id="7"
-                               type="checkbox" name="" value="" checked>
-                        <span>Удаленная работа</span>
-                    </label>
-                </div>
-            </fieldset>
-            <div class="field-container">
-                <label class="search-task__name" for="8">Период</label>
-                <select class="multiple-select input" id="8" size="1"
-                        name="time[]">
-                    <option value="day">За день</option>
-                    <option selected value="week">За неделю</option>
-                    <option value="month">За месяц</option>
-                </select>
-            </div>
-            <div class="field-container">
-                <label class="search-task__name" for="9">Поиск по
-                    названию</label>
-                <input class="input-middle input" id="9" type="search" name="q"
-                       placeholder="">
-            </div>
-            <button class="button" type="submit">Искать</button>
-        </form>
+        <?php $form = ActiveForm::begin([
+            'options' => [
+                'class' => 'search-task__form',
+            ],
+        ]); ?>
+        <fieldset class="search-task__categories">
+            <legend>Категории</legend>
+            <?= $form->field($taskFilter, 'showCategories')->checkboxList($taskFilter->categories) ?>
+        </fieldset>
+        <fieldset class="search-task__categories">
+            <legend>Дополнительно</legend>
+            <?= $form->field($taskFilter, 'isNotExecutor', [
+                'options' => ['class' => ''],
+                'checkboxTemplate' => '<label class="checkbox__legend">{input}<span>{labelTitle}</span></label>',
+            ])->checkbox(['class' => 'visually-hidden checkbox__input']) ?>
+            <?= $form->field($taskFilter, 'isRemoteWork', [
+                'options' => ['class' => ''],
+                'checkboxTemplate' => '<label class="checkbox__legend">{input}<span>{labelTitle}</span></label>',
+            ])->checkbox(['class' => 'visually-hidden checkbox__input']) ?>
+        </fieldset>
+        <?= $form->field($taskFilter, 'period',
+            [
+                'options' => ['class' => 'field-container'],
+                'labelOptions' => ['class' => 'search-task__name']
+            ])->dropDownList($taskFilter->periodLabels, ['class' => 'multiple-select input']); ?>
+        <?= $form->field($taskFilter, 'taskName',
+            [
+                'options' => ['class' => 'field-container'],
+                'labelOptions' => ['class' => 'search-task__name']
+            ])->textInput(['class' => 'input-middle input']); ?>
+        <button class="button" type="submit">Искать</button>
+        <?php ActiveForm::end() ?>
     </div>
 </section>

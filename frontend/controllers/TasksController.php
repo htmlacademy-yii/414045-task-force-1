@@ -7,6 +7,7 @@ use frontend\models\Task;
 use frontend\models\TaskFilter;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 use yii\web\Controller;
 
 class TasksController extends Controller
@@ -31,29 +32,37 @@ class TasksController extends Controller
 
     private function getDataProvider(TaskFilter $filter): ActiveDataProvider
     {
-        $query = Task::find()->where(
-            ['state' => TaskConstants::NEW_TASK_STATUS_NAME]
-        )->orderBy(['created_at' => SORT_DESC]);
+        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
 
         if (!empty($filter->showCategories)) {
-            $showCategoriesId = [];
-            foreach ($filter->showCategories as $categoryId) {
-                $showCategoriesId[] = $categoryId + 1;
-            }
-            $query = Task::find()->where(
-                [
-                    'state' => TaskConstants::NEW_TASK_STATUS_NAME,
-                    'category_id' => $showCategoriesId
-                ]
-            )->orderBy(['created_at' => SORT_DESC]);
+            $conditions['category_id'] = $this->getCategoriesFilter($filter->showCategories);
         }
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+        if ($filter->isNotExecutor) {
+            $conditions['executor_id'] = null;
+        }
+
+        if ($filter->isRemoteWork) {
+            $conditions['address'] = null;
+        }
+
+        if ($filter->period) {
+
+        }
+
+        return new ActiveDataProvider([
+            'query' => Task::find()->where($conditions)->orderBy(['created_at' => SORT_DESC]),
             'pagination' => [
                 'pageSize' => 5,
             ],
         ]);
-        return $dataProvider;
+    }
+
+    private function getCategoriesFilter($categoriesId): array {
+        $showCategoriesId = [];
+        foreach ($categoriesId as $categoryId) {
+            $showCategoriesId[] = $categoryId + 1;
+        }
+        return $showCategoriesId;
     }
 }

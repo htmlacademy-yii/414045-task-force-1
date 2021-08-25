@@ -13,7 +13,7 @@ class TaskFilter extends ActiveRecord
     public const PERIOD_MONTH = 'month';
 
     public array $categories = [];
-    public array $showCategories = [];
+    public array|string $showCategories = [];
     public bool $isNotExecutor = false;
     public bool $isRemoteWork = false;
     public string $period = '';
@@ -30,7 +30,6 @@ class TaskFilter extends ActiveRecord
         $this->categories = Category::find()->asArray()->select('title')->all();
         foreach ($this->categories as $key => $category) {
             $this->categories[$key] = $category['title'];
-            $this->showCategories[$category['title']] = false;
         }
     }
 

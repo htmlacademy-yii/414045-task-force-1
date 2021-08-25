@@ -54,7 +54,17 @@ use yii\widgets\ListView;
         ]); ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
-            <?= $form->field($taskFilter, 'showCategories')->checkboxList($taskFilter->categories) ?>
+            <?= $form->field($taskFilter, 'showCategories',
+                ['labelOptions' => ['label' => null]])->checkboxList($taskFilter->categories, [
+                'item' => function ($index, $label, $name, $checked, $value) {
+                    $checked = $checked ? 'checked' : '';
+                    return "<label class='checkbox__legend'>
+                            <input type='checkbox' {$checked} name='{$name}' value='{$value}' tabindex='3'>
+                            <span>{$label}</span>
+                            </label>";
+                }
+
+            ]) ?>
         </fieldset>
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>

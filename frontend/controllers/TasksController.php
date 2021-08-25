@@ -33,9 +33,11 @@ class TasksController extends Controller
     private function getDataProvider(TaskFilter $filter): ActiveDataProvider
     {
         $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
+        $conditionsDate = '';
+        $conditionsName = '';
 
         if (!empty($filter->showCategories)) {
-            $conditions['category_id'] = $this->getCategoriesFilter($filter->showCategories);
+            $conditions['category_id'] = $this->categoriesFilter($filter->showCategories);
         }
 
         if ($filter->isNotExecutor) {
@@ -47,22 +49,41 @@ class TasksController extends Controller
         }
 
         if ($filter->period) {
+            $conditionsDate = ['>', 'created_at', $this->dateFilter($filter->period)];
+        }
 
+        if ($filter->taskName) {
+            $conditionsName = ['like', 'title', $filter->taskName];
         }
 
         return new ActiveDataProvider([
-            'query' => Task::find()->where($conditions)->orderBy(['created_at' => SORT_DESC]),
+            'query' => Task::find()->where($conditions)->andWhere($conditionsDate)->andWhere($conditionsName)->orderBy(['created_at' => SORT_DESC]),
             'pagination' => [
                 'pageSize' => 5,
             ],
         ]);
     }
 
-    private function getCategoriesFilter($categoriesId): array {
+    private function categoriesFilter($categoriesId): array
+    {
         $showCategoriesId = [];
         foreach ($categoriesId as $categoryId) {
             $showCategoriesId[] = $categoryId + 1;
         }
         return $showCategoriesId;
+    }
+
+    private function dateFilter($period): string|bool
+    {
+        if ($period === TaskFilter::PERIOD_DAY) {
+            return date('Y-m-d H:i:s', strtotime('-1 day'));
+        }
+        if ($period === TaskFilter::PERIOD_WEEK) {
+            return date('Y-m-d H:i:s', strtotime('-7 day'));
+        }
+        if ($period === TaskFilter::PERIOD_MONTH) {
+            return date('Y-m-d H:i:s', strtotime('-1 month'));
+        }
+        return false;
     }
 }

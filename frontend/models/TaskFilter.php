@@ -19,8 +19,8 @@ class TaskFilter extends ActiveRecord
     public string $period = '';
     public array $periodLabels = [
         self::PERIOD_DAY => 'За день',
-        self::PERIOD_MONTH => 'За неделю',
-        self::PERIOD_WEEK => 'За месяц',
+        self::PERIOD_WEEK => 'За неделю',
+        self::PERIOD_MONTH => 'За месяц',
     ];
     public string $taskName = '';
 

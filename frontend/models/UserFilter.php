@@ -41,7 +41,7 @@ class UserFilter extends ActiveRecord
     public function rules()
     {
         return [
-            [['showCategories', 'categories', 'isFree', 'isOnline', 'hasReview', 'isFavorites'], 'safe'],
+            [['showCategories', 'categories', 'isFree', 'isOnline', 'hasReview', 'isFavorites', 'userName'], 'safe'],
         ];
     }
 }

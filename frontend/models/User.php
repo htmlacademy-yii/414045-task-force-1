@@ -156,7 +156,7 @@ class User extends ActiveRecord
      */
     public function getReviews(): ActiveQuery
     {
-        if ($this->role === UserConstants::USER_ROLE_EXECUTOR) {
+        if ($this->role === UserConstants::USER_ROLE_CUSTOMER) {
             return $this->hasMany(Review::class, ['sender_id' => 'id']);
         }
 

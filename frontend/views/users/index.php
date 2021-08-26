@@ -37,6 +37,10 @@ echo ListView::widget([
             'class' => 'new-task__pagination-list',
         ]
     ],
+    'emptyText' => 'Подходящих пользователей не найдено',
+    'emptyTextOptions' => [
+        'tag' => 'p'
+    ],
 ]); ?>
 <section class="search-task">
     <div class="search-task__wrapper">

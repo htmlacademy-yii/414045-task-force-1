@@ -11,6 +11,7 @@ class TaskFilter extends ActiveRecord
     public const PERIOD_DAY = 'day';
     public const PERIOD_WEEK = 'week';
     public const PERIOD_MONTH = 'month';
+    public const PERIOD_ALL = 'all';
 
     public array $categories = [];
     public array|string $showCategories = [];
@@ -21,6 +22,7 @@ class TaskFilter extends ActiveRecord
         self::PERIOD_DAY => 'За день',
         self::PERIOD_WEEK => 'За неделю',
         self::PERIOD_MONTH => 'За месяц',
+        self::PERIOD_ALL => 'За всё время'
     ];
     public string $taskName = '';
 

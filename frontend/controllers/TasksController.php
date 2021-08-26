@@ -33,31 +33,35 @@ class TasksController extends Controller
     private function getDataProvider(TaskFilter $filter): ActiveDataProvider
     {
         $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
-        $conditionsDate = '';
-        $conditionsName = '';
 
+        $query = Task::find()->where($conditions);
         if (!empty($filter->showCategories)) {
-            $conditions['category_id'] = $this->categoriesFilter($filter->showCategories);
+            $conditionCategoryId = ['category_id' => $this->categoriesFilter($filter->showCategories)];
+            $query->andWhere($conditionCategoryId);
         }
 
         if ($filter->isNotExecutor) {
-            $conditions['executor_id'] = null;
+            $isNotExecutor = ['executor_id' => null];
+            $query->andWhere($isNotExecutor);
         }
 
         if ($filter->isRemoteWork) {
-            $conditions['address'] = null;
+            $conditionsIsRemoteWork = ['address' => null];
+            $query->andWhere($conditionsIsRemoteWork);
         }
 
         if ($filter->period) {
-            $conditionsDate = ['>', 'created_at', $this->dateFilter($filter->period)];
+            $conditionsPeriod = ['>', 'created_at', $this->dateFilter($filter->period)];
+            $query->andWhere($conditionsPeriod);
         }
 
         if ($filter->taskName) {
             $conditionsName = ['like', 'title', $filter->taskName];
+            $query->andWhere($conditionsName);
         }
 
         return new ActiveDataProvider([
-            'query' => Task::find()->where($conditions)->andWhere($conditionsDate)->andWhere($conditionsName)->orderBy(['created_at' => SORT_DESC]),
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
             'pagination' => [
                 'pageSize' => 5,
             ],

@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use Components\Categories\Category;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use frontend\models\User;
@@ -16,7 +17,6 @@ class UsersController extends Controller
     public function actionIndex(): string
     {
         $userFilter = $this->getUserFilter();
-
         $dataProvider = $this->getDataProvider($userFilter);
 
         return $this->render('index', compact('dataProvider', 'userFilter'));
@@ -28,6 +28,7 @@ class UsersController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $userFilter->load(Yii::$app->request->post());
         }
+
         return $userFilter;
     }
 
@@ -41,13 +42,14 @@ class UsersController extends Controller
             's.user_id = users.id')->where($conditions);
 
         if (!empty($filter->showCategories)) {
-            $conditionCategoryId = ['category_id' => $this->categoriesFilter($filter->showCategories)];
+            $category = new Category();
+            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
             $query->filterWhere($conditionCategoryId);
         }
 
         if ($filter->isFree) {
             $conditionUserIsFree = ['!=', 'state', TaskConstants::NEW_TASK_STATUS_NAME];
-            $query->leftJoin(['t' => 'tasks'],'t.executor_id = users.id')->andWhere($conditionUserIsFree);
+            $query->leftJoin(['t' => 'tasks'], 't.executor_id = users.id')->andWhere($conditionUserIsFree);
         }
 
         if ($filter->isOnline) {
@@ -74,14 +76,5 @@ class UsersController extends Controller
                 'pageSize' => 5,
             ],
         ]);
-    }
-
-    private function categoriesFilter($categoriesId): array
-    {
-        $showCategoriesId = [];
-        foreach ($categoriesId as $categoryId) {
-            $showCategoriesId[] = $categoryId + 1;
-        }
-        return $showCategoriesId;
     }
 }

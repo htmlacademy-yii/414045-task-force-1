@@ -3,11 +3,10 @@
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
-use frontend\models\Category;
+use Components\Categories\Category;
 
 class TaskFilter extends ActiveRecord
 {
-
     public const PERIOD_DAY = 'day';
     public const PERIOD_WEEK = 'week';
     public const PERIOD_MONTH = 'month';
@@ -29,10 +28,7 @@ class TaskFilter extends ActiveRecord
     public function __construct($config = [])
     {
         parent::__construct($config);
-        $this->categories = Category::find()->asArray()->select('title')->all();
-        foreach ($this->categories as $key => $category) {
-            $this->categories[$key] = $category['title'];
-        }
+        $this->categories = Category::getCategoryNames();
     }
 
     public function attributeLabels()

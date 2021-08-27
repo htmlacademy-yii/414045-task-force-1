@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use Components\Categories\Category;
 use Components\Constants\TaskConstants;
 use frontend\models\Task;
 use frontend\models\TaskFilter;
@@ -15,7 +16,6 @@ class TasksController extends Controller
     public function actionIndex(): string
     {
         $taskFilter = $this->getTaskFilter();
-
         $dataProvider = $this->getDataProvider($taskFilter);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
@@ -27,17 +27,19 @@ class TasksController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $taskFilter->load(Yii::$app->request->post());
         }
+
         return $taskFilter;
     }
 
     private function getDataProvider(TaskFilter $filter): ActiveDataProvider
     {
         $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
-
         $query = Task::find()->where($conditions);
+
         if (!empty($filter->showCategories)) {
-            $conditionCategoryId = ['category_id' => $this->categoriesFilter($filter->showCategories)];
-            $query->andWhere($conditionCategoryId);
+            $category = new Category();
+            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
+            $query->filterWhere($conditionCategoryId);
         }
 
         if ($filter->isNotExecutor) {
@@ -68,26 +70,13 @@ class TasksController extends Controller
         ]);
     }
 
-    private function categoriesFilter($categoriesId): array
-    {
-        $showCategoriesId = [];
-        foreach ($categoriesId as $categoryId) {
-            $showCategoriesId[] = $categoryId + 1;
-        }
-        return $showCategoriesId;
-    }
-
     private function dateFilter($period): string|bool
     {
-        if ($period === TaskFilter::PERIOD_DAY) {
-            return date('Y-m-d H:i:s', strtotime('-1 day'));
-        }
-        if ($period === TaskFilter::PERIOD_WEEK) {
-            return date('Y-m-d H:i:s', strtotime('-7 day'));
-        }
-        if ($period === TaskFilter::PERIOD_MONTH) {
-            return date('Y-m-d H:i:s', strtotime('-1 month'));
-        }
-        return false;
+        return match ($period) {
+            TaskFilter::PERIOD_DAY => date('Y-m-d H:i:s', strtotime('-1 day')),
+            TaskFilter::PERIOD_WEEK => date('Y-m-d H:i:s', strtotime('-7 day')),
+            TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
+            TaskFilter::PERIOD_ALL => false,
+        };
     }
 }

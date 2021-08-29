@@ -7,7 +7,7 @@
         <a href="user.html"><img src="<?= $model->avatar_src ?? './img/user.png' ?>"
                                  width="65" height="65"></a>
         <span><?= count($model->tasks) ?> заданий</span>
-        <span><?= count($model->responses) ?> отзывов</span>
+        <span><?= count($model->reviews) ?> отзывов</span>
     </div>
     <div class="feedback-card__top--name user__search-card">
         <p class="link-name"><a href="user.html"

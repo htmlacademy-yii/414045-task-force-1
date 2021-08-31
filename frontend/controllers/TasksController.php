@@ -21,6 +21,18 @@ class TasksController extends Controller
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
 
+    public function actionView($id): string
+    {
+        $task = $this->getTask($id);
+
+        return $this->render('view', compact('task'));
+    }
+
+    private function getTask($id): ActiveQuery
+    {
+        return Task::find()->where($id);
+    }
+
     private function getTaskFilter(): TaskFilter
     {
         $taskFilter = new TaskFilter();

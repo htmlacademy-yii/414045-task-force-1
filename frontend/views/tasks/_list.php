@@ -1,9 +1,14 @@
 <?php
+/**
+ * @var Task $model;
+ */
+
+use frontend\models\Task;
 
 ?>
 
 <div class="new-task__title">
-    <a href="view.html" class="link-regular">
+    <a href="tasks/view/<?= $model->id ?>" class="link-regular">
         <h2><?= $model->title ?></h2></a>
     <a class="new-task__type link-regular" href="#"><p>
             <?= $model->category->title ?> </p></a>

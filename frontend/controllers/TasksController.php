@@ -3,12 +3,13 @@
 namespace frontend\controllers;
 
 use Components\Categories\Category;
+use Components\Constants\CategoryConstants;
 use Components\Constants\TaskConstants;
 use frontend\models\Task;
 use frontend\models\TaskFilter;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\web\Controller;
 
 class TasksController extends Controller
@@ -24,13 +25,17 @@ class TasksController extends Controller
     public function actionView($id): string
     {
         $task = $this->getTask($id);
+        $city = $task->city->title;
+        $categoryName = $task->category->title;
+        $categoryMap = array_flip(CategoryConstants::NAME_MAP);
+        $categoryClassName = $categoryMap[$categoryName];
 
-        return $this->render('view', compact('task'));
+        return $this->render('view', compact('task', 'city', 'categoryName', 'categoryClassName'));
     }
 
-    private function getTask($id): ActiveQuery
+    private function getTask($id): array|ActiveRecord|null
     {
-        return Task::find()->where($id);
+        return Task::findOne($id);
     }
 
     private function getTaskFilter(): TaskFilter

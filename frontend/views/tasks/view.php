@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var Task $task ;
+ * @var string $city ;
+ * @var string $categoryName ;
+ * @var string $categoryClassName ;
+ */
 
 ?>
 
@@ -7,22 +13,19 @@
         <div class="content-view__card-wrapper">
             <div class="content-view__header">
                 <div class="content-view__headline">
-                    <h1>Убрать квартиру после вписки</h1>
+                    <h1><?= $task->title ?></h1>
                     <span>Размещено в категории
-                                    <a href="browse.html" class="link-regular">Уборка</a>
+                                    <a href="browse.html" class="link-regular"><?= $categoryName ?></a>
                                     25 минут назад</span>
                 </div>
-                <b class="new-task__price new-task__price--clean content-view-price">1500<b> ₽</b></b>
-                <div class="new-task__icon new-task__icon--clean content-view-icon"></div>
+                <b class="new-task__price new-task__price--<?= $categoryClassName ?> content-view-price"><?= $task->price ?><b>
+                        ₽</b></b>
+                <div class="new-task__icon new-task__icon--<?= $categoryClassName ?> content-view-icon"></div>
             </div>
             <div class="content-view__description">
                 <h3 class="content-view__h3">Общее описание</h3>
                 <p>
-                    Внезапно, ключевые особенности структуры проекта неоднозначны и будут подвергнуты целой серии
-                    независимых исследований. Следует отметить, что высококачественный прототип будущего проекта, в
-                    своём классическом представлении, допускает внедрение своевременного выполнения сверхзадачи.
-                    Кстати, некоторые особенности внутренней политики будут функционально разнесены на независимые
-                    элементы.
+                    <?= $task->description ?>
                 </p>
             </div>
             <div class="content-view__attach">
@@ -39,8 +42,8 @@
                     </div>
                     <div class="content-view__address">
                         <span class="address__town">Москва</span><br>
-                        <span>Новый арбат, 23 к. 1</span>
-                        <p>Вход под арку, код домофона 1122</p>
+                        <span><?= $task->address ?></span>
+                        <p><?= $task->address_comment ?></p>
                     </div>
                 </div>
             </div>

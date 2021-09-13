@@ -5,19 +5,19 @@ namespace frontend\controllers;
 use Components\Categories\Category;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
+use frontend\models\Review;
 use frontend\models\User;
 use frontend\models\UserFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use Yii;
-use yii\db\ActiveQuery;
 
 class UsersController extends Controller
 {
     public function actionIndex(): string
     {
         $userFilter = $this->getUserFilter();
-        $dataProvider = $this->getDataProvider($userFilter);
+        $dataProvider = $this->getDataProviderFilter($userFilter);
 
         return $this->render('index', compact('dataProvider', 'userFilter'));
     }
@@ -32,7 +32,7 @@ class UsersController extends Controller
         return $userFilter;
     }
 
-    private function getDataProvider(UserFilter $filter): ActiveDataProvider
+    private function getDataProviderFilter(UserFilter $filter): ActiveDataProvider
     {
         $conditions = [
             'role' => UserConstants::USER_ROLE_EXECUTOR,
@@ -69,6 +69,26 @@ class UsersController extends Controller
             $conditionName = ['like', 'name', $filter->userName];
             $query->andWhere($conditionName);
         }
+
+        return new ActiveDataProvider([
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
+    }
+
+    public function actionView($id): string
+    {
+        $user = User::findOne($id);
+        $dataProvider = $this->getDataProviderReviews($user->id);
+
+        return $this->render('view', compact('user', 'dataProvider'));
+    }
+
+    private function getDataProviderReviews($userId)
+    {
+        $query = Review::find()->where(['addressee_id' => $userId]);
 
         return new ActiveDataProvider([
             'query' => $query->orderBy(['created_at' => SORT_DESC]),

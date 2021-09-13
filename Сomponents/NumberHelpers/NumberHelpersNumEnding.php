@@ -1,16 +1,16 @@
 <?php
 
 
-namespace Components\Time;
+namespace Components\NumberHelpers;
 
 /**
- * Class TimeNumEnding
+ * Class NumberHelpersNumEnding
  *
  * Класс для получения правильных окончаний числительных
  *
  * @package Components\Time
  */
-class TimeNumEnding extends Time
+class NumberHelpersNumEnding
 {
     /**
      * @param int $number числительное для которого нужно существительное в правильном склонении

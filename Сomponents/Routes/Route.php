@@ -15,4 +15,14 @@ class Route
     {
         return Url::to(['/users']);
     }
+
+    public static function getTaskView($taskId): string
+    {
+        return Url::to(['/tasks/view/' . $taskId]);
+    }
+
+    public static function getUserView($userId): string
+    {
+        return Url::to(['/users/view/' . $userId]);
+    }
 }

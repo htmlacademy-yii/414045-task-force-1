@@ -53,7 +53,7 @@ class Portfolio extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
+            'user_id' => 'UserHelper ID',
             'img_src' => 'Img Src',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -61,7 +61,7 @@ class Portfolio extends ActiveRecord
     }
 
     /**
-     * Gets query for [[User]].
+     * Gets query for [[UserHelper]].
      *
      * @return ActiveQuery
      */

@@ -17,7 +17,7 @@ use yii\widgets\ListView;
         <h1>Новые задания</h1>
         <?php echo ListView::widget([
             'dataProvider' => $dataProvider,
-            'itemView' => '_list',
+            'itemView' => '_taskList',
             'layout' => "{items}\n<div class='new-task__pagination'>{pager}</div>",
             'itemOptions' => [
                 'tag' => 'label',

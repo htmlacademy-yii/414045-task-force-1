@@ -9,7 +9,7 @@ use frontend\models\Task;
 use frontend\models\TaskFilter;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\web\Controller;
 
 class TasksController extends Controller
@@ -17,25 +17,26 @@ class TasksController extends Controller
     public function actionIndex(): string
     {
         $taskFilter = $this->getTaskFilter();
-        $dataProvider = $this->getDataProvider($taskFilter);
+        $dataProvider = $this->getTaskDataProvider($taskFilter);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
 
     public function actionView($id): string
     {
-        $task = $this->getTask($id);
+        $task = Task::findOne($id);
+        $customer = $task->customer;
+        $countCustomerTasks = count($customer->tasks);
+        $countResponses = count($task->responses);
+        $dataProvider = $this->getResponsesDataProvider($task->id);
         $city = $task->city->title;
         $categoryName = $task->category->title;
         $categoryMap = array_flip(CategoryConstants::NAME_MAP);
         $categoryClassName = $categoryMap[$categoryName];
 
-        return $this->render('view', compact('task', 'city', 'categoryName', 'categoryClassName'));
-    }
-
-    private function getTask($id): array|ActiveRecord|null
-    {
-        return Task::findOne($id);
+        return $this->render('view',
+            compact('task', 'customer', 'dataProvider', 'countCustomerTasks', 'countResponses', 'city', 'categoryName',
+                'categoryClassName'));
     }
 
     private function getTaskFilter(): TaskFilter
@@ -48,7 +49,7 @@ class TasksController extends Controller
         return $taskFilter;
     }
 
-    private function getDataProvider(TaskFilter $filter): ActiveDataProvider
+    private function getTaskDataProvider(TaskFilter $filter): ActiveDataProvider
     {
         $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
         $query = Task::find()->where($conditions);
@@ -95,5 +96,20 @@ class TasksController extends Controller
             TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
             TaskFilter::PERIOD_ALL => false,
         };
+    }
+
+    private function getResponsesDataProvider($taskId): ActiveDataProvider
+    {
+        $query = (new Query())->select(['user_id', 'content', 'price', 'name', 'avatar_src', 'rating'])
+            ->from('responses')
+            ->where(['task_id' => $taskId])
+            ->leftJoin(['u' => 'users'], 'u.id = responses.user_id');
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
     }
 }

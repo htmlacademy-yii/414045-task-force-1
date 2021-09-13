@@ -34,8 +34,8 @@ CREATE TABLE categories
 
 CREATE TABLE users_specialty
 (
-    id           int PRIMARY KEY AUTO_INCREMENT,
-    user_id      int NOT NULL,
+    id          int PRIMARY KEY AUTO_INCREMENT,
+    user_id     int NOT NULL,
     category_id int NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (category_id) REFERENCES categories (id)
@@ -76,8 +76,8 @@ CREATE TABLE tasks
     city_id         int,
     address         varchar(256),
     address_comment varchar(256),
-    created_at     datetime default current_timestamp,
-    updated_at     datetime default current_timestamp on update current_timestamp ,
+    created_at      datetime default current_timestamp,
+    updated_at      datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (category_id) REFERENCES categories (id),
@@ -100,7 +100,7 @@ CREATE TABLE messages
     sender_id    int  NOT NULL,
     addressee_id int  NOT NULL,
     content      text NOT NULL,
-    created_at     datetime default current_timestamp,
+    created_at   datetime default current_timestamp,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (addressee_id) REFERENCES users (id)
 );
@@ -113,7 +113,7 @@ CREATE TABLE reviews
     task_id      int UNIQUE NOT NULL,
     rating       int        NOT NULL,
     content      text       NOT NULL,
-    created_at     datetime default current_timestamp,
+    created_at   datetime default current_timestamp,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (addressee_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id)
@@ -125,8 +125,9 @@ CREATE TABLE responses
     task_id    int NOT NULL,
     user_id    int NOT NULL,
     content    text,
-    created_at     datetime default current_timestamp,
-    updated_at     datetime default current_timestamp on update current_timestamp,
+    price      int,
+    created_at datetime default current_timestamp,
+    updated_at datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );

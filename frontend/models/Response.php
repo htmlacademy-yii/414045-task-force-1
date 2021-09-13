@@ -63,7 +63,7 @@ class Response extends ActiveRecord
         return [
             'id' => 'ID',
             'task_id' => 'Task ID',
-            'user_id' => 'User ID',
+            'user_id' => 'UserHelper ID',
             'content' => 'Content',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -81,7 +81,7 @@ class Response extends ActiveRecord
     }
 
     /**
-     * Gets query for [[User]].
+     * Gets query for [[UserHelper]].
      *
      * @return ActiveQuery
      */

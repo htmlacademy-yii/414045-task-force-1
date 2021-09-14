@@ -1,6 +1,7 @@
 <?php
 
 use Components\Constants\UserConstants;
+use Components\Routes\Route;
 use frontend\models\Task;
 use frontend\models\User;
 use yii\data\ActiveDataProvider;
@@ -14,6 +15,7 @@ use yii\widgets\ListView;
  * @var int $countCustomerTasks ;
  * @var int $countResponses ;
  * @var string $city ;
+ * @var int $categoryId ;
  * @var string $categoryName ;
  * @var string $categoryClassName ;
  */
@@ -27,7 +29,7 @@ use yii\widgets\ListView;
                 <div class="content-view__headline">
                     <h1><?= $task->title ?></h1>
                     <span>Размещено в категории
-                                    <a href="browse.html" class="link-regular"><?= $categoryName ?></a>
+                                    <a href="<?= Route::getTasks($categoryId) ?>" class="link-regular"><?= $categoryName ?></a>
                                     25 минут назад</span>
                 </div>
                 <b class="new-task__price new-task__price--<?= $categoryClassName ?> content-view-price"><?= $task->price ?>

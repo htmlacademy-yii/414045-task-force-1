@@ -22,28 +22,14 @@ class TasksController extends Controller
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
 
-    public function actionView($id): string
-    {
-        $task = Task::findOne($id);
-        $customer = $task->customer;
-        $countCustomerTasks = count($customer->tasks);
-        $countResponses = count($task->responses);
-        $dataProvider = $this->getResponsesDataProvider($task->id);
-        $city = $task->city->title;
-        $categoryName = $task->category->title;
-        $categoryMap = array_flip(CategoryConstants::NAME_MAP);
-        $categoryClassName = $categoryMap[$categoryName];
-
-        return $this->render('view',
-            compact('task', 'customer', 'dataProvider', 'countCustomerTasks', 'countResponses', 'city', 'categoryName',
-                'categoryClassName'));
-    }
-
     private function getTaskFilter(): TaskFilter
     {
         $taskFilter = new TaskFilter();
         if (Yii::$app->request->getIsPost()) {
             $taskFilter->load(Yii::$app->request->post());
+        }
+        if (Yii::$app->request->get()) {
+            $taskFilter->showCategories[] = Yii::$app->request->get('category_id') - 1;
         }
 
         return $taskFilter;
@@ -96,6 +82,31 @@ class TasksController extends Controller
             TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
             TaskFilter::PERIOD_ALL => false,
         };
+    }
+
+    /**
+     * Отображает страницу просмотра задачи
+     *
+     * @param int $id id задачи
+     * @return string
+     */
+    public function actionView(int $id): string
+    {
+        $task = Task::findOne($id);
+        $customer = $task->customer;
+        $countCustomerTasks = count($customer->tasks);
+        $countResponses = count($task->responses);
+        $dataProvider = $this->getResponsesDataProvider($task->id);
+        $city = $task->city->title;
+        $categoryId = $task->category->id;
+        $categoryName = $task->category->title;
+        $categoryMap = array_flip(CategoryConstants::NAME_MAP);
+        $categoryClassName = $categoryMap[$categoryName];
+
+        return $this->render('view',
+            compact('task', 'customer', 'dataProvider', 'countCustomerTasks', 'countResponses', 'city', 'categoryId',
+                'categoryName',
+                'categoryClassName'));
     }
 
     private function getResponsesDataProvider($taskId): ActiveDataProvider

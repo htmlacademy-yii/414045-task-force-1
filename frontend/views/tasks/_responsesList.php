@@ -11,9 +11,9 @@ $rating = UserHelper::getCountRatingStars($model['rating']);
 ?>
 
 <div class="feedback-card__top">
-    <a href="user.html"><img src="<?= $model['avatar_src'] ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55" height="55"></a>
+    <a href="<?= \Components\Routes\Route::getUserView($model['user_id']) ?>"><img src="<?= $model['avatar_src'] ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55" height="55"></a>
     <div class="feedback-card__top--name">
-        <p><a href="user.html" class="link-regular"><?= $model['name'] ?></a></p>
+        <p><a href="<?= \Components\Routes\Route::getUserView($model['user_id']) ?>" class="link-regular"><?= $model['name'] ?></a></p>
         <?php for ($i = 0; $i < 5; $i++): ?>
             <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
         <?php endfor; ?>

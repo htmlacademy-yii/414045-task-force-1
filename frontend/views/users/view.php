@@ -1,10 +1,13 @@
 <?php
 /**
  * @var User $user ;
+ * @var string $userAge ;
+ * @var string $countUserTasksDone
  * @var ActiveDataProvider $dataProvider ;
  */
 
 use Components\Constants\UserConstants;
+use Components\Routes\Route;
 use Components\Users\UserHelper;
 use frontend\models\User;
 use yii\data\ActiveDataProvider;
@@ -20,14 +23,14 @@ $rating = UserHelper::getCountRatingStars($user->rating);
                  alt="Аватар пользователя">
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>
-                <p>Россия, Санкт-Петербург, 30 лет</p>
+                <p>Россия, Санкт-Петербург, <?= $userAge ?></p>
                 <div class="profile-mini__name five-stars__rate">
                     <?php for ($i = 0; $i < 5; $i++): ?>
                         <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
                     <?php endfor; ?>
                     <b><?= $rating ?></b>
                 </div>
-                <b class="done-task">Выполнил 5 заказов</b><b class="done-review">Получил <?= count($user->reviews) ?>
+                <b class="done-task">Выполнил <?= $countUserTasksDone ?> заказов</b><b class="done-review">Получил <?= count($user->reviews) ?>
                     отзывов</b>
             </div>
             <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
@@ -43,7 +46,7 @@ $rating = UserHelper::getCountRatingStars($user->rating);
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
                     <?php foreach ($user->categories as $specialty): ?>
-                        <a href="browse.html" class="link-regular"><?= $specialty->title ?></a>
+                        <a href="<?= Route::getTasks($specialty->id) ?>" class="link-regular"><?= $specialty->title ?></a>
                     <?php endforeach; ?>
                 </div>
                 <h3 class="content-view__h3">Контакты</h3>

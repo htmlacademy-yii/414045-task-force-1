@@ -11,6 +11,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 class TasksController extends Controller
 {
@@ -89,9 +90,14 @@ class TasksController extends Controller
      *
      * @param int $id id задачи
      * @return string
+     * @throws HttpException
      */
-    public function actionView(int $id): string
+    public function actionView(int $id = null): string
     {
+        if (!$id || !Task::findOne($id)) {
+            throw new HttpException(404, 'Задача не найдена.');
+        }
+
         $task = Task::findOne($id);
         $customer = $task->customer;
         $countCustomerTasks = count($customer->tasks);

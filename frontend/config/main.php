@@ -38,7 +38,7 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'maxSourceLines' => 20,
         ],
         /*
         'urlManager' => [

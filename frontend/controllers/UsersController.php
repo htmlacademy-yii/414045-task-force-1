@@ -5,12 +5,15 @@ namespace frontend\controllers;
 use Components\Categories\Category;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
+use Components\Time\TimeDifference;
 use frontend\models\Review;
+use frontend\models\Task;
 use frontend\models\User;
 use frontend\models\UserFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use Yii;
+use yii\web\HttpException;
 
 class UsersController extends Controller
 {
@@ -20,6 +23,24 @@ class UsersController extends Controller
         $dataProvider = $this->getDataProviderFilter($userFilter);
 
         return $this->render('index', compact('dataProvider', 'userFilter'));
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function actionView(int $id = null): string
+    {
+        if (!$id || User::findOne($id)->role !== UserConstants::USER_ROLE_EXECUTOR) {
+            throw new HttpException(404, 'Пользователь не найден.');
+        }
+
+        $user = User::findOne($id);
+        $timeDiff = new TimeDifference(date('Y-m-d'), $user->birthday);
+        $userAge = $timeDiff->getCountTimeUnits(['year' => 'Y']);
+        $countUserTasksDone = Task::find()->where(['executor_id' => $user->id, 'state' => TaskConstants::DONE_TASK_STATUS_NAME])->count();
+        $dataProvider = $this->getDataProviderReviews($user->id);
+
+        return $this->render('view', compact('user', 'userAge', 'countUserTasksDone', 'dataProvider'));
     }
 
     private function getUserFilter(): UserFilter
@@ -76,14 +97,6 @@ class UsersController extends Controller
                 'pageSize' => 5,
             ],
         ]);
-    }
-
-    public function actionView($id): string
-    {
-        $user = User::findOne($id);
-        $dataProvider = $this->getDataProviderReviews($user->id);
-
-        return $this->render('view', compact('user', 'dataProvider'));
     }
 
     private function getDataProviderReviews($userId)

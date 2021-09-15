@@ -29,7 +29,7 @@ class TasksController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $taskFilter->load(Yii::$app->request->post());
         }
-        if (Yii::$app->request->get()) {
+        if (Yii::$app->request->get('category_id')) {
             $taskFilter->showCategories[] = Yii::$app->request->get('category_id') - 1;
         }
 

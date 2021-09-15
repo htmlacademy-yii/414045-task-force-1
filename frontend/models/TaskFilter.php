@@ -13,7 +13,7 @@ class TaskFilter extends ActiveRecord
     public const PERIOD_ALL = 'all';
 
     public array $categories = [];
-    public array $showCategories = [];
+    public array|string $showCategories = [];
     public bool $isNotExecutor = false;
     public bool $isRemoteWork = false;
     public string $period = '';

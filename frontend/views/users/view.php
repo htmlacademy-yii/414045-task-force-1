@@ -66,6 +66,7 @@ $rating = UserHelper::getCountRatingStars($user->rating);
             </div>
         </div>
     </div>
+    <?php if (count($user->reviews)): ?>
     <div class="content-view__feedback">
         <h2>Отзывы<span>(<?= count($user->reviews) ?>)</span></h2>
         <?php echo ListView::widget([
@@ -78,9 +79,9 @@ $rating = UserHelper::getCountRatingStars($user->rating);
             'itemOptions' => [
                 'class' => 'feedback-card__reviews',
             ],
-            'emptyText' => 'У данного пользователя нет отзывов'
         ]) ?>
     </div>
+    <?php endif; ?>
 </section>
 <section class="connect-desk">
     <div class="connect-desk__chat">

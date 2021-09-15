@@ -33,8 +33,8 @@ use yii\widgets\ListView;
                 'nextPageLabel' => '',
                 'options' => [
                     'tag' => 'ul',
-                    'class' => 'visually-hidden checkbox__input',
-                ]
+                    'class' => 'new-task__pagination-list',
+                ],
             ],
             'emptyText' => 'Новых задач нет',
             'emptyTextOptions' => [

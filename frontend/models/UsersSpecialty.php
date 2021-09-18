@@ -57,7 +57,7 @@ class UsersSpecialty extends ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'UserHelper ID',
-            'category_id' => 'Category ID',
+            'category_id' => 'CategoryHelper ID',
         ];
     }
 
@@ -72,7 +72,7 @@ class UsersSpecialty extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Category]].
+     * Gets query for [[CategoryHelper]].
      *
      * @return ActiveQuery
      */

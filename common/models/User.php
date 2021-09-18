@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * UserHelper model
+ * User model
  *
  * @property integer $id
  * @property string $username

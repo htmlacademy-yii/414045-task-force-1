@@ -1,19 +1,20 @@
 <?php
 /**
- * @var User $model ;
+ * @var Response $model ;
  */
 
 use Components\Constants\UserConstants;
+use Components\Routes\Route;
 use Components\Users\UserHelper;
-use frontend\models\User;
+use frontend\models\Response;
 
-$rating = UserHelper::getCountRatingStars($model['rating']);
+$rating = UserHelper::getCountRatingStars($model->user->rating);
 ?>
 
 <div class="feedback-card__top">
-    <a href="<?= \Components\Routes\Route::getUserView($model['user_id']) ?>"><img src="<?= $model['avatar_src'] ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55" height="55"></a>
+    <a href="<?= Route::getUserView($model->user_id) ?>"><img src="<?= $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55" height="55"></a>
     <div class="feedback-card__top--name">
-        <p><a href="<?= \Components\Routes\Route::getUserView($model['user_id']) ?>" class="link-regular"><?= $model['name'] ?></a></p>
+        <p><a href="<?= Route::getUserView($model->user_id) ?>" class="link-regular"><?= $model->user->name ?></a></p>
         <?php for ($i = 0; $i < 5; $i++): ?>
             <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
         <?php endfor; ?>
@@ -23,9 +24,9 @@ $rating = UserHelper::getCountRatingStars($model['rating']);
 </div>
 <div class="feedback-card__content">
     <p>
-        <?= $model['content'] ?>
+        <?= $model->content ?>
     </p>
-    <span><?= $model['price'] ?> ₽</span>
+    <span><?= $model->price ?> ₽</span>
 </div>
 <div class="feedback-card__actions">
     <a class="button__small-color response-button button"

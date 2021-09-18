@@ -4,7 +4,7 @@ namespace Components\Categories;
 
 use Components\Constants\CategoryConstants;
 
-class Category
+class CategoryHelper
 {
     public static function getCategoryNames(): array
     {

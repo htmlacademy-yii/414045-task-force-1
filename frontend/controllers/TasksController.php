@@ -2,9 +2,8 @@
 
 namespace frontend\controllers;
 
-use Components\Categories\Category;
 use Components\Constants\CategoryConstants;
-use Components\Constants\TaskConstants;
+use frontend\models\Response;
 use frontend\models\Task;
 use frontend\models\TaskFilter;
 use Yii;
@@ -15,10 +14,12 @@ use yii\web\HttpException;
 
 class TasksController extends Controller
 {
+    public const TASKS_PAGINATION_SIZE = 5;
+
     public function actionIndex(): string
     {
         $taskFilter = $this->getTaskFilter();
-        $dataProvider = $this->getTaskDataProvider($taskFilter);
+        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
@@ -36,55 +37,6 @@ class TasksController extends Controller
         return $taskFilter;
     }
 
-    private function getTaskDataProvider(TaskFilter $filter): ActiveDataProvider
-    {
-        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
-        $query = Task::find()->where($conditions);
-
-        if (!empty($filter->showCategories)) {
-            $category = new Category();
-            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
-            $query->filterWhere($conditionCategoryId);
-        }
-
-        if ($filter->isNotExecutor) {
-            $isNotExecutor = ['executor_id' => null];
-            $query->andWhere($isNotExecutor);
-        }
-
-        if ($filter->isRemoteWork) {
-            $conditionsIsRemoteWork = ['address' => null];
-            $query->andWhere($conditionsIsRemoteWork);
-        }
-
-        if ($filter->period) {
-            $conditionsPeriod = ['>', 'created_at', $this->dateFilter($filter->period)];
-            $query->andWhere($conditionsPeriod);
-        }
-
-        if ($filter->taskName) {
-            $conditionsName = ['like', 'title', $filter->taskName];
-            $query->andWhere($conditionsName);
-        }
-
-        return new ActiveDataProvider([
-            'query' => $query->orderBy(['created_at' => SORT_DESC]),
-            'pagination' => [
-                'pageSize' => 5,
-            ],
-        ]);
-    }
-
-    private function dateFilter($period): string|bool
-    {
-        return match ($period) {
-            TaskFilter::PERIOD_DAY => date('Y-m-d H:i:s', strtotime('-1 day')),
-            TaskFilter::PERIOD_WEEK => date('Y-m-d H:i:s', strtotime('-7 day')),
-            TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
-            TaskFilter::PERIOD_ALL => false,
-        };
-    }
-
     /**
      * Отображает страницу просмотра задачи
      *
@@ -92,17 +44,18 @@ class TasksController extends Controller
      * @return string
      * @throws HttpException
      */
-    public function actionView(int $id = null): string
+    public function actionGetView(int $id = null): string
     {
-        if (!$id || !Task::findOne($id)) {
+        $task = Task::findOne($id);
+
+        if ($id === null || $task === null) {
             throw new HttpException(404, 'Задача не найдена.');
         }
 
-        $task = Task::findOne($id);
         $customer = $task->customer;
         $countCustomerTasks = count($customer->tasks);
         $countResponses = count($task->responses);
-        $dataProvider = $this->getResponsesDataProvider($task->id);
+        $dataProvider = Response::getResponsesDataProvider($task->id);
         $city = $task->city->title;
         $categoryId = $task->category->id;
         $categoryName = $task->category->title;
@@ -110,23 +63,16 @@ class TasksController extends Controller
         $categoryClassName = $categoryMap[$categoryName];
 
         return $this->render('view',
-            compact('task', 'customer', 'dataProvider', 'countCustomerTasks', 'countResponses', 'city', 'categoryId',
+            compact(
+                'task',
+                'customer',
+                'dataProvider',
+                'countCustomerTasks',
+                'countResponses',
+                'city',
+                'categoryId',
                 'categoryName',
-                'categoryClassName'));
-    }
-
-    private function getResponsesDataProvider($taskId): ActiveDataProvider
-    {
-        $query = (new Query())->select(['user_id', 'content', 'price', 'name', 'avatar_src', 'rating'])
-            ->from('responses')
-            ->where(['task_id' => $taskId])
-            ->leftJoin(['u' => 'users'], 'u.id = responses.user_id');
-
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 5,
-            ],
-        ]);
+                'categoryClassName'
+            ));
     }
 }

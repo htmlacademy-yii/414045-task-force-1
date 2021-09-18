@@ -3,7 +3,7 @@
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
-use Components\Categories\Category;
+use Components\Categories\CategoryHelper;
 
 class TaskFilter extends ActiveRecord
 {
@@ -28,7 +28,7 @@ class TaskFilter extends ActiveRecord
     public function __construct($config = [])
     {
         parent::__construct($config);
-        $this->categories = Category::getCategoryNames();
+        $this->categories = CategoryHelper::getCategoryNames();
     }
 
     public function attributeLabels()

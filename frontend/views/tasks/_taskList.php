@@ -3,7 +3,7 @@
  * @var Task $model;
  */
 
-use Components\Categories\Category;
+use Components\Categories\CategoryHelper;
 use Components\Routes\Route;
 use frontend\models\Task;
 
@@ -15,7 +15,7 @@ use frontend\models\Task;
     <a class="new-task__type link-regular" href="<?= Route::getTasks($model->category_id) ?>"><p>
             <?= $model->category->title ?> </p></a>
 </div>
-<div class="new-task__icon new-task__icon--<?= Category::getCategoryName($model->category->title) ?>"></div>
+<div class="new-task__icon new-task__icon--<?= CategoryHelper::getCategoryName($model->category->title) ?>"></div>
 <p class="new-task_description"> <?= $model->description ?> </p>
 <b class="new-task__price new-task__price--translation"><?= $model->price ?>
     <b> ₽</b></b>

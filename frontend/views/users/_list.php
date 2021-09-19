@@ -1,24 +1,24 @@
 <?php
 
+use Components\Constants\UserConstants;
+use Components\Users\UserHelper;
+
+$rating = UserHelper::getCountRatingStars($model->rating)
 ?>
 
 <div class="feedback-card__top">
     <div class="user__search-icon">
-        <a href="user.html"><img src="<?= $model->avatar_src ?? './img/user.png' ?>"
-                                 width="65" height="65"></a>
+        <a href="/users/view/<?= $model->id ?>"><img src="<?= $model->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
+                                                     width="65" height="65"></a>
         <span><?= count($model->tasks) ?> заданий</span>
         <span><?= count($model->reviews) ?> отзывов</span>
     </div>
     <div class="feedback-card__top--name user__search-card">
-        <p class="link-name"><a href="user.html"
-                                class="link-regular"><?= $model->name ?></a>
+        <p class="link-name">
+            <a href="/users/view/<?= $model->id ?>" class="link-regular"><?= $model->name ?></a>
         </p>
-        <?php for ($i = 1; $i <= 5; $i++) : ?>
-            <?php if ($model->rating > $i * 100) : ?>
-                <span></span>
-            <?php else: ?>
-                <span class="star-disabled"></span>
-            <?php endif; ?>
+        <?php for ($i = 0; $i < 5; $i++): ?>
+            <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
         <?php endfor; ?>
         <b><?= $model->rating / 100 ?></b>
         <p class="user__search-content">

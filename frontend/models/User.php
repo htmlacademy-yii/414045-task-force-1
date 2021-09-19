@@ -2,10 +2,15 @@
 
 namespace frontend\models;
 
+use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
+use Yii;
 use yii\base\InvalidConfigException;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use frontend\models\Category;
+use Components\Categories\CategoryHelper;
 
 /**
  * This is the model class for table "users".
@@ -44,6 +49,62 @@ class User extends ActiveRecord
     public static function tableName(): string
     {
         return 'users';
+    }
+
+    public static function getUserFilter(): UserFilter
+    {
+        $userFilter = new UserFilter();
+        if (Yii::$app->request->getIsPost()) {
+            $userFilter->load(Yii::$app->request->post());
+        }
+
+        return $userFilter;
+    }
+
+    public static function getDataProviderFilter(UserFilter $filter): ActiveDataProvider
+    {
+        $conditions = [
+            'role' => UserConstants::USER_ROLE_EXECUTOR,
+            's.category_id' => array_flip($filter->categories)
+        ];
+        $query = self::find()->leftJoin(['s' => 'users_specialty'],
+            's.user_id = users.id')->where($conditions);
+
+        if (!empty($filter->showCategories)) {
+            $category = new CategoryHelper();
+            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
+            $query->filterWhere($conditionCategoryId);
+        }
+
+        if ($filter->isFree) {
+            $conditionUserIsFree = ['!=', 'state', TaskConstants::NEW_TASK_STATUS_NAME];
+            $query->leftJoin(['t' => 'tasks'], 't.executor_id = users.id')->andWhere($conditionUserIsFree);
+        }
+
+        if ($filter->isOnline) {
+            //
+        }
+
+        if ($filter->hasReview) {
+            $conditionsHasReview = 'addressee_id = users.id';
+            $query->leftJoin('reviews', 'addressee_id = users.id')->andWhere($conditionsHasReview);
+        }
+
+        if ($filter->isFavorites) {
+            //
+        }
+
+        if ($filter->userName) {
+            $conditionName = ['like', 'name', $filter->userName];
+            $query->andWhere($conditionName);
+        }
+
+        return new ActiveDataProvider([
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
     }
 
     /**
@@ -128,7 +189,6 @@ class User extends ActiveRecord
         return $this->hasMany(Message::class, ['sender_id' => 'id']);
     }
 
-
     /**
      * Gets query for [[Portfolios]].
      *
@@ -163,7 +223,6 @@ class User extends ActiveRecord
         return $this->hasMany(Review::class, ['addressee_id' => 'id']);
     }
 
-
     /**
      * Gets query for [[Tasks]].
      *
@@ -177,7 +236,6 @@ class User extends ActiveRecord
 
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
-
 
     /**
      * Gets query for [[UserSetting]].

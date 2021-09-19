@@ -2,8 +2,11 @@
 
 namespace frontend\models;
 
+use phpDocumentor\Reflection\Types\Self_;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "responses".
@@ -63,7 +66,7 @@ class Response extends ActiveRecord
         return [
             'id' => 'ID',
             'task_id' => 'Task ID',
-            'user_id' => 'User ID',
+            'user_id' => 'UserHelper ID',
             'content' => 'Content',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -81,12 +84,29 @@ class Response extends ActiveRecord
     }
 
     /**
-     * Gets query for [[User]].
+     * Gets query for [[UserHelper]].
      *
      * @return ActiveQuery
      */
     public function getUser(): ActiveQuery
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public static function getResponsesDataProvider($taskId): ActiveDataProvider
+    {
+        $query = (new Query())->select(['user_id', 'content', 'price', 'name', 'avatar_src', 'rating'])
+            ->from('responses')
+            ->where(['task_id' => $taskId])
+            ->leftJoin(['u' => 'users'], 'u.id = responses.user_id');
+
+        $query = self::find()->where(['task_id' => $taskId]);
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
     }
 }

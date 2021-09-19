@@ -5,8 +5,11 @@ namespace frontend\models;
 use Components\Constants\TaskConstants;
 use Components\Time\TimeDifference;
 use Exception;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use frontend\models\Category;
+use Components\Categories\CategoryHelper;
 
 /**
  * This is the model class for table "tasks".
@@ -45,6 +48,55 @@ class Task extends ActiveRecord
     public static function tableName(): string
     {
         return 'tasks';
+    }
+
+    public static function getTaskDataProvider(TaskFilter $filter, int $page_size): ActiveDataProvider
+    {
+        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
+        $query = self::find()->where($conditions);
+
+        if (!empty($filter->showCategories)) {
+            $category = new CategoryHelper();
+            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
+            $query->filterWhere($conditionCategoryId);
+        }
+
+        if ($filter->isNotExecutor) {
+            $isNotExecutor = ['executor_id' => null];
+            $query->andWhere($isNotExecutor);
+        }
+
+        if ($filter->isRemoteWork) {
+            $conditionsIsRemoteWork = ['address' => null];
+            $query->andWhere($conditionsIsRemoteWork);
+        }
+
+        if ($filter->period) {
+            $conditionsPeriod = ['>', 'created_at', self::dateFilter($filter->period)];
+            $query->andWhere($conditionsPeriod);
+        }
+
+        if ($filter->taskName) {
+            $conditionsName = ['like', 'title', $filter->taskName];
+            $query->andWhere($conditionsName);
+        }
+
+        return new ActiveDataProvider([
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => $page_size,
+            ],
+        ]);
+    }
+
+    private static function dateFilter($period): string|bool
+    {
+        return match ($period) {
+            TaskFilter::PERIOD_DAY => date('Y-m-d H:i:s', strtotime('-1 day')),
+            TaskFilter::PERIOD_WEEK => date('Y-m-d H:i:s', strtotime('-7 day')),
+            TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
+            TaskFilter::PERIOD_ALL => false,
+        };
     }
 
     /**
@@ -136,7 +188,7 @@ class Task extends ActiveRecord
             'executor_id' => 'Executor ID',
             'title' => 'Title',
             'description' => 'Description',
-            'category_id' => 'Category ID',
+            'category_id' => 'CategoryHelper ID',
             'state' => 'State',
             'price' => 'Price',
             'deadline' => 'Deadline',
@@ -200,7 +252,7 @@ class Task extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Category]].
+     * Gets query for [[CategoryHelper]].
      *
      * @return ActiveQuery
      */

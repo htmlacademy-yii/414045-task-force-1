@@ -2,21 +2,24 @@
 
 namespace frontend\controllers;
 
-use Components\Categories\Category;
-use Components\Constants\TaskConstants;
+use Components\Constants\CategoryConstants;
+use frontend\models\Response;
 use frontend\models\Task;
 use frontend\models\TaskFilter;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQuery;
+use yii\db\Query;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 class TasksController extends Controller
 {
+    public const TASKS_PAGINATION_SIZE = 5;
+
     public function actionIndex(): string
     {
         $taskFilter = $this->getTaskFilter();
-        $dataProvider = $this->getDataProvider($taskFilter);
+        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
@@ -27,56 +30,49 @@ class TasksController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $taskFilter->load(Yii::$app->request->post());
         }
+        if (Yii::$app->request->get('category_id')) {
+            $taskFilter->showCategories[] = Yii::$app->request->get('category_id') - 1;
+        }
 
         return $taskFilter;
     }
 
-    private function getDataProvider(TaskFilter $filter): ActiveDataProvider
+    /**
+     * Отображает страницу просмотра задачи
+     *
+     * @param int $id id задачи
+     * @return string
+     * @throws HttpException
+     */
+    public function actionGetView(int $id = null): string
     {
-        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
-        $query = Task::find()->where($conditions);
+        $task = Task::findOne($id);
 
-        if (!empty($filter->showCategories)) {
-            $category = new Category();
-            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
-            $query->filterWhere($conditionCategoryId);
+        if ($id === null || $task === null) {
+            throw new HttpException(404, 'Задача не найдена.');
         }
 
-        if ($filter->isNotExecutor) {
-            $isNotExecutor = ['executor_id' => null];
-            $query->andWhere($isNotExecutor);
-        }
+        $customer = $task->customer;
+        $countCustomerTasks = count($customer->tasks);
+        $countResponses = count($task->responses);
+        $dataProvider = Response::getResponsesDataProvider($task->id);
+        $city = $task->city->title;
+        $categoryId = $task->category->id;
+        $categoryName = $task->category->title;
+        $categoryMap = array_flip(CategoryConstants::NAME_MAP);
+        $categoryClassName = $categoryMap[$categoryName];
 
-        if ($filter->isRemoteWork) {
-            $conditionsIsRemoteWork = ['address' => null];
-            $query->andWhere($conditionsIsRemoteWork);
-        }
-
-        if ($filter->period) {
-            $conditionsPeriod = ['>', 'created_at', $this->dateFilter($filter->period)];
-            $query->andWhere($conditionsPeriod);
-        }
-
-        if ($filter->taskName) {
-            $conditionsName = ['like', 'title', $filter->taskName];
-            $query->andWhere($conditionsName);
-        }
-
-        return new ActiveDataProvider([
-            'query' => $query->orderBy(['created_at' => SORT_DESC]),
-            'pagination' => [
-                'pageSize' => 5,
-            ],
-        ]);
-    }
-
-    private function dateFilter($period): string|bool
-    {
-        return match ($period) {
-            TaskFilter::PERIOD_DAY => date('Y-m-d H:i:s', strtotime('-1 day')),
-            TaskFilter::PERIOD_WEEK => date('Y-m-d H:i:s', strtotime('-7 day')),
-            TaskFilter::PERIOD_MONTH => date('Y-m-d H:i:s', strtotime('-1 month')),
-            TaskFilter::PERIOD_ALL => false,
-        };
+        return $this->render('view',
+            compact(
+                'task',
+                'customer',
+                'dataProvider',
+                'countCustomerTasks',
+                'countResponses',
+                'city',
+                'categoryId',
+                'categoryName',
+                'categoryClassName'
+            ));
     }
 }

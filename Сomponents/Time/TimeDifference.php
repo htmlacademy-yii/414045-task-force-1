@@ -6,6 +6,7 @@ namespace Components\Time;
 
 use Components\Constants\TimeConstants;
 use Components\Exceptions\TimeException;
+use Components\NumberHelpers\NumberHelpersNumEnding;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -75,7 +76,7 @@ class TimeDifference extends Time
                     'Неверный параметр timeUnits, метода getCountTimeUnits'
                 );
             }
-            $timeUnitName = new TimeNumEnding();
+            $timeUnitName = new NumberHelpersNumEnding();
             $countTimeUnit = $timeUnitsMap[$timeUnit]['count'];
             $timeUnitName = $timeUnitName->getEnding(
                 $countTimeUnit,

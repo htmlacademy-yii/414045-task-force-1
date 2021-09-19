@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -29,6 +30,18 @@ class Review extends ActiveRecord
     public static function tableName(): string
     {
         return 'reviews';
+    }
+
+    public static function getDataProviderReviews($userId): ActiveDataProvider
+    {
+        $query = self::find()->where(['addressee_id' => $userId]);
+
+        return new ActiveDataProvider([
+            'query' => $query->orderBy(['created_at' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
     }
 
     /**

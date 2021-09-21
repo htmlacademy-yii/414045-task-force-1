@@ -71,7 +71,7 @@ $rating = UserHelper::getCountRatingStars($user->rating);
         <h2>Отзывы<span>(<?= count($user->reviews) ?>)</span></h2>
         <?php echo ListView::widget([
             'dataProvider' => $dataProvider,
-            'itemView' => '_reviewsList',
+            'itemView' => 'reviewsList',
             'layout' => "{items}{pager}",
             'options' => [
                 'class' => 'content-view__feedback-wrapper reviews-wrapper'

@@ -81,7 +81,7 @@ use yii\widgets\ListView;
         <h2>Отклики <span>(<?= $countResponses ?>)</span></h2>
         <?php echo ListView::widget([
             'dataProvider' => $dataProvider,
-            'itemView' => '_responsesList',
+            'itemView' => 'responsesList',
             'layout' => "{items}{pager}",
             'options' => [
                 'class' => 'content-view__feedback-wrapper'

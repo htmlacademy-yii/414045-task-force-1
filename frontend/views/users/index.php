@@ -14,7 +14,7 @@ use yii\bootstrap\ActiveForm;
 
 echo ListView::widget([
     'dataProvider' => $dataProvider,
-    'itemView' => '_list',
+    'itemView' => 'usersList',
     'options' => [
         'tag' => 'section',
         'class' => 'user__search'

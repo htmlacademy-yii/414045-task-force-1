@@ -113,19 +113,24 @@ class User extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['rating'], 'integer', 'min' => 0, 'max' => 500],
-            [['role'], 'in', [0, 1]],
-            [['name', 'email', 'password', 'city_id'], 'required'],
-            [['about'], 'string'],
+            ['rating', 'integer', 'min' => 0, 'max' => 500],
+            ['role', 'in', 'range' => [0, 1]],
+            ['email', 'unique', 'message' => 'Пользователь с таким email уже существует'],
+            ['email', 'required', 'message' => 'Введите валидный адрес электронной почты'],
+            ['email', 'email', 'message' => 'Введите валидный адрес электронной почты'],
+            ['name', 'required', 'message' => 'Введите ваше имя и фамилию'],
+            ['city_id', 'required', 'message' => 'Укажите город, чтобы находить подходящие задачи'],
+            ['password', 'required', 'message' => 'Введите пароль'],
+            ['password', 'string', 'min' => 8, 'tooShort' => 'Длина пароля от 8 символов'],
+            ['about', 'string'],
             [
                 ['name', 'password', 'avatar_src', 'skype', 'over_messenger'],
                 'string',
                 'max' => 128,
             ],
-            [['email'], 'string', 'max' => 64],
-            [['email'], 'email'],
-            [['full_address'], 'string', 'max' => 256],
-            [['phone'], 'string', 'max' => 20],
+            ['email', 'string', 'max' => 64],
+            ['full_address', 'string', 'max' => 256],
+            ['phone', 'string', 'max' => 20],
             [['created_at', 'updated_at'], 'datetime'],
             [
                 ['city_id'],
@@ -137,6 +142,7 @@ class User extends ActiveRecord
             [
                 [
                     'name',
+                    'email',
                     'city_id',
                     'full_address',
                     'birthday',
@@ -160,22 +166,16 @@ class User extends ActiveRecord
     public function attributeLabels(): array
     {
         return [
-            'id' => 'ID',
-            'role' => 'Role',
-            'name' => 'Name',
-            'email' => 'Email',
-            'password' => 'Password',
-            'city_id' => 'City ID',
-            'full_address' => 'Full Address',
-            'birthday' => 'Birthday',
-            'about' => 'About',
-            'avatar_src' => 'Avatar Src',
-            'phone' => 'Phone',
+            'name' => 'ваше имя',
+            'email' => 'электронная почта',
+            'password' => 'пароль',
+            'city_id' => 'город проживания',
+            'full_address' => 'полный адрес',
+            'birthday' => 'день рождения',
+            'about' => 'о себе',
+            'phone' => 'телефон',
             'skype' => 'Skype',
-            'over_messenger' => 'Over Messenger',
-            'rating' => 'Rating',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'over_messenger' => 'другой месседжер',
         ];
     }
 

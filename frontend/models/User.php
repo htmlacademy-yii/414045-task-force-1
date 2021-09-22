@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use Components\Constants\TaskConstants;
@@ -41,7 +43,7 @@ use Components\Categories\CategoryHelper;
  * @property City $city
  * @property UsersSpecialty[] $usersSpecialties
  */
-class User extends ActiveRecord
+final class User extends ActiveRecord
 {
     /**
      * {@inheritdoc}

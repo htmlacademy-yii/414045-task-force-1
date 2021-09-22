@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
 use Components\Categories\CategoryHelper;
 
-class TaskFilter extends ActiveRecord
+final class TaskFilter extends ActiveRecord
 {
     public const PERIOD_DAY = 'day';
     public const PERIOD_WEEK = 'week';

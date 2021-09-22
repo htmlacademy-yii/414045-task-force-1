@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Components\Time;
 
@@ -11,11 +12,11 @@ use DateInterval;
 use DateTime;
 use Exception;
 
-class TimeDifference extends Time
+final class TimeDifference extends Time
 {
     public function __construct(
-        protected string      $firstDateTimeStringPoint,
-        protected string|null $secondDateTimeStringPoint = null
+        protected string $firstDateTimeStringPoint,
+        protected string $secondDateTimeStringPoint = ''
     ) {
     }
 

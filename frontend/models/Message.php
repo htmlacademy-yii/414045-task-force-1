@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveQuery;
@@ -18,7 +20,7 @@ use yii\db\ActiveRecord;
  * @property User $sender
  * @property User $addressee
  */
-class Message extends ActiveRecord
+final class Message extends ActiveRecord
 {
     /**
      * {@inheritdoc}

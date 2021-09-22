@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Components\Users;
 
-class UserHelper
+final class UserHelper
 {
-    static function getCountRatingStars($rating)
+    public static function getCountRatingStars($rating)
     {
-        return round($rating/100, 2);
+        return round($rating / 100, 2);
     }
 }

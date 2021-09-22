@@ -8,6 +8,7 @@ use yii\widgets\ActiveField;
 
 /**
  * @var User $user ;
+ * @var array $cities ;
  */
 ?>
 
@@ -60,7 +61,7 @@ use yii\widgets\ActiveField;
                     'class' => 'registration__text-error',
                 ],
             ])->dropDownList(
-            City::find()->select(['title', 'id'])->indexBy('id')->column())
+            $cities)
         ?>
         <?= $form->field($user, 'password',
             [

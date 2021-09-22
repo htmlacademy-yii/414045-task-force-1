@@ -1,24 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
+use Components\Routes\Route;
+use frontend\models\City;
 use frontend\models\User;
 use Yii;
 use yii\web\Controller;
 
-class RegistrationController extends Controller
+final class RegistrationController extends Controller
 {
     public function actionIndex(): string
     {
         $user = new User();
-        if (Yii::$app->request->getIsPost()){
+        $cities = City::getCitiesForOptionsList();
+        if (Yii::$app->request->getIsPost()) {
             $user->load(Yii::$app->request->post());
             if ($user->validate()) {
                 $user->save();
-                $this->redirect('/tasks');
+                $this->redirect(Route::getTasks());
             }
         }
 
-        return $this->render('index', compact('user'));
+        return $this->render('index', compact('user', 'cities'));
     }
 }

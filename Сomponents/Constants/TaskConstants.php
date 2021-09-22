@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Components\Constants;
-
 
 use Components\Tasks\Cancel;
 use Components\Tasks\Done;
 use Components\Tasks\Refuse;
 use Components\Tasks\Respond;
 
-class TaskConstants
+final class TaskConstants
 {
     public const NEW_TASK_STATUS_NAME = 'new';
     public const CANCELED_TASK_STATUS_NAME = 'canceled';

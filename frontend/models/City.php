@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveQuery;
@@ -17,7 +19,7 @@ use yii\db\ActiveRecord;
  * @property Task[] $tasks
  * @property User[] $users
  */
-class City extends ActiveRecord
+final class City extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -73,5 +75,10 @@ class City extends ActiveRecord
     public function getUsers(): ActiveQuery
     {
         return $this->hasMany(User::class, ['city_id' => 'id']);
+    }
+
+    public static function getCitiesForOptionsList(): array
+    {
+        return City::find()->select(['title', 'id'])->indexBy('id')->column();
     }
 }

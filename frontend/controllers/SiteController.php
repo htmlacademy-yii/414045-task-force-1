@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
 use common\models\LoginForm;
+use Components\Routes\Route;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\filters\AccessControl;
@@ -14,7 +17,7 @@ use yii\web\Controller;
 /**
  * Site controller
  */
-class SiteController extends Controller
+final class SiteController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -70,7 +73,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        Yii::$app->getResponse()->redirect(\Components\Routes\Route::getTasks());
+        Yii::$app->getResponse()->redirect(Route::getTasks());
     }
 
     /**

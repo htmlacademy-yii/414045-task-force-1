@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveQuery;
@@ -16,7 +18,7 @@ use yii\db\ActiveRecord;
  * @property Task[] $tasks
  * @property UsersSpecialty[] $usersSpecialties;
  */
-class Category extends ActiveRecord
+final class Category extends ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Components\Constants;
 
-
-class TimeConstants
+final class TimeConstants
 {
     public const ENDINGS_FOR_MINUTE
         = [

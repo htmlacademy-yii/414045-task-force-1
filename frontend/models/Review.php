@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\data\ActiveDataProvider;
@@ -22,7 +24,7 @@ use yii\db\ActiveRecord;
  * @property User $addressee
  * @property Task $task
  */
-class Review extends ActiveRecord
+final class Review extends ActiveRecord
 {
     /**
      * {@inheritdoc}

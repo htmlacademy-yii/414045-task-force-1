@@ -1,10 +1,7 @@
 <?php
 
-
 namespace Components\Exceptions;
 
-
-class TimeException extends BaseException
+final class TimeException extends BaseException
 {
-
 }

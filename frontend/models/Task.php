@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use Components\Constants\TaskConstants;
@@ -38,7 +40,7 @@ use Components\Categories\CategoryHelper;
  * @property Category $category
  * @property City $city
  */
-class Task extends ActiveRecord
+final class Task extends ActiveRecord
 {
 
 

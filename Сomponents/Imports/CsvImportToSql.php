@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Components\Imports;
-
 
 use Components\Exceptions\CsvImportToSqlException;
 use Components\GeoData\ConvertStringToGeoPoint;
@@ -13,7 +13,7 @@ use SplFileObject;
  *
  * @package Components\Imports
  */
-class CsvImportToSql
+final class CsvImportToSql
 {
     private object $importFile;
     private object $sqlFile;
@@ -178,9 +178,9 @@ class CsvImportToSql
      */
     private function convertToSql(
         string $table,
-        array  $headers,
-        array  $values,
-        bool   $has_geoPoint
+        array $headers,
+        array $values,
+        bool $has_geoPoint
     ): string {
         $geoPointForSql = '';
 

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Components\NumberHelpers;
 
@@ -10,7 +11,7 @@ namespace Components\NumberHelpers;
  *
  * @package Components\Time
  */
-class NumberHelpersNumEnding
+final class NumberHelpersNumEnding
 {
     /**
      * @param int $number числительное для которого нужно существительное в правильном склонении

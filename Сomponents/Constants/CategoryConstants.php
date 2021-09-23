@@ -2,7 +2,7 @@
 
 namespace Components\Constants;
 
-class CategoryConstants
+final class CategoryConstants
 {
     public const TRANSLATION_NAME = 'translation';
     public const CLEAN_NAME = 'clean';

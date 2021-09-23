@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Components\GeoData;
-
 
 /**
  * Class ConvertStringToGeoPoint
  *
  * @package Components\GeoData
  */
-class ConvertStringToGeoPoint
+final class ConvertStringToGeoPoint
 {
     /**
      * ConvertStringToGeoPoint constructor.

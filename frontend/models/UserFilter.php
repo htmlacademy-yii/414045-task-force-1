@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveRecord;
 use Components\Categories\CategoryHelper;
 
-class UserFilter extends ActiveRecord
+final class UserFilter extends ActiveRecord
 {
 
     public array $categories = [];

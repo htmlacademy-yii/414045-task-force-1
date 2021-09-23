@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
 use Components\Constants\TaskConstants;
@@ -12,7 +14,7 @@ use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\Response;
 
-class UsersController extends Controller
+final class UsersController extends Controller
 {
     public const MESSAGE_USER_NOT_FOUND = 'Пользователь не найден.';
     public const RESPONSE_STATUS_CODE = 404;

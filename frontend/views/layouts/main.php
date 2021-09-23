@@ -1,8 +1,9 @@
 <?php
 
-/* @var $this View */
-
-/* @var $content string */
+/**
+ * @var $this View;
+ * @var $content string;
+ */
 
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
@@ -99,58 +100,60 @@ AppAsset::register($this);
                     </li>
                 </ul>
             </div>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1"
-                        name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="view.html" class="link-regular">«Помочь с
-                        курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="view.html" class="link-regular">«Помочь с
-                        курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="view.html" class="link-regular">«Помочь с
-                        курсовой»</a>
-                </p>
-            </div>
-            <div class="header__account">
-                <a class="header__account-photo">
-                    <img src="/img/user-photo.png"
-                         width="43" height="44"
-                         alt="Аватар пользователя">
-                </a>
-                <span class="header__account-name">
+            <?php if (Yii::$app->user->identity): ?>
+                <div class="header__town">
+                    <select class="multiple-select input town-select" size="1"
+                            name="town[]">
+                        <option value="Moscow">Москва</option>
+                        <option selected value="SPB">Санкт-Петербург</option>
+                        <option value="Krasnodar">Краснодар</option>
+                        <option value="Irkutsk">Иркутск</option>
+                        <option value="Vladivostok">Владивосток</option>
+                    </select>
+                </div>
+                <div class="header__lightbulb"></div>
+                <div class="lightbulb__pop-up">
+                    <h3>Новые события</h3>
+                    <p class="lightbulb__new-task lightbulb__new-task--message">
+                        Новое сообщение в чате
+                        <a href="view.html" class="link-regular">«Помочь с
+                            курсовой»</a>
+                    </p>
+                    <p class="lightbulb__new-task lightbulb__new-task--executor">
+                        Выбран исполнитель для
+                        <a href="view.html" class="link-regular">«Помочь с
+                            курсовой»</a>
+                    </p>
+                    <p class="lightbulb__new-task lightbulb__new-task--close">
+                        Завершено задание
+                        <a href="view.html" class="link-regular">«Помочь с
+                            курсовой»</a>
+                    </p>
+                </div>
+                <div class="header__account">
+                    <a class="header__account-photo">
+                        <img src="/img/user-photo.png"
+                             width="43" height="44"
+                             alt="Аватар пользователя">
+                    </a>
+                    <span class="header__account-name">
                  Василий
              </span>
-            </div>
-            <div class="account__pop-up">
-                <ul class="account__pop-up-list">
-                    <li>
-                        <a href="mylist.html">Мои задания</a>
-                    </li>
-                    <li>
-                        <a href="account.html">Настройки</a>
-                    </li>
-                    <li>
-                        <a href="landing.html">Выход</a>
-                    </li>
-                </ul>
-            </div>
+                </div>
+                <div class="account__pop-up">
+                    <ul class="account__pop-up-list">
+                        <li>
+                            <a href="mylist.html">Мои задания</a>
+                        </li>
+                        <li>
+                            <a href="account.html">Настройки</a>
+                        </li>
+                        <li>
+                            <a href="landing.html">Выход</a>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </header>
     <main class="page-main">

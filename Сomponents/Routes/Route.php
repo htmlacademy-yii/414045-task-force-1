@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Components\Routes;
 
 use yii\helpers\Url;
 
-class Route
+final class Route
 {
 
     /**
@@ -50,5 +52,15 @@ class Route
     public static function getUserView(int $userId): string
     {
         return Url::to(['/users/view/' . $userId]);
+    }
+
+    /**
+     * Возвращает путь к странице регистрации
+     *
+     * @return string
+     */
+    public static function getRegistration(): string
+    {
+        return Url::to(['/registration']);
     }
 }

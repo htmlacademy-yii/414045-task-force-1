@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Components\Tasks;
 
@@ -13,7 +14,7 @@ use Components\Constants\ActionConstants;
  *
  * @package Components\Tasks
  */
-class Cancel extends AbstractAction
+final class Cancel extends AbstractAction
 {
     /**
      * Возвращает название действия для отображения пользователю

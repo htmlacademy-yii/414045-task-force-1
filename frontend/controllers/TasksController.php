@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
 use Components\Constants\CategoryConstants;
@@ -12,7 +14,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use yii\web\HttpException;
 
-class TasksController extends Controller
+final class TasksController extends Controller
 {
     public const TASKS_PAGINATION_SIZE = 5;
 

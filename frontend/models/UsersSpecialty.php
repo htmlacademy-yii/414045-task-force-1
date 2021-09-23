@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveQuery;
@@ -15,7 +17,7 @@ use yii\db\ActiveRecord;
  * @property User $user
  * @property Category $category
  */
-class UsersSpecialty extends ActiveRecord
+final class UsersSpecialty extends ActiveRecord
 {
     /**
      * {@inheritdoc}

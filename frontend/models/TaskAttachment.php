@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\db\ActiveQuery;
@@ -18,7 +20,7 @@ use yii\db\ActiveRecord;
  *
  * @property Task $task
  */
-class TaskAttachment extends ActiveRecord
+final class TaskAttachment extends ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use phpDocumentor\Reflection\Types\Self_;
@@ -21,7 +23,7 @@ use yii\db\Query;
  * @property Task $task
  * @property User $user
  */
-class Response extends ActiveRecord
+final class Response extends ActiveRecord
 {
     /**
      * {@inheritdoc}

@@ -1,10 +1,7 @@
 <?php
 
-
 namespace Components\Exceptions;
 
-
-class CsvImportToSqlException extends BaseException
+final class CsvImportToSqlException extends BaseException
 {
-
 }

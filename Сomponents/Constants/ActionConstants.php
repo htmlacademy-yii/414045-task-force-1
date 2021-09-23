@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Components\Constants;
 
-
-class ActionConstants
+final class ActionConstants
 {
     public const CANCEL_ACTION_NAME = 'cancel';
     public const RESPOND_ACTION_NAME = 'respond';

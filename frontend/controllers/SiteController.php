@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
-use common\models\LoginForm;
+use frontend\models\LoginForm;
 use Components\Routes\Route;
 use Yii;
 use yii\base\InvalidArgumentException;
@@ -27,24 +27,11 @@ final class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -73,7 +60,7 @@ final class SiteController extends Controller
      */
     public function actionIndex()
     {
-        Yii::$app->getResponse()->redirect(Route::getTasks());
+        $this->redirect(Route::getTasks());
     }
 
     /**
@@ -83,18 +70,17 @@ final class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $loginForm = new LoginForm();
+        if (\Yii::$app->request->getIsPost()) {
+            $loginForm->load(\Yii::$app->request->post());
+            if ($loginForm->validate()) {
+                $user = $loginForm->getUser();
+                \Yii::$app->user->login($user);
+                return $this->goHome();
+            }
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', compact('model'));
-        }
+        return $this->redirect(Route::getLanding());
     }
 
     /**

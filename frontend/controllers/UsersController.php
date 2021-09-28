@@ -14,7 +14,7 @@ use yii\web\Controller;
 use yii\web\HttpException;
 use yii\web\Response;
 
-final class UsersController extends Controller
+final class UsersController extends SecuredController
 {
     public const MESSAGE_USER_NOT_FOUND = 'Пользователь не найден.';
     public const RESPONSE_STATUS_CODE = 404;

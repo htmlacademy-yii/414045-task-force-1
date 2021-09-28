@@ -13,6 +13,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use frontend\models\Category;
 use Components\Categories\CategoryHelper;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "users".
@@ -43,7 +44,7 @@ use Components\Categories\CategoryHelper;
  * @property City $city
  * @property UsersSpecialty[] $usersSpecialties
  */
-final class User extends ActiveRecord
+final class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -269,5 +270,35 @@ final class User extends ActiveRecord
     {
         return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('users_specialty', ['user_id' => 'id']);
+    }
+
+    public function validatePassword($password): bool
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
     }
 }

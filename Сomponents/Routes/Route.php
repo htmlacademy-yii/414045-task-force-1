@@ -63,4 +63,24 @@ final class Route
     {
         return Url::to(['/registration']);
     }
+
+    /**
+     * Возвращает путь к лендингу
+     *
+     * @return string
+     */
+    public static function getLanding(): string
+    {
+        return Url::to(['/landing']);
+    }
+    /**
+     * Logout
+     *
+     * @return string
+     */
+    public static function logout(): string
+    {
+        return Url::to(['/logout']);
+    }
+
 }

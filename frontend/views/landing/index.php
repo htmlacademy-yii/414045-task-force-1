@@ -273,7 +273,10 @@ use yii\widgets\ActiveForm;
     </footer>
     <section class="modal enter-form form-modal" id="enter-form">
         <h2>Вход на сайт</h2>
-        <?php $form = ActiveForm::begin() ?>
+        <?php $form = ActiveForm::begin([
+            'id' => 'login-form',
+            'enableAjaxValidation' => true,
+        ]) ?>
         <?= $form->field($loginForm, 'email', [
             'options' => [
                 'tag' => 'p',
@@ -282,8 +285,12 @@ use yii\widgets\ActiveForm;
                 'class' => 'enter-form-email input input-middle'
             ],
             'labelOptions' => [
-                    'class' => 'form-modal-description',
-                    'for' => 'enter-email',
+                'class' => 'form-modal-description',
+                'for' => 'enter-email',
+            ],
+            'errorOptions' => [
+                'tag' => 'span',
+                'class' => 'registration__text-error',
             ],
         ])->input('email') ?>
         <?= $form->field($loginForm, 'password', [
@@ -296,6 +303,10 @@ use yii\widgets\ActiveForm;
             'labelOptions' => [
                 'class' => 'form-modal-description',
                 'for' => 'enter-password',
+            ],
+            'errorOptions' => [
+                'tag' => 'span',
+                'class' => 'registration__text-error',
             ],
         ])->passwordInput() ?>
         <?= Html::submitButton('Войти', ['class' => 'button']) ?>

@@ -5,9 +5,13 @@
  * @var $content string;
  */
 
+use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
+use Components\Users\UserHelper;
+
+$user = UserHelper::getUser();
 
 AppAsset::register($this);
 ?>
@@ -132,12 +136,12 @@ AppAsset::register($this);
                 </div>
                 <div class="header__account">
                     <a class="header__account-photo">
-                        <img src="/img/user-photo.png"
+                        <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
                              width="43" height="44"
                              alt="Аватар пользователя">
                     </a>
                     <span class="header__account-name">
-                 Василий
+                 <?= $user->name ?>
              </span>
                 </div>
                 <div class="account__pop-up">

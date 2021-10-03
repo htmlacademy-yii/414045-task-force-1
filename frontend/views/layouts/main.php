@@ -5,9 +5,13 @@
  * @var $content string;
  */
 
+use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
+use Components\Users\UserHelper;
+
+$user = UserHelper::getUser();
 
 AppAsset::register($this);
 ?>
@@ -29,7 +33,7 @@ AppAsset::register($this);
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
-                <a href="landing.html">
+                <a href="<?= Route::getLanding() ?>">
                     <svg class="page-header__logo-image" id="Layer_2"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 1634 646.35">
@@ -132,12 +136,12 @@ AppAsset::register($this);
                 </div>
                 <div class="header__account">
                     <a class="header__account-photo">
-                        <img src="/img/user-photo.png"
+                        <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
                              width="43" height="44"
                              alt="Аватар пользователя">
                     </a>
                     <span class="header__account-name">
-                 Василий
+                 <?= $user->name ?>
              </span>
                 </div>
                 <div class="account__pop-up">
@@ -149,7 +153,7 @@ AppAsset::register($this);
                             <a href="account.html">Настройки</a>
                         </li>
                         <li>
-                            <a href="landing.html">Выход</a>
+                            <a href="<?= Route::logout() ?>">Выход</a>
                         </li>
                     </ul>
                 </div>

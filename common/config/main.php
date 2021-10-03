@@ -15,12 +15,17 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
+                'landing' => 'landing/index',
+                'logout' => 'site/logout',
                 'tasks' => 'tasks/index',
                 'tasks/view/<id:\d+>' => 'tasks/get-view',
                 'users' => 'users/index',
                 'users/view/<id:\d+>' => 'users/get-view',
                 'registration' => 'registration/index'
             ],
+        ],
+        'user' => [
+            'loginUrl' => ['landing'],
         ],
     ],
 ];

@@ -19,6 +19,7 @@ final class RegistrationController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $user->load(Yii::$app->request->post());
             if ($user->validate()) {
+                $user->password = Yii::$app->getSecurity()->generatePasswordHash($user->password);
                 $user->save();
                 $this->redirect(Route::getTasks());
             }

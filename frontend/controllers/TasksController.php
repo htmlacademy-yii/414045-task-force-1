@@ -14,7 +14,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use yii\web\HttpException;
 
-final class TasksController extends Controller
+final class TasksController extends SecuredController
 {
     public const TASKS_PAGINATION_SIZE = 5;
 

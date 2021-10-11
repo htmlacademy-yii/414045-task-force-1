@@ -113,6 +113,8 @@ final class Task extends ActiveRecord
             ) . ' назад';
     }
 
+
+
     /**
      * {@inheritdoc}
      */
@@ -120,14 +122,15 @@ final class Task extends ActiveRecord
     {
         return [
             [
-                ['customer_id', 'title', 'category_id', 'state', 'price'],
+                ['customer_id', 'category_id', 'state', 'price'],
                 'required',
             ],
             [['price'], 'integer', 'min' => 0],
             [['description'], 'string'],
             [['deadline', 'created_at', 'updated_at'], 'datetime'],
+            [['title'], 'required', 'message' => 'Это поле не может быть пустым'],
             [['title'], 'string', 'max' => 64],
-            [['state'], 'in', TaskConstants::STATUS_MAP],
+            [['state'], 'in', 'range' => TaskConstants::STATUS_MAP],
             [
                 ['attachment_src', 'address', 'address_comment'],
                 'string',
@@ -188,15 +191,15 @@ final class Task extends ActiveRecord
             'id' => 'ID',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'title' => 'Title',
-            'description' => 'Description',
-            'category_id' => 'CategoryHelper ID',
-            'state' => 'State',
-            'price' => 'Price',
-            'deadline' => 'Deadline',
+            'title' => 'Мне нужно',
+            'description' => 'Подробности задания',
+            'category_id' => 'Категория',
+            'state' => 'Состояние',
+            'price' => 'Бюджет',
+            'deadline' => 'Сроки исполнения',
             'attachment_src' => 'Attachment Src',
-            'city_id' => 'City ID',
-            'address' => 'Address',
+            'city_id' => 'Город',
+            'address' => 'Локация',
             'address_comment' => 'Address Comment',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

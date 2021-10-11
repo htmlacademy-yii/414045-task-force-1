@@ -72,7 +72,6 @@ CREATE TABLE tasks
     state           varchar(10),
     price           int,
     deadline        date,
-    attachment_src  varchar(256),
     city_id         int,
     address         varchar(256),
     address_comment varchar(256),

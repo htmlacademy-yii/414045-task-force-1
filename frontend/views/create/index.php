@@ -65,16 +65,13 @@ use frontend\models\Task;
                     'class' => 'registration__text-error',
                 ],
             ])->dropDownList($categories)->hint('Выберите категорию', ['tag' => 'span']) ?>
-        <?= $form->field($task, 'attachmentFiles[]', [
-            'template' => '{label}{hint}<div class="create__file"><span>Добавить новый файл</span></div>{error}',
-            'options' => [
-                'class' => 'field-container',
-            ],
-            'errorOptions' => [
-                'tag' => 'span',
-                'class' => 'registration__text-error',
-            ],
-        ])->fileInput(['multiple' => true]) ?>
+        <div class="field-container">
+            <label>Файлы</label>
+            <span>Загрузите файлы, которые помогут исполнителю лучше выполнить или оценить работу</span>
+            <div class="create__file">
+                <span>Добавить новый файл</span>
+            </div>
+        </div>
         <?= $form->field($task, 'address',
             [
                 'options' => [

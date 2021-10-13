@@ -26,7 +26,6 @@ use yii\base\Model;
  * @property string $state
  * @property int $price
  * @property string|null $deadline
- * @property string|null $attachment_src
  * @property int|null $city_id
  * @property string|null $address
  * @property string|null $address_comment
@@ -43,11 +42,6 @@ use yii\base\Model;
  */
 final class Task extends ActiveRecord
 {
-    /**
-     * @var UploadedFile[]
-     */
-    public $attachmentFiles;
-
     /**
      * {@inheritdoc}
      */
@@ -147,11 +141,10 @@ final class Task extends ActiveRecord
             [['description'], 'string', 'min' => 30, 'tooShort' => 'Длина текста не может быть менее 30 символов'],
             [['state'], 'in', 'range' => TaskConstants::STATUS_MAP],
             [
-                ['attachment_src', 'address', 'address_comment'],
+                ['address', 'address_comment'],
                 'string',
                 'max' => 256,
             ],
-            [['attachmentFiles'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 5],
             [
                 ['customer_id'],
                 'exist',
@@ -187,7 +180,6 @@ final class Task extends ActiveRecord
                     'state',
                     'price',
                     'deadline',
-                    'attachment_src',
                     'address',
                     'address_comment',
                     'created_at',
@@ -213,7 +205,6 @@ final class Task extends ActiveRecord
             'state' => 'Состояние',
             'price' => 'Бюджет',
             'deadline' => 'Сроки исполнения',
-            'attachment_src' => 'Attachment Src',
             'city_id' => 'Город',
             'address' => 'Локация',
             'address_comment' => 'Комментарий к адресу',

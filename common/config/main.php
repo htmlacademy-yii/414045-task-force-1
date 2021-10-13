@@ -26,6 +26,7 @@ return [
             ],
         ],
         'user' => [
+            'class' => '\yii\web\User',
             'loginUrl' => ['landing'],
         ],
     ],

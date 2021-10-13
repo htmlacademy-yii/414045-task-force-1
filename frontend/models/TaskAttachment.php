@@ -22,6 +22,8 @@ use yii\db\ActiveRecord;
  */
 final class TaskAttachment extends ActiveRecord
 {
+
+
     /**
      * {@inheritdoc}
      */

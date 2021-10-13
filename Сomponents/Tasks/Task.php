@@ -39,7 +39,7 @@ class Task
      */
     public function getStatusMap(): array
     {
-        return TaskConstants::STATUS_MAP;
+        return TaskConstants::STATUS_MAP_FOR_USER;
     }
 
     /**
@@ -63,7 +63,7 @@ class Task
      */
     public function getPossibleActions(string $state): array
     {
-        if (!array_key_exists($state, TaskConstants::STATUS_MAP)) {
+        if (!array_key_exists($state, TaskConstants::STATUS_MAP_FOR_USER)) {
             throw new TaskStateException(
                 'Выбранного состояния задания не существует'
             );

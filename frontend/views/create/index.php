@@ -2,7 +2,7 @@
 
 use frontend\models\UploadTaskAttachmentsFiles;
 use yii\widgets\ActiveForm;
-use yii\widgets\ActiveField;
+use yii\jui\DatePicker;
 use frontend\models\Task;
 
 /**
@@ -17,6 +17,7 @@ use frontend\models\Task;
     <div class="create__task-main">
         <?php $form = ActiveForm::begin([
             'options' => [
+                'enctype' => 'multipart/form-data',
                 'class' => 'create__task-form form-create',
                 'id' => 'task-form',
             ]
@@ -64,7 +65,7 @@ use frontend\models\Task;
                     'class' => 'registration__text-error',
                 ],
             ])->dropDownList($categories)->hint('Выберите категорию', ['tag' => 'span']) ?>
-        <?= $form->field($files, 'files[]', [
+        <?= $form->field($task, 'attachmentFiles[]', [
             'template' => '{label}{hint}<div class="create__file"><span>Добавить новый файл</span></div>{error}',
             'options' => [
                 'class' => 'field-container',
@@ -73,7 +74,7 @@ use frontend\models\Task;
                 'tag' => 'span',
                 'class' => 'registration__text-error',
             ],
-        ])->fileInput(['multiple' => true, 'accept' => 'attachments/*']) ?>
+        ])->fileInput(['multiple' => true]) ?>
         <?= $form->field($task, 'address',
             [
                 'options' => [
@@ -104,20 +105,25 @@ use frontend\models\Task;
                         'class' => 'registration__text-error',
                     ],
                 ])->input('text')->hint('Не заполняйте для оценки исполнителем', ['tag' => 'span']); ?>
-            <?= $form->field($task, 'deadline',
-                [
-                    'options' => [
-                        'class' => 'field-container create__price-time--wrapper',
-                    ],
-                    'inputOptions' => [
-                        'class' => 'input-middle input input-date',
-                        'placeholder' => '10.11, 15:00',
-                    ],
-                    'errorOptions' => [
-                        'tag' => 'span',
-                        'class' => 'registration__text-error',
-                    ],
-                ])->input('search')->hint('Укажите крайний срок исполнения', ['tag' => 'span']); ?>
+            <?= $form
+                ->field($task, 'deadline',
+                    [
+                        'options' => [
+                            'class' => 'field-container create__price-time--wrapper',
+                        ],
+                        'errorOptions' => [
+                            'tag' => 'span',
+                            'class' => 'registration__text-error',
+                        ],
+                    ])->widget(DatePicker::class,
+                    [
+                        'language' => 'ru',
+                        'options' => [
+                            'class' => 'input-middle input input-date',
+                            'placeholder' => 'гггг-мм-дд',
+                            'autocomplete' => 'off',
+                        ]
+                    ])->hint('Укажите крайний срок исполнения', ['tag' => 'span']); ?>
         </div>
         <?php $form::end(); ?>
         <div class="create__warnings">
@@ -137,7 +143,7 @@ use frontend\models\Task;
                 <div class="warning-item warning-item--error">
                     <h2>Ошибки заполнения формы</h2>
                     <?php foreach ($task->errors as $title => $errors): ?>
-                        <h3><?= $title ?></h3>
+                        <h3><?= $task->getAttributeLabel($title) ?></h3>
                         <?php foreach ($errors as $error): ?>
                             <p><?= $error ?></p><br>
                         <?php endforeach; ?>

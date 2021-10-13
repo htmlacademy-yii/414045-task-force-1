@@ -10,6 +10,7 @@ use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
 use Components\Users\UserHelper;
+use yii\web\Request;
 
 $user = UserHelper::getUser();
 
@@ -97,7 +98,7 @@ AppAsset::register($this);
                         <a href="<?= Route::getUsers() ?>">Исполнители</a>
                     </li>
                     <li class="site-list__item">
-                        <a href="create.html">Создать задание</a>
+                        <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
                     </li>
                     <li class="site-list__item">
                         <a href="account.html">Мой профиль</a>
@@ -193,7 +194,7 @@ AppAsset::register($this);
                         <a href="signup.html">Регистрация</a>
                     </li>
                     <li class="links__item">
-                        <a href="create.html">Создать задание</a>
+                        <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
                     </li>
                     <li class="links__item">
                         <a href="">Справка</a>
@@ -214,9 +215,13 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 </body>
-<script src="js/dropzone.js"></script>
+<script src="/js/dropzone.js"></script>
 <script>
-    var dropzone = new Dropzone("div.create__file", {url: "upload.php", paramName: "Attach"});
+    var dropzone = new Dropzone("div.create__file", {
+        headers: {"<?= Request::CSRF_HEADER ?>": "<?= Yii::$app->getRequest()->getCsrfToken() ?>"},
+        url: "/create/upload",
+        paramName: "attachmentFiles[]"
+    });
 </script>
 </html>
 <?php $this->endPage() ?>

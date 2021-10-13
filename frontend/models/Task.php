@@ -12,6 +12,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use frontend\models\Category;
 use Components\Categories\CategoryHelper;
+use yii\base\Model;
 
 /**
  * This is the model class for table "tasks".
@@ -42,7 +43,10 @@ use Components\Categories\CategoryHelper;
  */
 final class Task extends ActiveRecord
 {
-
+    /**
+     * @var UploadedFile[]
+     */
+    public $attachmentFiles;
 
     /**
      * {@inheritdoc}
@@ -113,29 +117,41 @@ final class Task extends ActiveRecord
             ) . ' назад';
     }
 
-
-
     /**
      * {@inheritdoc}
      */
     public function rules(): array
     {
         return [
+            [['category_id'], 'default', 'value' => 1],
             [
-                ['customer_id', 'category_id', 'state', 'price'],
-                'required',
+                ['category_id'],
+                'exist',
+                'targetClass' => Category::class,
+                'targetAttribute' => 'id',
+                'message' => 'Выбранной категории не существует'
             ],
             [['price'], 'integer', 'min' => 0],
-            [['description'], 'string'],
-            [['deadline', 'created_at', 'updated_at'], 'datetime'],
+            [['deadline'], 'default', 'value' => null],
+            [['deadline'], 'date', 'message' => 'Формат для ввода даты ""'],
+            [['created_at', 'updated_at'], 'datetime'],
+            [['title', 'description'], 'trim'],
             [['title'], 'required', 'message' => 'Это поле не может быть пустым'],
-            [['title'], 'string', 'max' => 64],
+            [
+                'title',
+                'string',
+                'length' => [10, 64],
+                'tooShort' => 'Должно содержать от 10 символов',
+                'tooLong' => 'Должно содержать не более 64 символов'
+            ],
+            [['description'], 'string', 'min' => 30, 'tooShort' => 'Длина текста не может быть менее 30 символов'],
             [['state'], 'in', 'range' => TaskConstants::STATUS_MAP],
             [
                 ['attachment_src', 'address', 'address_comment'],
                 'string',
                 'max' => 256,
             ],
+            [['attachmentFiles'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 5],
             [
                 ['customer_id'],
                 'exist',
@@ -200,7 +216,7 @@ final class Task extends ActiveRecord
             'attachment_src' => 'Attachment Src',
             'city_id' => 'Город',
             'address' => 'Локация',
-            'address_comment' => 'Address Comment',
+            'address_comment' => 'Комментарий к адресу',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

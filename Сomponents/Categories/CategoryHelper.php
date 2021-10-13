@@ -15,6 +15,16 @@ final class CategoryHelper
         return $categories->pluck('title')->all();
     }
 
+    public static function getCategoryNamesForDB(): array
+    {
+        $categories = collect(Category::find()->select('title')->all());
+        $categories = $categories->pluck('title')->all();
+        array_unshift($categories, null);
+        unset($categories[0]);
+
+        return $categories;
+    }
+
     public static function getCategoryName($nameCategoryForUser): string
     {
         $categoriesNames = array_flip(CategoryConstants::NAME_MAP);

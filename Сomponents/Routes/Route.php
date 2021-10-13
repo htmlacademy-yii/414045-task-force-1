@@ -44,6 +44,16 @@ final class Route
     }
 
     /**
+     * Возвращает путь к странице создания задачи
+     *
+     * @return string
+     */
+    public static function getTaskCreate(): string
+    {
+        return Url::to(['/create']);
+    }
+
+    /**
      * Возвращает путь к странице просмотра пользователя
      *
      * @param int $userId id пользователя

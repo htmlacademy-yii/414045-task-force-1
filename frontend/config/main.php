@@ -40,6 +40,9 @@ return [
         'errorHandler' => [
             'maxSourceLines' => 20,
         ],
+        'formatter' => [
+            'dateFormat' => 'yyyy-MM-dd',
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

@@ -21,7 +21,7 @@ class CreateController extends SecuredController
     {
         $user = User::findOne(Yii::$app->user->id);
 
-        if ($user !== UserConstants::USER_ROLE_CUSTOMER) {
+        if ($user->role !== UserConstants::USER_ROLE_CUSTOMER) {
             $this->redirect(Route::getTasks());
         }
 

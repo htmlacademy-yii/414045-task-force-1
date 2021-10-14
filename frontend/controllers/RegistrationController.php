@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
+use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\models\City;
 use frontend\models\User;
@@ -20,6 +21,7 @@ final class RegistrationController extends Controller
             $user->load(Yii::$app->request->post());
             if ($user->validate()) {
                 $user->password = Yii::$app->getSecurity()->generatePasswordHash($user->password);
+                $user->role = UserConstants::USER_ROLE_CUSTOMER;
                 $user->save();
                 $this->redirect(Route::getTasks());
             }

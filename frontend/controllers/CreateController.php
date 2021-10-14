@@ -4,9 +4,11 @@ namespace frontend\controllers;
 
 use Components\Categories\CategoryHelper;
 use Components\Constants\TaskConstants;
+use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\models\Task;
 use frontend\models\TaskAttachment;
+use frontend\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\UploadedFile;
@@ -17,7 +19,12 @@ class CreateController extends SecuredController
 
     public function actionIndex()
     {
-        $user = Yii::$app->user;
+        $user = User::findOne(Yii::$app->user->id);
+
+        if ($user !== UserConstants::USER_ROLE_CUSTOMER) {
+            $this->redirect(Route::getTasks());
+        }
+
         $task = new Task();
         $categories = CategoryHelper::getCategoryNamesForDB();
 

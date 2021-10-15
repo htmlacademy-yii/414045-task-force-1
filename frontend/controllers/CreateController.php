@@ -11,13 +11,14 @@ use frontend\models\TaskAttachment;
 use frontend\models\User;
 use Yii;
 use yii\web\Controller;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 class CreateController extends SecuredController
 {
     public Task $task;
 
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $user = User::findOne(Yii::$app->user->id);
 
@@ -25,8 +26,16 @@ class CreateController extends SecuredController
             $this->redirect(Route::getTasks());
         }
 
-        $task = new Task();
+        $task = $this->task ?? new Task();
         $categories = CategoryHelper::getCategoryNamesForDB();
+
+        return $this->render('index', compact('task', 'categories'));
+    }
+
+    public function actionCheckForm(): Response
+    {
+        $user = User::findOne(Yii::$app->user->id);
+        $task = new Task();
 
         if (Yii::$app->request->isPost) {
             $task->load(Yii::$app->request->post());
@@ -37,23 +46,24 @@ class CreateController extends SecuredController
                 $task->save();
                 $attachmentFileNames = Yii::$app->session->get('attachmentFileNames') ?? null;
 
-                foreach ($attachmentFileNames as $fileName) {
-                    $file = new TaskAttachment();
-                    $file->task_id = $task->id;
-                    $file->file_base_name = $fileName['baseName'];
-                    $file->file_name = $fileName['name'];
-                    $file->file_src = TaskAttachment::UPLOAD_DIR . $fileName['name'];
-                    if ($file->validate()) {
-                        $file->save();
+                if ($attachmentFileNames !== null) {
+                    foreach ($attachmentFileNames as $fileName) {
+                        $file = new TaskAttachment();
+                        $file->task_id = $task->id;
+                        $file->file_base_name = $fileName['baseName'];
+                        $file->file_name = $fileName['name'];
+                        $file->file_src = TaskAttachment::UPLOAD_DIR . $fileName['name'];
+                        if ($file->validate()) {
+                            $file->save();
+                        }
                     }
                 }
-
                 Yii::$app->session->remove('attachmentFileNames');
-                $this->redirect(Route::getTasks());
+                return $this->redirect(Route::getTasks());
             }
+            $this->task = $task;
         }
-
-        return $this->render('index', compact('task', 'categories'));
+        return $this->redirect(Route::getTaskCreate());
     }
 
     public function actionUpload()

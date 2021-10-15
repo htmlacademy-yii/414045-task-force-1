@@ -16,6 +16,7 @@ use frontend\models\Task;
     <h1>Публикация нового задания</h1>
     <div class="create__task-main">
         <?php $form = ActiveForm::begin([
+            'action' => '/create/check-form',
             'options' => [
                 'enctype' => 'multipart/form-data',
                 'class' => 'create__task-form form-create',

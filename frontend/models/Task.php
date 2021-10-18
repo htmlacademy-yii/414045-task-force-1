@@ -12,6 +12,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use frontend\models\Category;
 use Components\Categories\CategoryHelper;
+use yii\base\Model;
 
 /**
  * This is the model class for table "tasks".
@@ -25,7 +26,6 @@ use Components\Categories\CategoryHelper;
  * @property string $state
  * @property int $price
  * @property string|null $deadline
- * @property string|null $attachment_src
  * @property int|null $city_id
  * @property string|null $address
  * @property string|null $address_comment
@@ -42,8 +42,6 @@ use Components\Categories\CategoryHelper;
  */
 final class Task extends ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -119,17 +117,31 @@ final class Task extends ActiveRecord
     public function rules(): array
     {
         return [
+            [['category_id'], 'default', 'value' => 1],
             [
-                ['customer_id', 'title', 'category_id', 'state', 'price'],
-                'required',
+                ['category_id'],
+                'exist',
+                'targetClass' => Category::class,
+                'targetAttribute' => 'id',
+                'message' => 'Выбранной категории не существует'
             ],
             [['price'], 'integer', 'min' => 0],
-            [['description'], 'string'],
-            [['deadline', 'created_at', 'updated_at'], 'datetime'],
-            [['title'], 'string', 'max' => 64],
-            [['state'], 'in', TaskConstants::STATUS_MAP],
+            [['deadline'], 'default', 'value' => null],
+            [['deadline'], 'date', 'message' => 'Формат для ввода даты ""'],
+            [['created_at', 'updated_at'], 'datetime'],
+            [['title', 'description'], 'trim'],
+            [['title'], 'required', 'message' => 'Это поле не может быть пустым'],
             [
-                ['attachment_src', 'address', 'address_comment'],
+                'title',
+                'string',
+                'length' => [10, 64],
+                'tooShort' => 'Должно содержать от 10 символов',
+                'tooLong' => 'Должно содержать не более 64 символов'
+            ],
+            [['description'], 'string', 'min' => 30, 'tooShort' => 'Длина текста не может быть менее 30 символов'],
+            [['state'], 'in', 'range' => TaskConstants::STATUS_MAP],
+            [
+                ['address', 'address_comment'],
                 'string',
                 'max' => 256,
             ],
@@ -168,7 +180,6 @@ final class Task extends ActiveRecord
                     'state',
                     'price',
                     'deadline',
-                    'attachment_src',
                     'address',
                     'address_comment',
                     'created_at',
@@ -188,16 +199,15 @@ final class Task extends ActiveRecord
             'id' => 'ID',
             'customer_id' => 'Customer ID',
             'executor_id' => 'Executor ID',
-            'title' => 'Title',
-            'description' => 'Description',
-            'category_id' => 'CategoryHelper ID',
-            'state' => 'State',
-            'price' => 'Price',
-            'deadline' => 'Deadline',
-            'attachment_src' => 'Attachment Src',
-            'city_id' => 'City ID',
-            'address' => 'Address',
-            'address_comment' => 'Address Comment',
+            'title' => 'Мне нужно',
+            'description' => 'Подробности задания',
+            'category_id' => 'Категория',
+            'state' => 'Состояние',
+            'price' => 'Бюджет',
+            'deadline' => 'Сроки исполнения',
+            'city_id' => 'Город',
+            'address' => 'Локация',
+            'address_comment' => 'Комментарий к адресу',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

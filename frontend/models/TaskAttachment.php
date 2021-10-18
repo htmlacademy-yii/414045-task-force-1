@@ -12,8 +12,8 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int $task_id
- * @property string $file_type
  * @property string $file_name
+ * @property string $file_base_name
  * @property string $file_src
  * @property string|null $created_at
  * @property string|null $updated_at
@@ -22,6 +22,8 @@ use yii\db\ActiveRecord;
  */
 final class TaskAttachment extends ActiveRecord
 {
+    public const UPLOAD_DIR = '@webroot/uploads/';
+
     /**
      * {@inheritdoc}
      */
@@ -36,8 +38,8 @@ final class TaskAttachment extends ActiveRecord
     public function rules(): array
     {
         return [
-            [['task_id', 'file_type', 'file_name', 'file_src'], 'required'],
-            [['file_type'], 'string', 'max' => 32],
+            [['task_id', 'file_base_name', 'file_name', 'file_src'], 'required'],
+            [['file_base_name'], 'string', 'max' => 256],
             [['file_name'], 'string', 'max' => 64],
             [['file_src'], 'string', 'max' => 256],
             [['created_at', 'updated_at'], 'datetime'],

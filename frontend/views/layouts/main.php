@@ -10,6 +10,7 @@ use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
 use Components\Users\UserHelper;
+use yii\web\Request;
 
 $user = UserHelper::getUser();
 
@@ -96,9 +97,11 @@ AppAsset::register($this);
                     <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Route::getUsers() ?>">Исполнители</a>
                     </li>
-                    <li class="site-list__item">
-                        <a href="create.html">Создать задание</a>
-                    </li>
+                    <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+                        <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
+                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="site-list__item">
                         <a href="account.html">Мой профиль</a>
                     </li>
@@ -192,9 +195,11 @@ AppAsset::register($this);
                     <li class="links__item">
                         <a href="signup.html">Регистрация</a>
                     </li>
-                    <li class="links__item">
-                        <a href="create.html">Создать задание</a>
-                    </li>
+                    <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+                        <li class="links__item">
+                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="links__item">
                         <a href="">Справка</a>
                     </li>
@@ -214,5 +219,13 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 </body>
+<script src="/js/dropzone.js"></script>
+<script>
+    var dropzone = new Dropzone("div.create__file", {
+        headers: {"<?= Request::CSRF_HEADER ?>": "<?= Yii::$app->getRequest()->getCsrfToken() ?>"},
+        url: "/create/upload",
+        paramName: "attachmentFiles[]"
+    });
+</script>
 </html>
 <?php $this->endPage() ?>

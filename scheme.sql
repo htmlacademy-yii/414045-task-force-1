@@ -72,7 +72,6 @@ CREATE TABLE tasks
     state           varchar(10),
     price           int,
     deadline        date,
-    attachment_src  varchar(256),
     city_id         int,
     address         varchar(256),
     address_comment varchar(256),
@@ -88,7 +87,7 @@ CREATE TABLE task_attachments
 (
     id        int PRIMARY KEY AUTO_INCREMENT,
     task_id   int          NOT NULL,
-    file_type varchar(32)  NOT NULL,
+    file_base_name varchar(256)  NOT NULL,
     file_name varchar(64)  NOT NULL,
     file_src  varchar(256) NOT NULL,
     FOREIGN KEY (task_id) REFERENCES tasks (id)

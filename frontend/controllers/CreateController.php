@@ -6,6 +6,7 @@ use Components\Categories\CategoryHelper;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
+use Components\Tasks\Task as TaskHelper;
 use frontend\models\Task;
 use frontend\models\TaskAttachment;
 use frontend\models\User;
@@ -46,19 +47,9 @@ class CreateController extends SecuredController
                 $task->save();
                 $attachmentFileNames = Yii::$app->session->get('attachmentFileNames') ?? null;
 
-                if ($attachmentFileNames !== null) {
-                    foreach ($attachmentFileNames as $fileName) {
-                        $file = new TaskAttachment();
-                        $file->task_id = $task->id;
-                        $file->file_base_name = $fileName['baseName'];
-                        $file->file_name = $fileName['name'];
-                        $file->file_src = TaskAttachment::UPLOAD_DIR . $fileName['name'];
-                        if ($file->validate()) {
-                            $file->save();
-                        }
-                    }
-                }
+                TaskHelper::saveTaskAttachmentFiles($attachmentFileNames, $task->id);
                 Yii::$app->session->remove('attachmentFileNames');
+
                 return $this->redirect(Route::getTasks());
             }
             $this->task = $task;

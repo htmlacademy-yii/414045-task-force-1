@@ -8,6 +8,7 @@ use Components\Constants\ActionConstants;
 use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
+use frontend\models\TaskAttachment;
 
 /**
  * Class Task
@@ -32,6 +33,22 @@ class Task
     ) {
     }
 
+    public static function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
+    {
+        if ($attachmentFileNames !== null) {
+            foreach ($attachmentFileNames as $fileName) {
+                $file = new TaskAttachment();
+                $file->task_id = $taskId;
+                $file->file_base_name = $fileName['baseName'];
+                $file->file_name = $fileName['name'];
+                $file->file_src = TaskAttachment::UPLOAD_DIR . $fileName['name'];
+                if ($file->validate()) {
+                    $file->save();
+                }
+            }
+        }
+    }
+
     /**
      * Получить карту статусов задачи
      *
@@ -51,7 +68,6 @@ class Task
     {
         return ActionConstants::ACTION_MAP;
     }
-
 
     /**
      * Получить доступные действия для задачи

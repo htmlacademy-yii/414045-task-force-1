@@ -19,6 +19,8 @@ return [
                 'logout' => 'site/logout',
                 'tasks' => 'tasks/index',
                 'tasks/view/<id:\d+>' => 'tasks/get-view',
+                'tasks/view/<id:\d+>/response-accept/<responseId:\d+>' => 'tasks/response-accept',
+                'tasks/view/<id:\d+>/response-refuse/<responseId:\d+>' => 'tasks/response-refuse',
                 'users' => 'users/index',
                 'users/view/<id:\d+>' => 'users/get-view',
                 'registration' => 'registration/index',

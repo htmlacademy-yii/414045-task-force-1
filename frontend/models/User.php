@@ -134,7 +134,7 @@ final class User extends ActiveRecord implements IdentityInterface
             ['email', 'string', 'max' => 64],
             ['full_address', 'string', 'max' => 256],
             ['phone', 'string', 'max' => 20],
-            [['created_at', 'updated_at'], 'datetime'],
+            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
             [
                 ['city_id'],
                 'exist',

@@ -9,18 +9,19 @@ use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 use frontend\models\TaskAttachment;
+use frontend\models\Task;
 
 /**
- * Class Task
+ * Class TaskHelper
  *
  * @package Components\Tasks
  */
-class Task
+class TaskHelper
 {
     public string $taskState = TaskConstants::NEW_TASK_STATUS_NAME;
 
     /**
-     * Task constructor.
+     * TaskHelper constructor.
      *
      * @param int $user_id
      * @param int $customer_id
@@ -54,7 +55,7 @@ class Task
      *
      * @return array
      */
-    public function getStatusMap(): array
+    public static function getStatusMap(): array
     {
         return TaskConstants::STATUS_MAP_FOR_USER;
     }
@@ -64,33 +65,41 @@ class Task
      *
      * @return array
      */
-    public function getActionMap(): array
+    public static function getActionMap(): array
     {
         return ActionConstants::ACTION_MAP;
     }
 
     /**
-     * Получить доступные действия для задачи
+     * Получить доступные классы действий для задачи
      *
-     * @param string $state текущее состояние задачи
-     *
-     * @return array доступные действия
+     * @param Task $task
+     * @return array классы доступных действий
      * @throws TaskStateException
      */
-    public function getPossibleActions(string $state): array
+    public static function getPossibleActions(Task $task): array
     {
-        if (!array_key_exists($state, TaskConstants::STATUS_MAP_FOR_USER)) {
+        if (!array_key_exists($task->state, TaskConstants::STATUS_MAP_FOR_USER)) {
             throw new TaskStateException(
                 'Выбранного состояния задания не существует'
             );
         }
-        if (!array_key_exists($state, TaskConstants::TRANSFER_MAP)) {
+        if (!array_key_exists($task->state, TaskConstants::TRANSFER_MAP)) {
             throw new TaskStateException(
                 'Для выбранного статуса задания нет доступных действий'
             );
         }
 
-        return TaskConstants::TRANSFER_MAP[$state];
+        $actions = TaskConstants::TRANSFER_MAP[$task->state];
+        $possibleActions = [];
+
+        foreach ($actions as $action) {
+            if ($action::authActionForUser($task)) {
+                $possibleActions[] = $action;
+            }
+        }
+
+        return $possibleActions;
     }
 
     /**
@@ -101,7 +110,7 @@ class Task
      * @return string|null статус задачи после выполненного действия
      * @throws TaskActionException
      */
-    public function getTaskStateAfterAction(string $action): string|null
+    public static function getTaskStateAfterAction(string $action): string|null
     {
         if (in_array($action, ActionConstants::ACTION_MAP)) {
             throw new TaskActionException('Указанного действия не существует');

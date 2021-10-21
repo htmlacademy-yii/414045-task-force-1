@@ -6,17 +6,20 @@ namespace Components\Tasks;
 
 
 use Components\Constants\ActionConstants;
+use Components\Constants\UserConstants;
+use Components\Responses\ResponseHelper;
 use frontend\models\Task;
+use frontend\models\User;
 use Yii;
 
 /**
- * Class Cancel
+ * Class Response
  *
- * Действие отмены задачи заказчиком
+ * Действие отклика на задание исполнителя
  *
  * @package Components\Tasks
  */
-final class Cancel extends AbstractAction
+final class Response extends AbstractAction
 {
     /**
      * Возвращает название действия для отображения пользователю
@@ -26,7 +29,7 @@ final class Cancel extends AbstractAction
      */
     public static function getActionNameForUser(Task $task): string|null
     {
-        return self::authActionForUser($task) ? ActionConstants::CANCEL_ACTION_NAME_FOR_USER
+        return self::authActionForUser($task) ? ActionConstants::RESPONSE_ACTION_NAME_FOR_USER
             : null;
     }
 
@@ -38,7 +41,10 @@ final class Cancel extends AbstractAction
      */
     public static function authActionForUser(Task $task): bool
     {
-        return Yii::$app->user->id === $task->customer_id;
+        $user = User::findOne(Yii::$app->user->id);
+        $isUserSentResponse = ResponseHelper::isUserSentResponse($task);
+
+        return $user->role === UserConstants::USER_ROLE_EXECUTOR && !$isUserSentResponse;
     }
 
     /**
@@ -48,6 +54,6 @@ final class Cancel extends AbstractAction
      */
     public static function getActionName(): string
     {
-        return ActionConstants::CANCEL_ACTION_NAME;
+        return ActionConstants::RESPONSE_ACTION_NAME;
     }
 }

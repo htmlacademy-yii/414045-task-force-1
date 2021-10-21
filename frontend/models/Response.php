@@ -41,7 +41,7 @@ final class Response extends ActiveRecord
         return [
             [['task_id', 'user_id'], 'required'],
             [['content'], 'string'],
-            [['created_at', 'updated_at'], 'datetime'],
+            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
             [
                 ['task_id'],
                 'exist',
@@ -67,7 +67,7 @@ final class Response extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'task_id' => 'Task ID',
+            'task_id' => 'TaskHelper ID',
             'user_id' => 'UserHelper ID',
             'content' => 'Content',
             'created_at' => 'Created At',
@@ -76,7 +76,7 @@ final class Response extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Task]].
+     * Gets query for [[TaskHelper]].
      *
      * @return ActiveQuery
      */
@@ -95,14 +95,12 @@ final class Response extends ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    public static function getResponsesDataProvider($taskId): ActiveDataProvider
+    public static function getResponsesDataProvider($taskId, $executorId = null): ActiveDataProvider
     {
-        $query = (new Query())->select(['user_id', 'content', 'price', 'name', 'avatar_src', 'rating'])
-            ->from('responses')
-            ->where(['task_id' => $taskId])
-            ->leftJoin(['u' => 'users'], 'u.id = responses.user_id');
-
         $query = self::find()->where(['task_id' => $taskId]);
+        if ($executorId !== null) {
+            $query->andWhere(['user_id' => $executorId]);
+        }
 
         return new ActiveDataProvider([
             'query' => $query,

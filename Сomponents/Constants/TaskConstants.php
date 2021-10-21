@@ -5,7 +5,7 @@ namespace Components\Constants;
 use Components\Tasks\Cancel;
 use Components\Tasks\Done;
 use Components\Tasks\Refuse;
-use Components\Tasks\Respond;
+use Components\Tasks\Response;
 
 final class TaskConstants
 {
@@ -23,7 +23,7 @@ final class TaskConstants
 
     public const TRANSFER_MAP
         = [
-            self::NEW_TASK_STATUS_NAME => [Cancel::class, Respond::class],
+            self::NEW_TASK_STATUS_NAME => [Cancel::class, Response::class],
             self::IN_WORK_TASK_STATUS_NAME => [Done::class, Refuse::class],
         ];
     public const STATUS_MAP
@@ -45,7 +45,7 @@ final class TaskConstants
     public const STATE_AFTER_ACTION
         = [
             ActionConstants::CANCEL_ACTION_NAME => TaskConstants::CANCELED_TASK_STATUS_NAME,
-            ActionConstants::RESPOND_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
+            ActionConstants::RESPONSE_ACTION_NAME => TaskConstants::IN_WORK_TASK_STATUS_NAME,
             ActionConstants::DONE_ACTION_NAME => TaskConstants::DONE_TASK_STATUS_NAME,
             ActionConstants::REFUSE_ACTION_NAME => TaskConstants::FAILED_TASK_STATUS_NAME,
         ];

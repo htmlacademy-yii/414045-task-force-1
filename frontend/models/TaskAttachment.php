@@ -70,7 +70,7 @@ final class TaskAttachment extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'task_id' => 'Task ID',
+            'task_id' => 'TaskHelper ID',
             'file_type' => 'File Type',
             'file_name' => 'File Name',
             'file_src' => 'File Src',
@@ -80,7 +80,7 @@ final class TaskAttachment extends ActiveRecord
     }
 
     /**
-     * Gets query for [[Task]].
+     * Gets query for [[TaskHelper]].
      *
      * @return ActiveQuery
      */

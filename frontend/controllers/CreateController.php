@@ -6,7 +6,7 @@ use Components\Categories\CategoryHelper;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
-use Components\Tasks\Task as TaskHelper;
+use Components\Tasks\TaskHelper as TaskHelper;
 use frontend\models\Task;
 use frontend\models\TaskAttachment;
 use frontend\models\User;

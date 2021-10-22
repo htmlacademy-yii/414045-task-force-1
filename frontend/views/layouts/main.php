@@ -220,9 +220,7 @@ AppAsset::register($this);
         </div>
     </footer>
 </div>
-
-<?php $this->endBody() ?>
-</body>
+<div class="overlay"></div>
 <script src="/js/main.js"></script>
 <script src="/js/messenger.js"></script>
 <script src="/js/dropzone.js"></script>
@@ -233,5 +231,7 @@ AppAsset::register($this);
         paramName: "attachmentFiles[]"
     });
 </script>
+<?php $this->endBody() ?>
+</body>
 </html>
 <?php $this->endPage() ?>

@@ -38,7 +38,7 @@ final class Refuse extends AbstractAction
      */
     public static function authActionForUser(Task $task): bool
     {
-        return Yii::$app->user === $task->executor_id;
+        return Yii::$app->user->id === $task->executor_id;
     }
 
     /**

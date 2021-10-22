@@ -17,6 +17,8 @@ use yii\db\Query;
  * @property int $task_id
  * @property int $user_id
  * @property string|null $content
+ * @property int|null $price
+ * @property string|null $state
  * @property string|null $created_at
  * @property string|null $updated_at
  *
@@ -42,6 +44,7 @@ final class Response extends ActiveRecord
             [['task_id', 'user_id'], 'required'],
             [['content'], 'string'],
             [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['price'], 'match', 'pattern' => '/^[0-9]*$/', 'message' => 'Введите целое число'],
             [
                 ['task_id'],
                 'exist',
@@ -56,7 +59,7 @@ final class Response extends ActiveRecord
                 'targetClass' => User::class,
                 'targetAttribute' => ['user_id' => 'id'],
             ],
-            [['content', 'created_at', 'updated_at'], 'safe'],
+            [['content', 'price', 'state', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -69,7 +72,8 @@ final class Response extends ActiveRecord
             'id' => 'ID',
             'task_id' => 'TaskHelper ID',
             'user_id' => 'UserHelper ID',
-            'content' => 'Content',
+            'content' => 'Комментарий',
+            'price' =>  'Ваша цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

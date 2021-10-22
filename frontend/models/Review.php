@@ -94,7 +94,7 @@ final class Review extends ActiveRecord
             'id' => 'ID',
             'sender_id' => 'Sender ID',
             'addressee_id' => 'Addressee ID',
-            'task_id' => 'TaskHelper ID',
+            'task_id' => 'Task ID',
             'rating' => 'Rating',
             'content' => 'Content',
             'created_at' => 'Created At',

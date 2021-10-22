@@ -21,6 +21,12 @@ final class TaskConstants
     public const DONE_TASK_STATUS_NAME_FOR_USER = 'Выполнено';
     public const FAILED_TASK_STATUS_NAME_FOR_USER = 'Провалено';
 
+    public const TASK_COMPLETE_FORM_STATE_SUCCESS = 'yes';
+    public const TASK_COMPLETE_FORM_STATE_REFUSE = 'difficulties';
+
+    public const TASK_COMPLETE_FORM_STATE_SUCCESS_LABEL = 'Да';
+    public const TASK_COMPLETE_FORM_STATE_REFUSE_LABEL = 'Возникли проблемы';
+
     public const TRANSFER_MAP
         = [
             self::NEW_TASK_STATUS_NAME => [Cancel::class, Response::class],

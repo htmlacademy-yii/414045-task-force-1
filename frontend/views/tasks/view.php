@@ -1,17 +1,23 @@
 <?php
 
 use Components\Constants\UserConstants;
+use Components\Constants\ActionConstants;
 use Components\Routes\Route;
+use Components\Tasks\TaskHelper;
 use frontend\models\Task;
+use frontend\models\TaskCompleteForm;
 use frontend\models\User;
+use frontend\models\Response;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
 
 /**
  * @var Task $task ;
+ * @var TaskCompleteForm $taskCompleteForm ;
  * @var array $possibleTaskActions ;
  * @var array $taskAttachments ;
  * @var User $customer ;
+ * @var Response $response ;
  * @var bool $isUserSentResponse ;
  * @var ActiveDataProvider $dataProvider ;
  * @var int $countCustomerTasks ;
@@ -70,9 +76,11 @@ use yii\widgets\ListView;
         </div>
         <div class="content-view__action-buttons">
             <?php foreach ($possibleTaskActions as $action): ?>
+                <?php $actionName = $action::getActionName() ?>
                 <button
-                        class=" button button__big-color <?= $action::getActionName() ?>-button open-modal"
-                        type="button" data-for="<?= $action::getActionName() ?>-form"><?= $action::getActionNameForUser($task) ?>
+                        class=" button button__big-color <?= TaskHelper::getTaskActionButtonClassName($actionName) ?> open-modal"
+                        type="button"
+                        data-for="<?= TaskHelper::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -116,3 +124,6 @@ use yii\widgets\ListView;
         <chat class="connect-desk__chat"></chat>
     </div>
 </section>
+<?= $this->render('modalResponse', compact(['response'])) ?>
+<?= $this->render('modalComplete', compact(['taskCompleteForm'])) ?>
+<?= $this->render('modalRefuse', compact(['task'])) ?>

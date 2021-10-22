@@ -102,6 +102,16 @@ class TaskHelper
         return $possibleActions;
     }
 
+    public static function getTaskActionButtonClassName($actionName): string
+    {
+        return ActionConstants::ACTION_BUTTON_CLASS_NAMES_MAP[$actionName];
+    }
+
+    public static function getTaskActionDataForClassName($actionName): string
+    {
+        return ActionConstants::ACTION_DATA_FOR_CLASS_NAMES_MAP[$actionName];
+    }
+
     /**
      * Получить статус задачи после действия
      *

@@ -38,7 +38,7 @@ final class Done extends AbstractAction
      */
     public static function authActionForUser(Task $task): bool
     {
-        return Yii::$app->user === $task->customer_id;
+        return Yii::$app->user->id === $task->customer_id;
     }
 
     /**

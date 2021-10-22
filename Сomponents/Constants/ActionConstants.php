@@ -14,11 +14,37 @@ final class ActionConstants
     public const DONE_ACTION_NAME_FOR_USER = 'Выполнено';
     public const REFUSE_ACTION_NAME_FOR_USER = 'Отказаться';
 
+    public const CANCEL_ACTION_BUTTON_CLASS_NAME = 'refuse-button';
+    public const RESPONSE_ACTION_BUTTON_CLASS_NAME = 'response-button';
+    public const DONE_ACTION_BUTTON_CLASS_NAME = 'request-button';
+    public const REFUSE_ACTION_BUTTON_CLASS_NAME = 'refuse-button';
+
+    public const CANCEL_ACTION_DATA_FOR_CLASS_NAME = 'refuse-form';
+    public const RESPONSE_ACTION_DATA_FOR_CLASS_NAME = 'response-form';
+    public const DONE_ACTION_DATA_FOR_CLASS_NAME = 'complete-form';
+    public const REFUSE_ACTION_DATA_FOR_CLASS_NAME = 'refuse-form';
+
     public const ACTION_MAP
         = [
-            ActionConstants::CANCEL_ACTION_NAME => ActionConstants::CANCEL_ACTION_NAME_FOR_USER,
-            ActionConstants::RESPONSE_ACTION_NAME => ActionConstants::RESPONSE_ACTION_NAME_FOR_USER,
-            ActionConstants::DONE_ACTION_NAME => ActionConstants::DONE_ACTION_NAME_FOR_USER,
-            ActionConstants::REFUSE_ACTION_NAME => ActionConstants::REFUSE_ACTION_NAME_FOR_USER,
+            self::CANCEL_ACTION_NAME => self::CANCEL_ACTION_NAME_FOR_USER,
+            self::RESPONSE_ACTION_NAME => self::RESPONSE_ACTION_NAME_FOR_USER,
+            self::DONE_ACTION_NAME => self::DONE_ACTION_NAME_FOR_USER,
+            self::REFUSE_ACTION_NAME => self::REFUSE_ACTION_NAME_FOR_USER,
+        ];
+
+    public const ACTION_BUTTON_CLASS_NAMES_MAP
+        = [
+            self::CANCEL_ACTION_NAME => self::CANCEL_ACTION_BUTTON_CLASS_NAME,
+            self::RESPONSE_ACTION_NAME => self::RESPONSE_ACTION_BUTTON_CLASS_NAME,
+            self::DONE_ACTION_NAME => self::DONE_ACTION_BUTTON_CLASS_NAME,
+            self::REFUSE_ACTION_NAME => self::REFUSE_ACTION_BUTTON_CLASS_NAME,
+        ];
+
+    public const ACTION_DATA_FOR_CLASS_NAMES_MAP
+        = [
+            self::CANCEL_ACTION_NAME => self::CANCEL_ACTION_DATA_FOR_CLASS_NAME,
+            self::RESPONSE_ACTION_NAME => self::RESPONSE_ACTION_DATA_FOR_CLASS_NAME,
+            self::DONE_ACTION_NAME => self::DONE_ACTION_DATA_FOR_CLASS_NAME,
+            self::REFUSE_ACTION_NAME => self::REFUSE_ACTION_DATA_FOR_CLASS_NAME,
         ];
 }

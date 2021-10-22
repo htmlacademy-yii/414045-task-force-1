@@ -44,7 +44,7 @@ final class Response extends AbstractAction
         $user = User::findOne(Yii::$app->user->id);
         $isUserSentResponse = ResponseHelper::isUserSentResponse($task);
 
-        return $user->role === UserConstants::USER_ROLE_EXECUTOR && !$isUserSentResponse;
+        return $user->role === UserConstants::USER_ROLE_EXECUTOR && $user->id !== $task->customer_id && !$isUserSentResponse;
     }
 
     /**

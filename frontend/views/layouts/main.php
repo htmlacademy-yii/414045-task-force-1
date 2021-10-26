@@ -9,10 +9,10 @@ use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 use yii\web\Request;
 
-$user = UserHelper::getUser();
+$user = UserService::getUser();
 
 AppAsset::register($this);
 ?>

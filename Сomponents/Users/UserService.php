@@ -7,7 +7,7 @@ namespace Components\Users;
 use Yii;
 use frontend\models\User;
 
-final class UserHelper
+final class UserService
 {
     public static function getCountRatingStars($rating): float
     {

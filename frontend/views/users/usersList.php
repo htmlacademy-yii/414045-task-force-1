@@ -1,9 +1,9 @@
 <?php
 
 use Components\Constants\UserConstants;
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 
-$rating = UserHelper::getCountRatingStars($model->rating)
+$rating = UserService::getCountRatingStars($model->rating)
 ?>
 
 <div class="feedback-card__top">

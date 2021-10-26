@@ -12,28 +12,20 @@ use frontend\models\TaskAttachment;
 use frontend\models\Task;
 
 /**
- * Class TaskHelper
+ * Class TaskService
  *
  * @package Components\Tasks
  */
-class TaskHelper
+class TaskService
 {
     public string $taskState = TaskConstants::NEW_TASK_STATUS_NAME;
 
     /**
-     * TaskHelper constructor.
+     * Метод сохранения вложенных файлов для задачи
      *
-     * @param int $user_id
-     * @param int $customer_id
-     * @param int $executor_id
+     * @param $attachmentFileNames
+     * @param $taskId
      */
-    public function __construct(
-        private int $user_id,
-        private int $customer_id,
-        private int $executor_id
-    ) {
-    }
-
     public static function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
     {
         if ($attachmentFileNames !== null) {
@@ -74,7 +66,7 @@ class TaskHelper
      * Получить доступные классы действий для задачи
      *
      * @param Task $task
-     * @return array классы доступных действий
+     * @return array Классы доступных действий
      * @throws TaskStateException
      */
     public static function getPossibleActions(Task $task): array
@@ -93,6 +85,9 @@ class TaskHelper
         $actions = TaskConstants::TRANSFER_MAP[$task->state];
         $possibleActions = [];
 
+        /**
+         * @var AbstractAction $action
+         */
         foreach ($actions as $action) {
             if ($action::authActionForUser($task)) {
                 $possibleActions[] = $action;
@@ -102,11 +97,43 @@ class TaskHelper
         return $possibleActions;
     }
 
+    /**
+     * Метод проверяет, может ли задача быть закончена
+     *
+     * @param Task $task
+     * @return bool
+     * @throws TaskStateException
+     */
+    public static function isTaskCanBeComplete(Task $task): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Done::class) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Метод возвращает имя класса для кнопки действия
+     *
+     * @param $actionName
+     * @return string
+     */
     public static function getTaskActionButtonClassName($actionName): string
     {
         return ActionConstants::ACTION_BUTTON_CLASS_NAMES_MAP[$actionName];
     }
 
+    /**
+     * Метод возвращает имя класса для DataFor
+     *
+     * @param $actionName
+     * @return string
+     */
     public static function getTaskActionDataForClassName($actionName): string
     {
         return ActionConstants::ACTION_DATA_FOR_CLASS_NAMES_MAP[$actionName];
@@ -117,7 +144,7 @@ class TaskHelper
      *
      * @param string $action действие
      *
-     * @return string|null статус задачи после выполненного действия
+     * @return string|null Статус задачи после выполненного действия
      * @throws TaskActionException
      */
     public static function getTaskStateAfterAction(string $action): string|null

@@ -8,7 +8,7 @@ class TaskCompleteForm extends Model
 {
     public string $completeState = '';
     public string $comment = '';
-    public ?int $rating = null;
+    public string $rating = '';
 
     public function rules()
     {
@@ -23,6 +23,8 @@ class TaskCompleteForm extends Model
     {
         return [
             'comment' => 'Комментарий',
+            'rating' => 'Рейтинг',
+            'completeState' => 'completeState'
         ];
     }
 }

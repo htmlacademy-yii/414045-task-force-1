@@ -86,7 +86,7 @@ final class UserSetting extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'UserHelper ID',
+            'user_id' => 'UserService ID',
             'is_message_ntf_enabled' => 'Is Message Ntf Enabled',
             'is_action_ntf_enabled' => 'Is Action Ntf Enabled',
             'is_new_review_ntf_enabled' => 'Is New Review Ntf Enabled',
@@ -98,7 +98,7 @@ final class UserSetting extends ActiveRecord
     }
 
     /**
-     * Gets query for [[UserHelper]].
+     * Gets query for [[UserService]].
      *
      * @return ActiveQuery
      */

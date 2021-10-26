@@ -8,12 +8,12 @@
 
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 use frontend\models\User;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
 
-$rating = UserHelper::getCountRatingStars($user->rating);
+$rating = UserService::getCountRatingStars($user->rating);
 ?>
 
 <section class="content-view">

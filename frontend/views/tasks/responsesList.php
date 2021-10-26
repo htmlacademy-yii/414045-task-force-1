@@ -7,10 +7,10 @@ use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Constants\ResponseConstants;
 use Components\Routes\Route;
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 use frontend\models\Response;
 
-$rating = UserHelper::getCountRatingStars($model->user->rating);
+$rating = UserService::getCountRatingStars($model->user->rating);
 ?>
 
     <div class="feedback-card__top">

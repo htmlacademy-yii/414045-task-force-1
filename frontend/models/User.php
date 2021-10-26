@@ -12,7 +12,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use frontend\models\Category;
-use Components\Categories\CategoryHelper;
+use Components\Categories\CategoryService;
 use yii\web\IdentityInterface;
 
 /**
@@ -74,7 +74,7 @@ final class User extends ActiveRecord implements IdentityInterface
             's.user_id = users.id')->where($conditions);
 
         if (!empty($filter->showCategories)) {
-            $category = new CategoryHelper();
+            $category = new CategoryService();
             $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
             $query->filterWhere($conditionCategoryId);
         }

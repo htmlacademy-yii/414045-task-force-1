@@ -70,8 +70,8 @@ final class Response extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'task_id' => 'TaskHelper ID',
-            'user_id' => 'UserHelper ID',
+            'task_id' => 'Task ID',
+            'user_id' => 'User ID',
             'content' => 'Комментарий',
             'price' =>  'Ваша цена',
             'created_at' => 'Created At',
@@ -80,7 +80,7 @@ final class Response extends ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskHelper]].
+     * Gets query for [[TaskService]].
      *
      * @return ActiveQuery
      */
@@ -90,7 +90,7 @@ final class Response extends ActiveRecord
     }
 
     /**
-     * Gets query for [[UserHelper]].
+     * Gets query for [[UserService]].
      *
      * @return ActiveQuery
      */

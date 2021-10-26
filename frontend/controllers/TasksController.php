@@ -7,11 +7,11 @@ namespace frontend\controllers;
 use Components\Constants\CategoryConstants;
 use Components\Constants\ResponseConstants;
 use Components\Constants\TaskConstants;
-use Components\Responses\ResponseHelper;
+use Components\Responses\ResponseService;
+use Components\Reviews\ReviewService;
 use Components\Routes\Route;
-use Components\Tasks\TaskHelper as TaskHelper;
+use Components\Tasks\TaskService;
 use frontend\models\Response;
-use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\TaskFilter;
@@ -44,7 +44,7 @@ final class TasksController extends SecuredController
         return $taskFilter;
     }
 
-    public function actionResponseAccept($id, $responseId)
+    public function actionResponseAccept($id, $responseId): \yii\web\Response
     {
         $task = Task::findOne($id);
         $response = Response::findOne($responseId);
@@ -60,7 +60,7 @@ final class TasksController extends SecuredController
         return $this->redirect(Route::getTaskView($id));
     }
 
-    public function actionResponseRefuse($id, $responseId)
+    public function actionResponseRefuse($id, $responseId): \yii\web\Response
     {
         $task = Task::findOne($id);
         $response = Response::findOne($responseId);
@@ -92,8 +92,8 @@ final class TasksController extends SecuredController
         $userId = Yii::$app->user->id;
         $taskCompleteForm = new TaskCompleteForm();
         $response = new Response();
-        $isUserSentResponse = ResponseHelper::isUserSentResponse($task);
-        $possibleTaskActions = TaskHelper::getPossibleActions($task);
+        $isUserSentResponse = ResponseService::isUserSentResponse($task);
+        $possibleTaskActions = TaskService::getPossibleActions($task);
         $customer = $task->customer;
         $countCustomerTasks = count($customer->tasks);
         $countResponses = count($task->responses);
@@ -123,45 +123,25 @@ final class TasksController extends SecuredController
             ));
     }
 
-    public function actionResponse($id)
+    public function actionResponse($id): \yii\web\Response
     {
         $task = Task::findOne($id);
-        $isUserSentResponse = ResponseHelper::isUserSentResponse($task);
+        $isUserSentResponse = ResponseService::isUserSentResponse($task);
 
         if (Yii::$app->request->isPost && !$isUserSentResponse) {
-            $response = new Response();
-            $response->load(Yii::$app->request->post());
-            $response->user_id = Yii::$app->user->id;
-            $response->task_id = $id;
-            $response->state = ResponseConstants::NEW_STATUS_NAME;
-
-            if ($response->validate()) {
-                $response->save();
-            }
+            ResponseService::createResponse($id);
         }
 
         return $this->redirect(Route::getTaskView($id));
     }
 
-    public function actionComplete($id)
+    public function actionComplete($id): \yii\web\Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
-        $completeForm = new TaskCompleteForm();
-        $completeForm->load(Yii::$app->request->post());
 
-        if (Yii::$app->request->isPost && $task->customer_id === $userId && $completeForm->validate()) {
-            $review = new Review();
-            $review->task_id = $task->id;
-            $review->sender_id = $userId;
-            $review->addressee_id = $task->executor_id;
-            $review->rating = $completeForm->rating ?? null;
-            $review->content = $completeForm->comment ?? null;
-            $task->state = $completeForm->completeState === TaskConstants::TASK_COMPLETE_FORM_STATE_SUCCESS
-                ? TaskConstants::DONE_TASK_STATUS_NAME
-                : TaskConstants::FAILED_TASK_STATUS_NAME;
-            $review->save();
-            $task->save();
+        if (TaskService::isTaskCanBeComplete($task) && Yii::$app->request->isPost) {
+            ReviewService::createReview($task, $userId);
 
             return $this->redirect(Route::getTasks());
         }
@@ -169,7 +149,7 @@ final class TasksController extends SecuredController
         return $this->redirect(Route::getTaskView($id));
     }
 
-    public function actionRefuse($id)
+    public function actionRefuse($id): \yii\web\Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;

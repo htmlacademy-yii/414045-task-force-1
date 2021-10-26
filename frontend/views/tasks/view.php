@@ -3,7 +3,7 @@
 use Components\Constants\UserConstants;
 use Components\Constants\ActionConstants;
 use Components\Routes\Route;
-use Components\Tasks\TaskHelper;
+use Components\Tasks\TaskService;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\User;
@@ -78,9 +78,9 @@ use yii\widgets\ListView;
             <?php foreach ($possibleTaskActions as $action): ?>
                 <?php $actionName = $action::getActionName() ?>
                 <button
-                        class=" button button__big-color <?= TaskHelper::getTaskActionButtonClassName($actionName) ?> open-modal"
+                        class=" button button__big-color <?= TaskService::getTaskActionButtonClassName($actionName) ?> open-modal"
                         type="button"
-                        data-for="<?= TaskHelper::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
+                        data-for="<?= TaskService::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
                 </button>
             <?php endforeach; ?>
         </div>

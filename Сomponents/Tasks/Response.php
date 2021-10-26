@@ -7,7 +7,7 @@ namespace Components\Tasks;
 
 use Components\Constants\ActionConstants;
 use Components\Constants\UserConstants;
-use Components\Responses\ResponseHelper;
+use Components\Responses\ResponseService;
 use frontend\models\Task;
 use frontend\models\User;
 use Yii;
@@ -42,7 +42,7 @@ final class Response extends AbstractAction
     public static function authActionForUser(Task $task): bool
     {
         $user = User::findOne(Yii::$app->user->id);
-        $isUserSentResponse = ResponseHelper::isUserSentResponse($task);
+        $isUserSentResponse = ResponseService::isUserSentResponse($task);
 
         return $user->role === UserConstants::USER_ROLE_EXECUTOR && $user->id !== $task->customer_id && !$isUserSentResponse;
     }

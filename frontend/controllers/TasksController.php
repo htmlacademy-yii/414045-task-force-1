@@ -123,24 +123,29 @@ final class TasksController extends SecuredController
             ));
     }
 
+    /**
+     * @throws TaskStateException
+     */
     public function actionResponse($id): \yii\web\Response
     {
         $task = Task::findOne($id);
-        $isUserSentResponse = ResponseService::isUserSentResponse($task);
 
-        if (Yii::$app->request->isPost && !$isUserSentResponse) {
+        if (TaskService::isTaskCanBeResponse($task) && Yii::$app->request->isPost) {
             ResponseService::createResponse($id);
         }
 
         return $this->redirect(Route::getTaskView($id));
     }
 
+    /**
+     * @throws TaskStateException
+     */
     public function actionComplete($id): \yii\web\Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
 
-        if (TaskService::isTaskCanBeComplete($task) && Yii::$app->request->isPost) {
+        if (TaskService::isTaskCanBeComplete($task, $userId) && Yii::$app->request->isPost) {
             ReviewService::createReview($task, $userId);
 
             return $this->redirect(Route::getTasks());
@@ -149,20 +154,34 @@ final class TasksController extends SecuredController
         return $this->redirect(Route::getTaskView($id));
     }
 
+    /**
+     * @throws TaskStateException
+     */
     public function actionRefuse($id): \yii\web\Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
 
-        if (Yii::$app->request->isPost && $task->customer_id === $userId && $task->state === TaskConstants::NEW_TASK_STATUS_NAME) {
-            $task->state = TaskConstants::CANCELED_TASK_STATUS_NAME;
+        if (TaskService::isTaskCanBeRefuse($task, $userId) && Yii::$app->request->isPost) {
+            $task->state = TaskConstants::FAILED_TASK_STATUS_NAME;
             $task->save();
 
             return $this->redirect(Route::getTasks());
         }
 
-        if (Yii::$app->request->isPost && $task->executor_id === $userId && $task->state === TaskConstants::IN_WORK_TASK_STATUS_NAME) {
-            $task->state = TaskConstants::FAILED_TASK_STATUS_NAME;
+        return $this->redirect(Route::getTaskView($id));
+    }
+
+    /**
+     * @throws TaskStateException
+     */
+    public function actionCancel($id): \yii\web\Response
+    {
+        $task = Task::findOne($id);
+        $userId = Yii::$app->user->id;
+
+        if (TaskService::isTaskCanBeCancel($task, $userId) && Yii::$app->request->isPost) {
+            $task->state = TaskConstants::CANCELED_TASK_STATUS_NAME;
             $task->save();
 
             return $this->redirect(Route::getTasks());

@@ -8,6 +8,7 @@ use Components\Constants\ActionConstants;
 use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
+use Components\Responses\ResponseService;
 use frontend\models\TaskAttachment;
 use frontend\models\Task;
 
@@ -101,15 +102,79 @@ class TaskService
      * Метод проверяет, может ли задача быть закончена
      *
      * @param Task $task
+     * @param int $userId
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeComplete(Task $task): bool
+    public static function isTaskCanBeComplete(Task $task, int $userId): bool
     {
         $possibleActions = self::getPossibleActions($task);
 
         foreach ($possibleActions as $action) {
-            if ($action === Done::class) {
+            if ($action === Done::class && $task->customer_id === $userId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Метод проверяет, может ли задача быть отменена исполнителем
+     *
+     * @param Task $task
+     * @param int $userId
+     * @return bool
+     * @throws TaskStateException
+     */
+    public static function isTaskCanBeRefuse(Task $task, int $userId): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Refuse::class && $task->executor_id === $userId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Метод проверяет, может ли задача быть отменена заказчиком
+     *
+     * @param Task $task
+     * @param int $userId
+     * @return bool
+     * @throws TaskStateException
+     */
+    public static function isTaskCanBeCancel(Task $task, int $userId): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Cancel::class && $task->customer_id === $userId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Метод проверяет, можно ли откликнуться на задачу
+     *
+     * @param Task $task
+     * @return bool
+     * @throws TaskStateException
+     */
+    public static function isTaskCanBeResponse(Task $task): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+        $isUserSentResponse = ResponseService::isUserSentResponse($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Refuse::class && !$isUserSentResponse) {
                 return true;
             }
         }

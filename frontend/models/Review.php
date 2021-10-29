@@ -123,7 +123,7 @@ final class Review extends ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskService]].
+     * Gets query for [[Task]].
      *
      * @return ActiveQuery
      */

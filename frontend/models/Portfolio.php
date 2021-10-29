@@ -63,7 +63,7 @@ final class Portfolio extends ActiveRecord
     }
 
     /**
-     * Gets query for [[UserService]].
+     * Gets query for [[User]].
      *
      * @return ActiveQuery
      */

@@ -16,6 +16,7 @@ use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\TaskFilter;
 use Yii;
+use yii\db\Exception;
 use yii\web\HttpException;
 use Components\Exceptions\TaskStateException;
 
@@ -50,11 +51,26 @@ final class TasksController extends SecuredController
         $response = Response::findOne($responseId);
 
         if (Yii::$app->user->id === $task->customer_id || $response !== null) {
-            $response->state = ResponseConstants::ACCEPT_STATUS_NAME;
-            $task->executor_id = $response->user_id;
-            $task->state = TaskConstants::IN_WORK_TASK_STATUS_NAME;
-            $task->save();
-            $response->save();
+
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try {
+                $response->state = ResponseConstants::ACCEPT_STATUS_NAME;
+                $task->executor_id = $response->user_id;
+                $task->state = TaskConstants::IN_WORK_TASK_STATUS_NAME;
+
+                if (!$task->save()) {
+                    throw new Exception('Ошибка сохранения задачи!');
+                }
+
+                if (!$response->save()) {
+                    throw new Exception('Ошибка сохранения отклика!');
+                }
+
+                $transaction->commit();
+            } catch (Exception) {
+                $transaction->rollBack();
+            }
         }
 
         return $this->redirect(Route::getTaskView($id));

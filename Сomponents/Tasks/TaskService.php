@@ -31,11 +31,10 @@ class TaskService
     {
         if ($attachmentFileNames !== null) {
             foreach ($attachmentFileNames as $fileName) {
-                $file = new TaskAttachment();
-                $file->task_id = $taskId;
-                $file->file_base_name = $fileName['baseName'];
-                $file->file_name = $fileName['name'];
-                $file->file_src = TaskAttachment::UPLOAD_DIR . $fileName['name'];
+                /**
+                 * @var TaskAttachment $file
+                 */
+                $file = (new TaskAttachmentFactory())->create($taskId, $fileName);
                 if ($file->validate()) {
                     $file->save();
                 }
@@ -174,7 +173,7 @@ class TaskService
         $isUserSentResponse = ResponseService::isUserSentResponse($task);
 
         foreach ($possibleActions as $action) {
-            if ($action === Refuse::class && !$isUserSentResponse) {
+            if ($action === Response::class && !$isUserSentResponse) {
                 return true;
             }
         }

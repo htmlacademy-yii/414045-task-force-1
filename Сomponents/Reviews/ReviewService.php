@@ -7,6 +7,7 @@ use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use Yii;
+use yii\db\Exception;
 
 class ReviewService
 {
@@ -19,33 +20,56 @@ class ReviewService
      * @param int $userId
      * @return bool
      */
-    public static function createReview(Task $task, int $userId)
+    public static function createReview(Task $task, int $userId): bool
     {
-        $review = new Review();
         $completeForm = new TaskCompleteForm();
         $completeForm->load(Yii::$app->request->post());
 
         if ($task->customer_id === $userId && $completeForm->validate()) {
-            $review->task_id = $task->id;
-            $review->sender_id = $userId;
-            $review->addressee_id = $task->executor_id;
-            $review->rating = $completeForm->rating ?? '';
-            $review->comment = $completeForm->comment ?? '';
+            $review = (new ReviewFactory())->create($task, $completeForm, $userId);
             $task->state = $completeForm->completeState === TaskConstants::TASK_COMPLETE_FORM_STATE_SUCCESS
                 ? TaskConstants::DONE_TASK_STATUS_NAME
                 : TaskConstants::FAILED_TASK_STATUS_NAME;
 
-            if (!$review->validate()) {
-                return false;
+            if (self::saveReview($task, $review))
+            {
+                return true;
             }
-
-            if (!$review->save() || !$task->save()) {
-                return false;
-            }
-
-            return true;
         }
 
         return false;
+    }
+
+    /**
+     * Метод сохраняет отзыв и новый статус задачи
+     *
+     * @param Task $task
+     * @param Review $review
+     * @return bool
+     */
+    public static function saveReview(Task $task, Review $review): bool
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            if (!$review->validate()) {
+                throw new Exception('Ошибка валидации');
+            }
+
+            if (!$review->save()) {
+                throw new Exception('Ошибка сохранения отзыва');
+            }
+
+            if (!$review->save() || !$task->save()) {
+                throw new Exception('Ошибка сохранения задачи');
+            }
+
+            $transaction->commit();
+        } catch (Exception) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        return true;
     }
 }

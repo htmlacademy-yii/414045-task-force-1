@@ -2,7 +2,6 @@
 
 namespace Components\Responses;
 
-use Components\Constants\ResponseConstants;
 use frontend\models\Response;
 use frontend\models\Task;
 use Yii;
@@ -14,17 +13,28 @@ class ResponseService
      *
      * Создаёт экземпляр класса Response, наполняет данными из формы и сохраняет
      *
-     * @param int $taskId
+     * @param $taskId
      * @return bool
      */
-    public static function createResponse(int $taskId): bool
+    public static function createResponse($taskId): bool
     {
-        $response = new Response();
-        $response->load(Yii::$app->request->post());
-        $response->user_id = Yii::$app->user->id;
-        $response->task_id = $taskId;
-        $response->state = ResponseConstants::NEW_STATUS_NAME;
+        $response = (new ResponseFactory())->create($taskId);
 
+        if (!self::saveResponse($response)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Метод сохраняет отклик
+     *
+     * @param Response $response
+     * @return bool
+     */
+    public static function saveResponse(Response $response): bool
+    {
         if (!$response->validate()) {
             return false;
         }

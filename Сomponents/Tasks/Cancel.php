@@ -6,6 +6,8 @@ namespace Components\Tasks;
 
 
 use Components\Constants\ActionConstants;
+use frontend\models\Task;
+use Yii;
 
 /**
  * Class Cancel
@@ -19,22 +21,24 @@ final class Cancel extends AbstractAction
     /**
      * Возвращает название действия для отображения пользователю
      *
+     * @param Task $task
      * @return string|null
      */
-    public function getActionNameForUser(): string|null
+    public static function getActionNameForUser(Task $task): string|null
     {
-        return $this->authUser() ? ActionConstants::CANCEL_ACTION_NAME_FOR_USER
+        return self::authActionForUser($task) ? ActionConstants::CANCEL_ACTION_NAME_FOR_USER
             : null;
     }
 
     /**
      * Проверяет доступно ли действие для роли пользователя
      *
+     * @param Task $task
      * @return bool
      */
-    public function authUser(): bool
+    public static function authActionForUser(Task $task): bool
     {
-        return $this->user_id === $this->customer_id;
+        return Yii::$app->user->id === $task->customer_id;
     }
 
     /**
@@ -42,7 +46,7 @@ final class Cancel extends AbstractAction
      *
      * @return string
      */
-    public function getActionName(): string
+    public static function getActionName(): string
     {
         return ActionConstants::CANCEL_ACTION_NAME;
     }

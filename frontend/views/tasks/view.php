@@ -1,16 +1,24 @@
 <?php
 
 use Components\Constants\UserConstants;
+use Components\Constants\ActionConstants;
 use Components\Routes\Route;
+use Components\Tasks\TaskService;
 use frontend\models\Task;
+use frontend\models\TaskCompleteForm;
 use frontend\models\User;
+use frontend\models\Response;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
 
 /**
  * @var Task $task ;
+ * @var TaskCompleteForm $taskCompleteForm ;
+ * @var array $possibleTaskActions ;
  * @var array $taskAttachments ;
  * @var User $customer ;
+ * @var Response $response ;
+ * @var bool $isUserSentResponse ;
  * @var ActiveDataProvider $dataProvider ;
  * @var int $countCustomerTasks ;
  * @var int $countResponses ;
@@ -29,7 +37,8 @@ use yii\widgets\ListView;
                 <div class="content-view__headline">
                     <h1><?= $task->title ?></h1>
                     <span>Размещено в категории
-                                    <a href="<?= Route::getTasks($categoryId) ?>" class="link-regular"><?= $categoryName ?></a>
+                                    <a href="<?= Route::getTasks($categoryId) ?>"
+                                       class="link-regular"><?= $categoryName ?></a>
                                     25 минут назад</span>
                 </div>
                 <b class="new-task__price new-task__price--<?= $categoryClassName ?> content-view-price"><?= $task->price ?>
@@ -66,32 +75,33 @@ use yii\widgets\ListView;
             </div>
         </div>
         <div class="content-view__action-buttons">
-            <button class=" button button__big-color response-button open-modal"
-                    type="button" data-for="response-form">Откликнуться
-            </button>
-            <button class="button button__big-color refusal-button open-modal"
-                    type="button" data-for="refuse-form">Отказаться
-            </button>
-            <button class="button button__big-color request-button open-modal"
-                    type="button" data-for="complete-form">Завершить
-            </button>
+            <?php foreach ($possibleTaskActions as $action): ?>
+                <?php $actionName = $action::getActionName() ?>
+                <button
+                        class=" button button__big-color <?= TaskService::getTaskActionButtonClassName($actionName) ?> open-modal"
+                        type="button"
+                        data-for="<?= TaskService::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
+                </button>
+            <?php endforeach; ?>
         </div>
     </div>
-    <div class="content-view__feedback">
-        <h2>Отклики <span>(<?= $countResponses ?>)</span></h2>
-        <?php echo ListView::widget([
-            'dataProvider' => $dataProvider,
-            'itemView' => 'responsesList',
-            'layout' => "{items}{pager}",
-            'options' => [
-                'class' => 'content-view__feedback-wrapper'
-            ],
-            'itemOptions' => [
-                'class' => 'content-view__feedback-card',
-            ],
-            'emptyText' => 'Откликов на выбранную задачу нет'
-        ]) ?>
-    </div>
+    <?php if (Yii::$app->user->id === $task->customer_id || $isUserSentResponse): ?>
+        <div class="content-view__feedback">
+            <h2>Отклики <span><?= !$isUserSentResponse ? '(' . $countResponses . ')' : '' ?></span></h2>
+            <?php echo ListView::widget([
+                'dataProvider' => $dataProvider,
+                'itemView' => 'responsesList',
+                'layout' => "{items}{pager}",
+                'options' => [
+                    'class' => 'content-view__feedback-wrapper'
+                ],
+                'itemOptions' => [
+                    'class' => 'content-view__feedback-card',
+                ],
+                'emptyText' => 'Откликов на выбранную задачу нет'
+            ]) ?>
+        </div>
+    <?php endif; ?>
 </section>
 <section class="connect-desk">
     <div class="connect-desk__profile-mini">
@@ -114,3 +124,6 @@ use yii\widgets\ListView;
         <chat class="connect-desk__chat"></chat>
     </div>
 </section>
+<?= $this->render('modalResponse', compact(['response'])) ?>
+<?= $this->render('modalComplete', compact(['taskCompleteForm'])) ?>
+<?= $this->render('modalRefuse', compact(['task'])) ?>

@@ -16,7 +16,7 @@ use yii\db\ActiveRecord;
  * @property int $addressee_id
  * @property int $task_id
  * @property int $rating
- * @property string $content
+ * @property string $comment
  * @property string|null $created_at
  * @property string|null $updated_at
  *
@@ -53,11 +53,11 @@ final class Review extends ActiveRecord
     {
         return [
             [
-                ['sender_id', 'addressee_id', 'task_id', 'rating', 'content'],
+                ['sender_id', 'addressee_id', 'task_id'],
                 'required',
             ],
             [['rating'], 'integer', 'min' => 0, 'max' => 500],
-            [['content'], 'string'],
+            [['comment'], 'string'],
             [['created_at', 'updated_at'], 'datetime'],
             [['task_id'], 'unique'],
             [
@@ -81,7 +81,7 @@ final class Review extends ActiveRecord
                 'targetClass' => Task::class,
                 'targetAttribute' => ['task_id' => 'id'],
             ],
-            [['rating', 'content', 'created_at', 'updated_at'], 'safe'],
+            [['rating', 'comment', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -96,7 +96,7 @@ final class Review extends ActiveRecord
             'addressee_id' => 'Addressee ID',
             'task_id' => 'Task ID',
             'rating' => 'Rating',
-            'content' => 'Content',
+            'comment' => 'comment',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

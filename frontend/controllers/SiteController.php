@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 use frontend\models\LoginForm;
 use Components\Routes\Route;
 use Yii;

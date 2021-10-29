@@ -85,11 +85,11 @@ CREATE TABLE tasks
 
 CREATE TABLE task_attachments
 (
-    id        int PRIMARY KEY AUTO_INCREMENT,
-    task_id   int          NOT NULL,
-    file_base_name varchar(256)  NOT NULL,
-    file_name varchar(64)  NOT NULL,
-    file_src  varchar(256) NOT NULL,
+    id             int PRIMARY KEY AUTO_INCREMENT,
+    task_id        int          NOT NULL,
+    file_base_name varchar(256) NOT NULL,
+    file_name      varchar(64)  NOT NULL,
+    file_src       varchar(256) NOT NULL,
     FOREIGN KEY (task_id) REFERENCES tasks (id)
 );
 
@@ -110,8 +110,8 @@ CREATE TABLE reviews
     sender_id    int        NOT NULL,
     addressee_id int        NOT NULL,
     task_id      int UNIQUE NOT NULL,
-    rating       int        NOT NULL,
-    content      text       NOT NULL,
+    rating       int,
+    comment      text,
     created_at   datetime default current_timestamp,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (addressee_id) REFERENCES users (id),
@@ -125,6 +125,7 @@ CREATE TABLE responses
     user_id    int NOT NULL,
     content    text,
     price      int,
+    state      varchar(10),
     created_at datetime default current_timestamp,
     updated_at datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (task_id) REFERENCES tasks (id),

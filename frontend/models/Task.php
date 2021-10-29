@@ -11,7 +11,7 @@ use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use frontend\models\Category;
-use Components\Categories\CategoryHelper;
+use Components\Categories\CategoryService;
 use yii\base\Model;
 
 /**
@@ -56,7 +56,7 @@ final class Task extends ActiveRecord
         $query = self::find()->where($conditions);
 
         if (!empty($filter->showCategories)) {
-            $category = new CategoryHelper();
+            $category = new CategoryService();
             $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
             $query->filterWhere($conditionCategoryId);
         }
@@ -128,7 +128,7 @@ final class Task extends ActiveRecord
             [['price'], 'integer', 'min' => 0],
             [['deadline'], 'default', 'value' => null],
             [['deadline'], 'date', 'message' => 'Формат для ввода даты ""'],
-            [['created_at', 'updated_at'], 'datetime'],
+            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
             [['title', 'description'], 'trim'],
             [['title'], 'required', 'message' => 'Это поле не может быть пустым'],
             [
@@ -264,7 +264,7 @@ final class Task extends ActiveRecord
     }
 
     /**
-     * Gets query for [[CategoryHelper]].
+     * Gets query for [[CategoryService]].
      *
      * @return ActiveQuery
      */

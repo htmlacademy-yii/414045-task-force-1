@@ -9,10 +9,10 @@ use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use yii\web\View;
-use Components\Users\UserHelper;
+use Components\Users\UserService;
 use yii\web\Request;
 
-$user = UserHelper::getUser();
+$user = UserService::getUser();
 
 AppAsset::register($this);
 ?>
@@ -89,77 +89,79 @@ AppAsset::register($this);
                     </svg>
                 </a>
             </div>
-            <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item <?= Yii::$app->request->get('r') === 'tasks' ? 'site-list__item--active' : '' ?>">
-                        <a href="<?= Route::getTasks() ?>">Задания</a>
-                    </li>
-                    <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
-                        <a href="<?= Route::getUsers() ?>">Исполнители</a>
-                    </li>
-                    <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
-                        <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
-                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <div class="header__nav">
+                    <ul class="header-nav__list site-list">
+                        <li class="site-list__item <?= Yii::$app->request->get('r') === 'tasks' ? 'site-list__item--active' : '' ?>">
+                            <a href="<?= Route::getTasks() ?>">Задания</a>
                         </li>
-                    <?php endif; ?>
-                    <li class="site-list__item">
-                        <a href="account.html">Мой профиль</a>
-                    </li>
-                </ul>
-            </div>
-            <?php if (Yii::$app->user->identity): ?>
-                <div class="header__town">
-                    <select class="multiple-select input town-select" size="1"
-                            name="town[]">
-                        <option value="Moscow">Москва</option>
-                        <option selected value="SPB">Санкт-Петербург</option>
-                        <option value="Krasnodar">Краснодар</option>
-                        <option value="Irkutsk">Иркутск</option>
-                        <option value="Vladivostok">Владивосток</option>
-                    </select>
-                </div>
-                <div class="header__lightbulb"></div>
-                <div class="lightbulb__pop-up">
-                    <h3>Новые события</h3>
-                    <p class="lightbulb__new-task lightbulb__new-task--message">
-                        Новое сообщение в чате
-                        <a href="view.html" class="link-regular">«Помочь с
-                            курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        Выбран исполнитель для
-                        <a href="view.html" class="link-regular">«Помочь с
-                            курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--close">
-                        Завершено задание
-                        <a href="view.html" class="link-regular">«Помочь с
-                            курсовой»</a>
-                    </p>
-                </div>
-                <div class="header__account">
-                    <a class="header__account-photo">
-                        <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
-                             width="43" height="44"
-                             alt="Аватар пользователя">
-                    </a>
-                    <span class="header__account-name">
-                 <?= $user->name ?>
-             </span>
-                </div>
-                <div class="account__pop-up">
-                    <ul class="account__pop-up-list">
-                        <li>
-                            <a href="mylist.html">Мои задания</a>
+                        <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
+                            <a href="<?= Route::getUsers() ?>">Исполнители</a>
                         </li>
-                        <li>
-                            <a href="account.html">Настройки</a>
-                        </li>
-                        <li>
-                            <a href="<?= Route::logout() ?>">Выход</a>
+                        <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+                            <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
+                                <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="site-list__item">
+                            <a href="account.html">Мой профиль</a>
                         </li>
                     </ul>
                 </div>
+                <?php if (Yii::$app->user->identity): ?>
+                    <div class="header__town">
+                        <select class="multiple-select input town-select" size="1"
+                                name="town[]">
+                            <option value="Moscow">Москва</option>
+                            <option selected value="SPB">Санкт-Петербург</option>
+                            <option value="Krasnodar">Краснодар</option>
+                            <option value="Irkutsk">Иркутск</option>
+                            <option value="Vladivostok">Владивосток</option>
+                        </select>
+                    </div>
+                    <div class="header__lightbulb"></div>
+                    <div class="lightbulb__pop-up">
+                        <h3>Новые события</h3>
+                        <p class="lightbulb__new-task lightbulb__new-task--message">
+                            Новое сообщение в чате
+                            <a href="view.html" class="link-regular">«Помочь с
+                                курсовой»</a>
+                        </p>
+                        <p class="lightbulb__new-task lightbulb__new-task--executor">
+                            Выбран исполнитель для
+                            <a href="view.html" class="link-regular">«Помочь с
+                                курсовой»</a>
+                        </p>
+                        <p class="lightbulb__new-task lightbulb__new-task--close">
+                            Завершено задание
+                            <a href="view.html" class="link-regular">«Помочь с
+                                курсовой»</a>
+                        </p>
+                    </div>
+                    <div class="header__account">
+                        <a class="header__account-photo">
+                            <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
+                                 width="43" height="44"
+                                 alt="Аватар пользователя">
+                        </a>
+                        <span class="header__account-name">
+                 <?= $user->name ?>
+             </span>
+                    </div>
+                    <div class="account__pop-up">
+                        <ul class="account__pop-up-list">
+                            <li>
+                                <a href="mylist.html">Мои задания</a>
+                            </li>
+                            <li>
+                                <a href="account.html">Настройки</a>
+                            </li>
+                            <li>
+                                <a href="<?= Route::logout() ?>">Выход</a>
+                            </li>
+                        </ul>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </header>
@@ -181,30 +183,32 @@ AppAsset::register($this);
                     mail@taskforce.com
                 </p>
             </div>
-            <div class="page-footer__links">
-                <ul class="links__list">
-                    <li class="links__item">
-                        <a href="<?= Route::getTasks() ?>">Задания</a>
-                    </li>
-                    <li class="links__item">
-                        <a href="account.html">Мой профиль</a>
-                    </li>
-                    <li class="links__item">
-                        <a href="<?= Route::getUsers() ?>">Исполнители</a>
-                    </li>
-                    <li class="links__item">
-                        <a href="signup.html">Регистрация</a>
-                    </li>
-                    <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+            <?php if (!Yii::$app->user->isGuest): ?>
+                <div class="page-footer__links">
+                    <ul class="links__list">
                         <li class="links__item">
-                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                            <a href="<?= Route::getTasks() ?>">Задания</a>
                         </li>
-                    <?php endif; ?>
-                    <li class="links__item">
-                        <a href="">Справка</a>
-                    </li>
-                </ul>
-            </div>
+                        <li class="links__item">
+                            <a href="account.html">Мой профиль</a>
+                        </li>
+                        <li class="links__item">
+                            <a href="<?= Route::getUsers() ?>">Исполнители</a>
+                        </li>
+                        <li class="links__item">
+                            <a href="signup.html">Регистрация</a>
+                        </li>
+                        <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+                            <li class="links__item">
+                                <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="links__item">
+                            <a href="">Справка</a>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
             <div class="page-footer__copyright">
                 <a>
                     <img class="copyright-logo"
@@ -216,9 +220,9 @@ AppAsset::register($this);
         </div>
     </footer>
 </div>
-
-<?php $this->endBody() ?>
-</body>
+<div class="overlay"></div>
+<script src="/js/main.js"></script>
+<script src="/js/messenger.js"></script>
 <script src="/js/dropzone.js"></script>
 <script>
     var dropzone = new Dropzone("div.create__file", {
@@ -227,5 +231,7 @@ AppAsset::register($this);
         paramName: "attachmentFiles[]"
     });
 </script>
+<?php $this->endBody() ?>
+</body>
 </html>
 <?php $this->endPage() ?>

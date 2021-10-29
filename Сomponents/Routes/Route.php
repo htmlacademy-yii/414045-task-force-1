@@ -38,7 +38,7 @@ final class Route
      * @param int $taskId id задачи
      * @return string
      */
-    public static function getTaskView(int $taskId): string
+    public static function getTaskView($taskId): string
     {
         return Url::to(['/tasks/view/' . $taskId]);
     }
@@ -51,6 +51,16 @@ final class Route
     public static function getTaskCreate(): string
     {
         return Url::to(['/create']);
+    }
+
+    public static function getTaskResponseAccept($taskId, $responseId)
+    {
+        return Url::to([self::getTaskView($taskId) . '/response-accept/' . $responseId]);
+    }
+
+    public static function getTaskResponseRefuse($taskId, $responseId)
+    {
+        return Url::to([self::getTaskView($taskId) . '/response-refuse/' . $responseId]);
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Components\Categories;
 use Components\Constants\CategoryConstants;
 use frontend\models\Category;
 
-final class CategoryHelper
+final class CategoryService
 {
     public static function getCategoryNames(): array
     {

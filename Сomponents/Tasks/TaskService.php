@@ -11,6 +11,8 @@ use Components\Exceptions\TaskStateException;
 use Components\Responses\ResponseService;
 use frontend\models\TaskAttachment;
 use frontend\models\Task;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class TaskService
@@ -63,6 +65,27 @@ class TaskService
     }
 
     /**
+     * Метод проверяет, может ли задача быть закончена
+     *
+     * @param Task $task
+     * @param int $userId
+     * @return bool
+     * @throws TaskStateException
+     */
+    public static function isTaskCanBeComplete(Task $task, int $userId): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Done::class && $task->customer_id === $userId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Получить доступные классы действий для задачи
      *
      * @param Task $task
@@ -95,27 +118,6 @@ class TaskService
         }
 
         return $possibleActions;
-    }
-
-    /**
-     * Метод проверяет, может ли задача быть закончена
-     *
-     * @param Task $task
-     * @param int $userId
-     * @return bool
-     * @throws TaskStateException
-     */
-    public static function isTaskCanBeComplete(Task $task, int $userId): bool
-    {
-        $possibleActions = self::getPossibleActions($task);
-
-        foreach ($possibleActions as $action) {
-            if ($action === Done::class && $task->customer_id === $userId) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -218,5 +220,75 @@ class TaskService
         }
 
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
+    }
+
+    /**
+     * @param string $address
+     * @return array|false|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function getLocation(string $address)
+    {
+        $client = new Client([
+            'base_uri' => 'https://geocode-maps.yandex.ru/',
+        ]);
+
+        try {
+            $response = $client->request('GET', '1.x', [
+                'query' => [
+                    'geocode' => $address,
+                    'apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a',
+                    'format' => 'json',
+                ]
+            ]);
+
+            $content = $response->getBody()->getContents();
+            $response_data = json_decode($content, true);
+
+            $result = false;
+
+            if (is_array($response_data)) {
+                $result = $response_data;
+            }
+        } catch (RequestException $e) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $address
+     * @return false|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function getLocationPoint($address)
+    {
+        $location = self::getLocation($address);
+
+        if (!is_array($location)) {
+            return false;
+        }
+
+        return $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
+    }
+
+    /**
+     * @param $point
+     * @return array|false
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function getLocationName($point)
+    {
+        $location = self::getLocation($point);
+
+        if (!is_array($location)) {
+            return false;
+        }
+
+        return [
+            'name' => $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['name'],
+            'description' => $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['description']
+            ];
     }
 }

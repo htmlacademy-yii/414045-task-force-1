@@ -114,6 +114,10 @@ final class TasksController extends SecuredController
         $countCustomerTasks = count($customer->tasks);
         $countResponses = count($task->responses);
         $city = $task->city->title ?? '';
+        $location = TaskService::getLocationName($task->address);
+        $locationName = $location['name'] ?? '';
+        $locationDescription = $location['description'] ?? '';
+        $locationPoint = explode(' ', $task->address);
         $categoryId = $task->category->id;
         $categoryName = $task->category->title;
         $categoryMap = array_flip(CategoryConstants::NAME_MAP);
@@ -133,6 +137,9 @@ final class TasksController extends SecuredController
                 'countCustomerTasks',
                 'countResponses',
                 'city',
+                'locationName',
+                'locationDescription',
+                'locationPoint',
                 'categoryId',
                 'categoryName',
                 'categoryClassName'

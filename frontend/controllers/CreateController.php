@@ -6,12 +6,11 @@ use Components\Categories\CategoryService;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
-use Components\Tasks\TaskService as TaskHelper;
+use Components\Tasks\TaskService;
 use frontend\models\Task;
 use frontend\models\TaskAttachment;
 use frontend\models\User;
 use Yii;
-use yii\web\Controller;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
@@ -42,6 +41,7 @@ class CreateController extends SecuredController
             $task->load(Yii::$app->request->post());
             $task->customer_id = $user->id;
             $task->state = TaskConstants::NEW_TASK_STATUS_NAME;
+            $task->address = $task->address !== null ? TaskService::getLocationPoint($task->address) : '';
 
             if ($task->validate()) {
                 $task->save();
@@ -54,6 +54,7 @@ class CreateController extends SecuredController
             }
             $this->task = $task;
         }
+
         return $this->redirect(Route::getTaskCreate());
     }
 

@@ -79,6 +79,7 @@ use frontend\models\Task;
                     'class' => 'field-container',
                 ],
                 'inputOptions' => [
+                    'id' => 'autoComplete',
                     'class' => 'input-navigation input-middle input',
                     'placeholder' => 'Санкт-Петербург, Калининский район',
                 ],

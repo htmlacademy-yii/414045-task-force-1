@@ -30,7 +30,7 @@ final class TaskFilter extends ActiveRecord
     public function __construct($config = [])
     {
         parent::__construct($config);
-        $this->categories = CategoryService::getCategoryNames();
+        $this->categories = (new CategoryService())->getCategoryNames();
     }
 
     public function attributeLabels()

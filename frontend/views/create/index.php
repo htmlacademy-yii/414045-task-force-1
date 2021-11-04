@@ -4,12 +4,15 @@ use frontend\models\UploadTaskAttachmentsFiles;
 use yii\widgets\ActiveForm;
 use yii\jui\DatePicker;
 use frontend\models\Task;
+use frontend\assets\CreateTaskAsset;
 
 /**
  * @var $task Task ;
  * @var $files UploadTaskAttachmentsFiles ;
  * @var $categories array ;
  */
+
+CreateTaskAsset::register($this);
 ?>
 
 <section class="create__task">

@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
 use Components\Categories\CategoryService;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
+use Components\Locations\LocationService;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
 use frontend\models\Task;
@@ -14,7 +17,7 @@ use Yii;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
-class CreateController extends SecuredController
+final class CreateController extends SecuredController
 {
     public Task $task;
 
@@ -27,7 +30,7 @@ class CreateController extends SecuredController
         }
 
         $task = $this->task ?? new Task();
-        $categories = CategoryService::getCategoryNamesForDB();
+        $categories = (new CategoryService())->getCategoryNamesForDB();
 
         return $this->render('index', compact('task', 'categories'));
     }
@@ -41,13 +44,13 @@ class CreateController extends SecuredController
             $task->load(Yii::$app->request->post());
             $task->customer_id = $user->id;
             $task->state = TaskConstants::NEW_TASK_STATUS_NAME;
-            $task->address = $task->address !== null ? TaskService::getLocationPoint($task->address) : '';
+            $task->location_point = $task->address !== null ? (new LocationService($task->address))->getLocationPoint() : '';
 
             if ($task->validate()) {
                 $task->save();
                 $attachmentFileNames = Yii::$app->session->get('attachmentFileNames') ?? null;
 
-                TaskService::saveTaskAttachmentFiles($attachmentFileNames, $task->id);
+                (new TaskService())->saveTaskAttachmentFiles($attachmentFileNames, $task->id);
                 Yii::$app->session->remove('attachmentFileNames');
 
                 return $this->redirect(Route::getTasks());

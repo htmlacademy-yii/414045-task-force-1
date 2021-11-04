@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
 use frontend\models\LoginForm;
@@ -8,7 +10,7 @@ use Yii;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
-class LandingController extends Controller
+final class LandingController extends Controller
 {
     public $layout = 'landing';
 

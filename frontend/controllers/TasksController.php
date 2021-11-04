@@ -7,10 +7,12 @@ namespace frontend\controllers;
 use Components\Constants\CategoryConstants;
 use Components\Constants\ResponseConstants;
 use Components\Constants\TaskConstants;
+use Components\Locations\LocationService;
 use Components\Responses\ResponseService;
 use Components\Reviews\ReviewService;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
+use Components\Users\UserService;
 use frontend\models\Response;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
@@ -51,7 +53,6 @@ final class TasksController extends SecuredController
         $response = Response::findOne($responseId);
 
         if (Yii::$app->user->id === $task->customer_id || $response !== null) {
-
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
@@ -108,22 +109,22 @@ final class TasksController extends SecuredController
         $userId = Yii::$app->user->id;
         $taskCompleteForm = new TaskCompleteForm();
         $response = new Response();
-        $isUserSentResponse = ResponseService::isUserSentResponse($task);
-        $possibleTaskActions = TaskService::getPossibleActions($task);
+        $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
+        $possibleTaskActions = (new TaskService())->getPossibleActions($task);
         $customer = $task->customer;
         $countCustomerTasks = count($customer->tasks);
         $countResponses = count($task->responses);
-        $city = $task->city->title ?? '';
-        $location = TaskService::getLocationName($task->address);
-        $locationName = $location['name'] ?? '';
-        $locationDescription = $location['description'] ?? '';
-        $locationPoint = explode(' ', $task->address);
         $categoryId = $task->category->id;
         $categoryName = $task->category->title;
         $categoryMap = array_flip(CategoryConstants::NAME_MAP);
         $categoryClassName = $categoryMap[$categoryName];
         $dataProvider = $isUserSentResponse ? Response::getResponsesDataProvider($task->id,
             $userId) : Response::getResponsesDataProvider($task->id);
+        $location = $task->location_point ?? (new UserService())->getUserLocation($task->customer_id);
+        $locationService = new LocationService($location);
+        $locationName = $locationService->getLocationName() ?? '';
+        $locationDescription = $locationService->getLocationDescription() ?? '';
+        $locationPoint = $locationService->getLocationPointForMap();
 
         return $this->render('view',
             compact(
@@ -136,7 +137,6 @@ final class TasksController extends SecuredController
                 'dataProvider',
                 'countCustomerTasks',
                 'countResponses',
-                'city',
                 'locationName',
                 'locationDescription',
                 'locationPoint',
@@ -153,8 +153,8 @@ final class TasksController extends SecuredController
     {
         $task = Task::findOne($id);
 
-        if (TaskService::isTaskCanBeResponse($task) && Yii::$app->request->isPost) {
-            ResponseService::createResponse($id);
+        if ((new TaskService())->isTaskCanBeResponse($task) && Yii::$app->request->isPost) {
+            (new ResponseService())->createResponse($id);
         }
 
         return $this->redirect(Route::getTaskView($id));
@@ -168,8 +168,8 @@ final class TasksController extends SecuredController
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
 
-        if (TaskService::isTaskCanBeComplete($task, $userId) && Yii::$app->request->isPost) {
-            ReviewService::createReview($task, $userId);
+        if ((new TaskService())->isTaskCanBeComplete($task, $userId) && Yii::$app->request->isPost) {
+            (new ReviewService())->createReview($task, $userId);
 
             return $this->redirect(Route::getTasks());
         }
@@ -185,7 +185,7 @@ final class TasksController extends SecuredController
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
 
-        if (TaskService::isTaskCanBeRefuse($task, $userId) && Yii::$app->request->isPost) {
+        if ((new TaskService())->isTaskCanBeRefuse($task, $userId) && Yii::$app->request->isPost) {
             $task->state = TaskConstants::FAILED_TASK_STATUS_NAME;
             $task->save();
 
@@ -203,7 +203,7 @@ final class TasksController extends SecuredController
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
 
-        if (TaskService::isTaskCanBeCancel($task, $userId) && Yii::$app->request->isPost) {
+        if ((new TaskService())->isTaskCanBeCancel($task, $userId) && Yii::$app->request->isPost) {
             $task->state = TaskConstants::CANCELED_TASK_STATUS_NAME;
             $task->save();
 

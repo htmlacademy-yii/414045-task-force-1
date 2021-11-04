@@ -1,7 +1,6 @@
 <?php
 
 use Components\Constants\UserConstants;
-use Components\Constants\ActionConstants;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
 use frontend\models\Task;
@@ -10,6 +9,7 @@ use frontend\models\User;
 use frontend\models\Response;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
+use frontend\assets\TaskViewAsset;
 
 /**
  * @var Task $task ;
@@ -31,6 +31,7 @@ use yii\widgets\ListView;
  * @var string $categoryClassName ;
  */
 
+TaskViewAsset::register($this);
 ?>
 
 <section class="content-view">
@@ -78,9 +79,9 @@ use yii\widgets\ListView;
             <?php foreach ($possibleTaskActions as $action): ?>
                 <?php $actionName = $action::getActionName() ?>
                 <button
-                        class=" button button__big-color <?= TaskService::getTaskActionButtonClassName($actionName) ?> open-modal"
+                        class=" button button__big-color <?= (new TaskService())->getTaskActionButtonClassName($actionName) ?> open-modal"
                         type="button"
-                        data-for="<?= TaskService::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
+                        data-for="<?= (new TaskService())->getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -128,8 +129,6 @@ use yii\widgets\ListView;
 <?= $this->render('modalComplete', compact(['taskCompleteForm'])) ?>
 <?= $this->render('modalRefuse', compact(['task'])) ?>
 
-<script src="https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU" type="text/javascript">
-</script>
 <script type="text/javascript">
     ymaps.ready(init);
     function init(){

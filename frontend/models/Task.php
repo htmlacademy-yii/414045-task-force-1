@@ -10,9 +10,7 @@ use Exception;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use frontend\models\Category;
 use Components\Categories\CategoryService;
-use yii\base\Model;
 
 /**
  * This is the model class for table "tasks".
@@ -26,8 +24,8 @@ use yii\base\Model;
  * @property string $state
  * @property int $price
  * @property string|null $deadline
- * @property int|null $city_id
  * @property string|null $address
+ * @property string|null $location_point
  * @property string|null $address_comment
  * @property string|null $created_at
  * @property string|null $updated_at
@@ -38,7 +36,6 @@ use yii\base\Model;
  * @property User $customer
  * @property User $executor
  * @property Category $category
- * @property City $city
  */
 final class Task extends ActiveRecord
 {
@@ -128,7 +125,7 @@ final class Task extends ActiveRecord
             [['price'], 'integer', 'min' => 0],
             [['deadline'], 'default', 'value' => null],
             [['deadline'], 'date', 'message' => 'Формат для ввода даты ""'],
-            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             [['title', 'description'], 'trim'],
             [['title'], 'required', 'message' => 'Это поле не может быть пустым'],
             [
@@ -145,6 +142,7 @@ final class Task extends ActiveRecord
                 'string',
                 'max' => 256,
             ],
+            [['location_point'], 'string', 'max' => 64],
             [
                 ['customer_id'],
                 'exist',
@@ -165,13 +163,6 @@ final class Task extends ActiveRecord
                 'skipOnError' => true,
                 'targetClass' => Category::class,
                 'targetAttribute' => ['category_id' => 'id'],
-            ],
-            [
-                ['city_id'],
-                'exist',
-                'skipOnError' => true,
-                'targetClass' => City::class,
-                'targetAttribute' => ['city_id' => 'id'],
             ],
             [
                 [
@@ -205,7 +196,6 @@ final class Task extends ActiveRecord
             'state' => 'Состояние',
             'price' => 'Бюджет',
             'deadline' => 'Сроки исполнения',
-            'city_id' => 'Город',
             'address' => 'Локация',
             'address_comment' => 'Комментарий к адресу',
             'created_at' => 'Created At',
@@ -271,15 +261,5 @@ final class Task extends ActiveRecord
     public function getCategory(): ActiveQuery
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
-    }
-
-    /**
-     * Gets query for [[City]].
-     *
-     * @return ActiveQuery
-     */
-    public function getCity(): ActiveQuery
-    {
-        return $this->hasOne(City::class, ['id' => 'city_id']);
     }
 }

@@ -42,7 +42,7 @@ final class Response extends AbstractAction
     public static function authActionForUser(Task $task): bool
     {
         $user = User::findOne(Yii::$app->user->id);
-        $isUserSentResponse = ResponseService::isUserSentResponse($task);
+        $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
 
         return $user->role === UserConstants::USER_ROLE_EXECUTOR && $user->id !== $task->customer_id && !$isUserSentResponse;
     }

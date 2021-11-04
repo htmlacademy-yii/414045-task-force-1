@@ -3,7 +3,7 @@
 use Components\Constants\UserConstants;
 use Components\Users\UserService;
 
-$rating = UserService::getCountRatingStars($model->rating)
+$rating = (new UserService())->getCountRatingStars($model->rating)
 ?>
 
 <div class="feedback-card__top">

@@ -9,10 +9,7 @@ use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 use Components\Responses\ResponseService;
-use frontend\models\TaskAttachment;
 use frontend\models\Task;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class TaskService
@@ -29,13 +26,10 @@ class TaskService
      * @param $attachmentFileNames
      * @param $taskId
      */
-    public static function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
+    public function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
     {
         if ($attachmentFileNames !== null) {
             foreach ($attachmentFileNames as $fileName) {
-                /**
-                 * @var TaskAttachment $file
-                 */
                 $file = (new TaskAttachmentFactory())->create($taskId, $fileName);
                 if ($file->validate()) {
                     $file->save();
@@ -49,7 +43,7 @@ class TaskService
      *
      * @return array
      */
-    public static function getStatusMap(): array
+    public function getStatusMap(): array
     {
         return TaskConstants::STATUS_MAP_FOR_USER;
     }
@@ -59,7 +53,7 @@ class TaskService
      *
      * @return array
      */
-    public static function getActionMap(): array
+    public function getActionMap(): array
     {
         return ActionConstants::ACTION_MAP;
     }
@@ -72,7 +66,7 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeComplete(Task $task, int $userId): bool
+    public function isTaskCanBeComplete(Task $task, int $userId): bool
     {
         $possibleActions = self::getPossibleActions($task);
 
@@ -92,7 +86,7 @@ class TaskService
      * @return array Классы доступных действий
      * @throws TaskStateException
      */
-    public static function getPossibleActions(Task $task): array
+    public function getPossibleActions(Task $task): array
     {
         if (!array_key_exists($task->state, TaskConstants::STATUS_MAP_FOR_USER)) {
             throw new TaskStateException(
@@ -128,9 +122,9 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeRefuse(Task $task, int $userId): bool
+    public function isTaskCanBeRefuse(Task $task, int $userId): bool
     {
-        $possibleActions = self::getPossibleActions($task);
+        $possibleActions = $this->getPossibleActions($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Refuse::class && $task->executor_id === $userId) {
@@ -149,9 +143,9 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeCancel(Task $task, int $userId): bool
+    public function isTaskCanBeCancel(Task $task, int $userId): bool
     {
-        $possibleActions = self::getPossibleActions($task);
+        $possibleActions = $this->getPossibleActions($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Cancel::class && $task->customer_id === $userId) {
@@ -169,10 +163,10 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeResponse(Task $task): bool
+    public function isTaskCanBeResponse(Task $task): bool
     {
-        $possibleActions = self::getPossibleActions($task);
-        $isUserSentResponse = ResponseService::isUserSentResponse($task);
+        $possibleActions = $this->getPossibleActions($task);
+        $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Response::class && !$isUserSentResponse) {
@@ -189,7 +183,7 @@ class TaskService
      * @param $actionName
      * @return string
      */
-    public static function getTaskActionButtonClassName($actionName): string
+    public function getTaskActionButtonClassName($actionName): string
     {
         return ActionConstants::ACTION_BUTTON_CLASS_NAMES_MAP[$actionName];
     }
@@ -200,7 +194,7 @@ class TaskService
      * @param $actionName
      * @return string
      */
-    public static function getTaskActionDataForClassName($actionName): string
+    public function getTaskActionDataForClassName($actionName): string
     {
         return ActionConstants::ACTION_DATA_FOR_CLASS_NAMES_MAP[$actionName];
     }
@@ -213,82 +207,12 @@ class TaskService
      * @return string|null Статус задачи после выполненного действия
      * @throws TaskActionException
      */
-    public static function getTaskStateAfterAction(string $action): string|null
+    public function getTaskStateAfterAction(string $action): string|null
     {
         if (in_array($action, ActionConstants::ACTION_MAP)) {
             throw new TaskActionException('Указанного действия не существует');
         }
 
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
-    }
-
-    /**
-     * @param string $address
-     * @return array|false|mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function getLocation(string $address)
-    {
-        $client = new Client([
-            'base_uri' => 'https://geocode-maps.yandex.ru/',
-        ]);
-
-        try {
-            $response = $client->request('GET', '1.x', [
-                'query' => [
-                    'geocode' => $address,
-                    'apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a',
-                    'format' => 'json',
-                ]
-            ]);
-
-            $content = $response->getBody()->getContents();
-            $response_data = json_decode($content, true);
-
-            $result = false;
-
-            if (is_array($response_data)) {
-                $result = $response_data;
-            }
-        } catch (RequestException $e) {
-            return false;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $address
-     * @return false|mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function getLocationPoint($address)
-    {
-        $location = self::getLocation($address);
-
-        if (!is_array($location)) {
-            return false;
-        }
-
-        return $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
-    }
-
-    /**
-     * @param $point
-     * @return array|false
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function getLocationName($point)
-    {
-        $location = self::getLocation($point);
-
-        if (!is_array($location)) {
-            return false;
-        }
-
-        return [
-            'name' => $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['name'],
-            'description' => $location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['description']
-            ];
     }
 }

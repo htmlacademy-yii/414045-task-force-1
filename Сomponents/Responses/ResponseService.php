@@ -6,6 +6,11 @@ use frontend\models\Response;
 use frontend\models\Task;
 use Yii;
 
+/**
+ * class ResponseService
+ *
+ * @package Components/Responses
+ */
 class ResponseService
 {
     /**
@@ -16,11 +21,11 @@ class ResponseService
      * @param $taskId
      * @return bool
      */
-    public static function createResponse($taskId): bool
+    public function createResponse($taskId): bool
     {
         $response = (new ResponseFactory())->create($taskId);
 
-        if (!self::saveResponse($response)) {
+        if (!$this->saveResponse($response)) {
             return false;
         }
 
@@ -33,7 +38,7 @@ class ResponseService
      * @param Response $response
      * @return bool
      */
-    public static function saveResponse(Response $response): bool
+    public function saveResponse(Response $response): bool
     {
         if (!$response->validate()) {
             return false;
@@ -54,7 +59,7 @@ class ResponseService
      * @param Task $task
      * @return bool
      */
-    public static function isUserSentResponse(Task $task): bool
+    public function isUserSentResponse(Task $task): bool
     {
         $userId = Yii::$app->user->id;
         $isUserSentResponse = false;

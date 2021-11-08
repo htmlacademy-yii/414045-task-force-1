@@ -79,8 +79,7 @@ CREATE TABLE tasks
     updated_at      datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (city_id) REFERENCES cities (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
 CREATE TABLE task_attachments

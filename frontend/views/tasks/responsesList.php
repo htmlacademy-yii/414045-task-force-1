@@ -10,7 +10,7 @@ use Components\Routes\Route;
 use Components\Users\UserService;
 use frontend\models\Response;
 
-$rating = UserService::getCountRatingStars($model->user->rating);
+$rating = (new UserService())->getCountRatingStars($model->user->rating);
 ?>
 
     <div class="feedback-card__top">

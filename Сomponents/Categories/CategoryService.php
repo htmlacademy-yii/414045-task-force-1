@@ -7,15 +7,20 @@ namespace Components\Categories;
 use Components\Constants\CategoryConstants;
 use frontend\models\Category;
 
+/**
+ * Class CategoryService
+ *
+ * @package Components/Categories
+ */
 final class CategoryService
 {
-    public static function getCategoryNames(): array
+    public function getCategoryNames(): array
     {
         $categories = collect(Category::find()->select('title')->all());
         return $categories->pluck('title')->all();
     }
 
-    public static function getCategoryNamesForDB(): array
+    public function getCategoryNamesForDB(): array
     {
         $categories = collect(Category::find()->select('title')->all());
         $categories = $categories->pluck('title')->all();
@@ -25,13 +30,13 @@ final class CategoryService
         return $categories;
     }
 
-    public static function getCategoryName($nameCategoryForUser): string
+    public function getCategoryName($nameCategoryForUser): string
     {
         $categoriesNames = array_flip(CategoryConstants::NAME_MAP);
         return $categoriesNames[$nameCategoryForUser];
     }
 
-    public static function categoriesFilter($categoriesId): array
+    public function categoriesFilter($categoriesId): array
     {
         return array_map(fn($id): int => $id + 1, $categoriesId);
     }

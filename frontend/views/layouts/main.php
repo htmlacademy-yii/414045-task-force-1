@@ -12,7 +12,7 @@ use yii\web\View;
 use Components\Users\UserService;
 use yii\web\Request;
 
-$user = UserService::getUser();
+$user = (new UserService())->getUser();
 
 AppAsset::register($this);
 ?>
@@ -221,16 +221,7 @@ AppAsset::register($this);
     </footer>
 </div>
 <div class="overlay"></div>
-<script src="/js/main.js"></script>
 <script src="/js/messenger.js"></script>
-<script src="/js/dropzone.js"></script>
-<script>
-    var dropzone = new Dropzone("div.create__file", {
-        headers: {"<?= Request::CSRF_HEADER ?>": "<?= Yii::$app->getRequest()->getCsrfToken() ?>"},
-        url: "/create/upload",
-        paramName: "attachmentFiles[]"
-    });
-</script>
 <?php $this->endBody() ?>
 </body>
 </html>

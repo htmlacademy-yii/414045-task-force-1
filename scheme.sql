@@ -72,15 +72,14 @@ CREATE TABLE tasks
     state           varchar(10),
     price           int,
     deadline        date,
-    city_id         int,
     address         varchar(256),
+    location_point  varchar(64),
     address_comment varchar(256),
     created_at      datetime default current_timestamp,
     updated_at      datetime default current_timestamp on update current_timestamp,
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (city_id) REFERENCES cities (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
 CREATE TABLE task_attachments

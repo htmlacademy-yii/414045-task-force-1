@@ -9,7 +9,6 @@ use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 use Components\Responses\ResponseService;
-use frontend\models\TaskAttachment;
 use frontend\models\Task;
 
 /**
@@ -27,13 +26,10 @@ class TaskService
      * @param $attachmentFileNames
      * @param $taskId
      */
-    public static function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
+    public function saveTaskAttachmentFiles($attachmentFileNames, $taskId)
     {
         if ($attachmentFileNames !== null) {
             foreach ($attachmentFileNames as $fileName) {
-                /**
-                 * @var TaskAttachment $file
-                 */
                 $file = (new TaskAttachmentFactory())->create($taskId, $fileName);
                 if ($file->validate()) {
                     $file->save();
@@ -47,7 +43,7 @@ class TaskService
      *
      * @return array
      */
-    public static function getStatusMap(): array
+    public function getStatusMap(): array
     {
         return TaskConstants::STATUS_MAP_FOR_USER;
     }
@@ -57,9 +53,30 @@ class TaskService
      *
      * @return array
      */
-    public static function getActionMap(): array
+    public function getActionMap(): array
     {
         return ActionConstants::ACTION_MAP;
+    }
+
+    /**
+     * Метод проверяет, может ли задача быть закончена
+     *
+     * @param Task $task
+     * @param int $userId
+     * @return bool
+     * @throws TaskStateException
+     */
+    public function isTaskCanBeComplete(Task $task, int $userId): bool
+    {
+        $possibleActions = self::getPossibleActions($task);
+
+        foreach ($possibleActions as $action) {
+            if ($action === Done::class && $task->customer_id === $userId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -69,7 +86,7 @@ class TaskService
      * @return array Классы доступных действий
      * @throws TaskStateException
      */
-    public static function getPossibleActions(Task $task): array
+    public function getPossibleActions(Task $task): array
     {
         if (!array_key_exists($task->state, TaskConstants::STATUS_MAP_FOR_USER)) {
             throw new TaskStateException(
@@ -98,27 +115,6 @@ class TaskService
     }
 
     /**
-     * Метод проверяет, может ли задача быть закончена
-     *
-     * @param Task $task
-     * @param int $userId
-     * @return bool
-     * @throws TaskStateException
-     */
-    public static function isTaskCanBeComplete(Task $task, int $userId): bool
-    {
-        $possibleActions = self::getPossibleActions($task);
-
-        foreach ($possibleActions as $action) {
-            if ($action === Done::class && $task->customer_id === $userId) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Метод проверяет, может ли задача быть отменена исполнителем
      *
      * @param Task $task
@@ -126,9 +122,9 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeRefuse(Task $task, int $userId): bool
+    public function isTaskCanBeRefuse(Task $task, int $userId): bool
     {
-        $possibleActions = self::getPossibleActions($task);
+        $possibleActions = $this->getPossibleActions($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Refuse::class && $task->executor_id === $userId) {
@@ -147,9 +143,9 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeCancel(Task $task, int $userId): bool
+    public function isTaskCanBeCancel(Task $task, int $userId): bool
     {
-        $possibleActions = self::getPossibleActions($task);
+        $possibleActions = $this->getPossibleActions($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Cancel::class && $task->customer_id === $userId) {
@@ -167,10 +163,10 @@ class TaskService
      * @return bool
      * @throws TaskStateException
      */
-    public static function isTaskCanBeResponse(Task $task): bool
+    public function isTaskCanBeResponse(Task $task): bool
     {
-        $possibleActions = self::getPossibleActions($task);
-        $isUserSentResponse = ResponseService::isUserSentResponse($task);
+        $possibleActions = $this->getPossibleActions($task);
+        $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
 
         foreach ($possibleActions as $action) {
             if ($action === Response::class && !$isUserSentResponse) {
@@ -187,7 +183,7 @@ class TaskService
      * @param $actionName
      * @return string
      */
-    public static function getTaskActionButtonClassName($actionName): string
+    public function getTaskActionButtonClassName($actionName): string
     {
         return ActionConstants::ACTION_BUTTON_CLASS_NAMES_MAP[$actionName];
     }
@@ -198,7 +194,7 @@ class TaskService
      * @param $actionName
      * @return string
      */
-    public static function getTaskActionDataForClassName($actionName): string
+    public function getTaskActionDataForClassName($actionName): string
     {
         return ActionConstants::ACTION_DATA_FOR_CLASS_NAMES_MAP[$actionName];
     }
@@ -211,7 +207,7 @@ class TaskService
      * @return string|null Статус задачи после выполненного действия
      * @throws TaskActionException
      */
-    public static function getTaskStateAfterAction(string $action): string|null
+    public function getTaskStateAfterAction(string $action): string|null
     {
         if (in_array($action, ActionConstants::ACTION_MAP)) {
             throw new TaskActionException('Указанного действия не существует');

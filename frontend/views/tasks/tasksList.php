@@ -15,7 +15,7 @@ use frontend\models\Task;
     <a class="new-task__type link-regular" href="<?= Route::getTasks($model->category_id) ?>"><p>
             <?= $model->category->title ?> </p></a>
 </div>
-<div class="new-task__icon new-task__icon--<?= CategoryService::getCategoryName($model->category->title) ?>"></div>
+<div class="new-task__icon new-task__icon--<?= (new CategoryService())->getCategoryName($model->category->title) ?>"></div>
 <p class="new-task_description"> <?= $model->description ?> </p>
 <b class="new-task__price new-task__price--translation"><?= $model->price ?>
     <b> ₽</b></b>

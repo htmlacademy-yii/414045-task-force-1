@@ -1,7 +1,6 @@
 <?php
 
 use Components\Constants\UserConstants;
-use Components\Constants\ActionConstants;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
 use frontend\models\Task;
@@ -10,6 +9,7 @@ use frontend\models\User;
 use frontend\models\Response;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
+use frontend\assets\TaskViewAsset;
 
 /**
  * @var Task $task ;
@@ -23,11 +23,15 @@ use yii\widgets\ListView;
  * @var int $countCustomerTasks ;
  * @var int $countResponses ;
  * @var string $city ;
+ * @var string $locationName ;
+ * @var string $locationDescription ;
+ * @var array $locationPoint ;
  * @var int $categoryId ;
  * @var string $categoryName ;
  * @var string $categoryClassName ;
  */
 
+TaskViewAsset::register($this);
 ?>
 
 <section class="content-view">
@@ -62,13 +66,10 @@ use yii\widgets\ListView;
             <div class="content-view__location">
                 <h3 class="content-view__h3">Расположение</h3>
                 <div class="content-view__location-wrapper">
-                    <div class="content-view__map">
-                        <a href="#"><img src="/img/map.jpg" width="361" height="292"
-                                         alt="Москва, Новый арбат, 23 к. 1"></a>
-                    </div>
+                    <div id="map" style="width: 361px; height: 292px"></div>
                     <div class="content-view__address">
-                        <span class="address__town">Москва</span><br>
-                        <span><?= $task->address ?></span>
+                        <span class="address__town"><?= $locationDescription ?></span><br>
+                        <span><?= $locationName ?></span>
                         <p><?= $task->address_comment ?></p>
                     </div>
                 </div>
@@ -78,9 +79,9 @@ use yii\widgets\ListView;
             <?php foreach ($possibleTaskActions as $action): ?>
                 <?php $actionName = $action::getActionName() ?>
                 <button
-                        class=" button button__big-color <?= TaskService::getTaskActionButtonClassName($actionName) ?> open-modal"
+                        class=" button button__big-color <?= (new TaskService())->getTaskActionButtonClassName($actionName) ?> open-modal"
                         type="button"
-                        data-for="<?= TaskService::getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
+                        data-for="<?= (new TaskService())->getTaskActionDataForClassName($actionName) ?>"><?= $action::getActionNameForUser($task) ?>
                 </button>
             <?php endforeach; ?>
         </div>
@@ -127,3 +128,21 @@ use yii\widgets\ListView;
 <?= $this->render('modalResponse', compact(['response'])) ?>
 <?= $this->render('modalComplete', compact(['taskCompleteForm'])) ?>
 <?= $this->render('modalRefuse', compact(['task'])) ?>
+
+<script type="text/javascript">
+    ymaps.ready(init);
+    function init(){
+        var myMap = new ymaps.Map("map", {
+            center: [<?= $locationPoint[1] . ',' . $locationPoint[0] ?>],
+            zoom: 14
+        });
+        var myGeoObject = new ymaps.GeoObject({
+            geometry: {
+                type: "Point",
+                coordinates: [<?= $locationPoint[1] . ',' . $locationPoint[0] ?>]
+            }
+        });
+
+        myMap.geoObjects.add(myGeoObject);
+    }
+</script>

@@ -9,6 +9,11 @@ use frontend\models\TaskCompleteForm;
 use Yii;
 use yii\db\Exception;
 
+/**
+ * class ReviewService
+ *
+ * @package Components/Reviews
+ */
 class ReviewService
 {
     /**
@@ -20,7 +25,7 @@ class ReviewService
      * @param int $userId
      * @return bool
      */
-    public static function createReview(Task $task, int $userId): bool
+    public function createReview(Task $task, int $userId): bool
     {
         $completeForm = new TaskCompleteForm();
         $completeForm->load(Yii::$app->request->post());
@@ -31,7 +36,7 @@ class ReviewService
                 ? TaskConstants::DONE_TASK_STATUS_NAME
                 : TaskConstants::FAILED_TASK_STATUS_NAME;
 
-            if (self::saveReview($task, $review))
+            if ($this->saveReview($task, $review))
             {
                 return true;
             }
@@ -47,7 +52,7 @@ class ReviewService
      * @param Review $review
      * @return bool
      */
-    public static function saveReview(Task $task, Review $review): bool
+    public function saveReview(Task $task, Review $review): bool
     {
         $transaction = Yii::$app->db->beginTransaction();
 

@@ -100,4 +100,18 @@ final class Message extends ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'addressee_id']);
     }
+
+    public function getTask(): ActiveQuery
+    {
+        return $this->hasOne(Task::class, ['id' => 'task_id']);
+    }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'sender_id',
+            'content',
+        ];
+    }
 }

@@ -262,4 +262,16 @@ final class Task extends ActiveRecord
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
+
+    public function getMessages(): ActiveQuery
+    {
+        return $this->hasMany(Message::class, ['task_id' => 'id']);
+    }
+
+    public function extraFields()
+    {
+        return [
+            'messages',
+        ];
+    }
 }

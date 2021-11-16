@@ -268,10 +268,18 @@ final class Task extends ActiveRecord
         return $this->hasMany(Message::class, ['task_id' => 'id']);
     }
 
-    public function extraFields()
+    public function fields()
     {
         return [
-            'messages',
+            'title',
+            'published_at' => 'created_at',
+            'new_messages' => function () {
+                return count($this->messages);
+            },
+            'author_name' => function () {
+                return $this->customer->name;
+            },
+            'id',
         ];
     }
 }

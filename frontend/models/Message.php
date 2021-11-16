@@ -109,10 +109,11 @@ final class Message extends ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'task_id',
-            'sender_id',
-            'content',
+            'message' => 'content',
+            'published_at' => 'created_at',
+            'is_mine' => function () {
+                return \Yii::$app->user->id === $this->sender_id;
+            },
         ];
     }
 }

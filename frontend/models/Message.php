@@ -110,6 +110,7 @@ final class Message extends ActiveRecord
     {
         return [
             'id',
+            'task_id',
             'sender_id',
             'content',
         ];

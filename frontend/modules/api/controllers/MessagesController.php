@@ -15,6 +15,7 @@ class MessagesController extends ActiveController
         $actions = parent::actions();
         unset($actions['index']);
         unset($actions['create']);
+
         return $actions;
     }
 
@@ -31,8 +32,14 @@ class MessagesController extends ActiveController
 
     public function actionCreate()
     {
-        $content = \Yii::$app->request->post('message');
-        $task_id = \Yii::$app->request->post('task_id');
+        $requestBody = json_decode(\Yii::$app->request->getRawBody());
+        $content = $requestBody->message;
+        $task_id = $requestBody->task_id;
+
+        if (!$content) {
+            return \Yii::$app->response->statusCode = 412;
+        }
+
         $message = new Message();
         $task = Task::findOne($task_id);
         $message->sender_id = $task->executor_id;
@@ -40,10 +47,10 @@ class MessagesController extends ActiveController
         $message->content = $content;
         $message->task_id = $task_id;
 
-        if ($message->save()) {
-            \Yii::$app->response->statusCode = 201;
-        } else {
-            \Yii::$app->response->statusCode = 404;
+        if (!$message->save()) {
+            return \Yii::$app->response->statusCode = 404;
         }
+
+        return \Yii::$app->response->statusCode = 201;
     }
 }

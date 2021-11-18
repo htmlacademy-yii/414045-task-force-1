@@ -122,7 +122,7 @@ TaskViewAsset::register($this);
     </div>
     <div id="chat-container">
         <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
-        <chat class="connect-desk__chat"></chat>
+        <chat class="connect-desk__chat" task="<?= $task->id ?>"></chat>
     </div>
 </section>
 <?= $this->render('modalResponse', compact(['response'])) ?>
@@ -146,3 +146,4 @@ TaskViewAsset::register($this);
         myMap.geoObjects.add(myGeoObject);
     }
 </script>
+<script src="/js/messenger.js"></script>

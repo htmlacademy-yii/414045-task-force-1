@@ -36,8 +36,10 @@ class MessagesController extends ActiveController
         $content = $requestBody->message;
         $task_id = $requestBody->task_id;
 
-        if (!$content) {
-            return \Yii::$app->response->statusCode = 412;
+        if (!$content || !$task_id) {
+            \Yii::$app->response->statusCode = 412;
+
+            return null;
         }
 
         $message = new Message();
@@ -48,9 +50,19 @@ class MessagesController extends ActiveController
         $message->task_id = $task_id;
 
         if (!$message->save()) {
-            return \Yii::$app->response->statusCode = 404;
+            \Yii::$app->response->statusCode = 500;
+
+            return null;
         }
 
-        return \Yii::$app->response->statusCode = 201;
+        $message = Message::findOne($message->id);
+        $responseBody = [
+            'id' => $message->id,
+            'message' => $message->content,
+            'published_at' => $message->created_at,
+            'is_mine' => true,
+        ];
+        \Yii::$app->response->statusCode = 201;
+        \Yii::$app->response->content = json_encode($responseBody);
     }
 }

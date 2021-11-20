@@ -146,3 +146,6 @@ TaskViewAsset::register($this);
         myMap.geoObjects.add(myGeoObject);
     }
 </script>
+<?php if (Yii::$app->user->id === $task->customer_id || Yii::$app->user->id === $task->executor_id): ?>
+    <script src="/js/messenger.js"></script>
+<?php endif; ?>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace frontend\controllers;
 
 use frontend\models\LoginForm;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
 use yii\web\Response;
@@ -13,6 +14,21 @@ use yii\widgets\ActiveForm;
 final class LandingController extends Controller
 {
     public $layout = 'landing';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function actionIndex()
     {

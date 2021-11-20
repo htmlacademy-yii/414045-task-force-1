@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Components\Locations;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class LocationService
@@ -49,7 +49,7 @@ final class LocationService
             if (is_array($response_data)) {
                 $result = $response_data;
             }
-        } catch (RequestException $e) {
+        } catch (GuzzleException $e) {
             return $this->location = false;
         }
 

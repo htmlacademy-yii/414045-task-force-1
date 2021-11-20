@@ -31,11 +31,18 @@ return [
                 'users/view/<id:\d+>' => 'users/get-view',
                 'registration' => 'registration/index',
                 'create' => 'create/index',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/messages'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/tasks'],
             ],
         ],
         'user' => [
             'class' => '\yii\web\User',
             'loginUrl' => ['landing'],
         ],
+    ],
+    'modules' => [
+        'api' => [
+            'class' => 'frontend\modules\api\Module'
+        ]
     ],
 ];

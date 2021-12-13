@@ -40,9 +40,9 @@ use yii\web\IdentityInterface;
  * @property Response[] $responses
  * @property Review[] $reviews
  * @property Task[] $tasks
- * @property UserSetting $userSetting
+ * @property UserSettings $userSettings
  * @property City $city
- * @property UsersSpecialty[] $usersSpecialties
+ * @property Category[] $specialties
  */
 final class User extends ActiveRecord implements IdentityInterface
 {
@@ -54,6 +54,9 @@ final class User extends ActiveRecord implements IdentityInterface
         return 'users';
     }
 
+    /**
+     * @return UserFilter
+     */
     public static function getUserFilter(): UserFilter
     {
         $userFilter = new UserFilter();
@@ -64,6 +67,10 @@ final class User extends ActiveRecord implements IdentityInterface
         return $userFilter;
     }
 
+    /**
+     * @param UserFilter $filter
+     * @return ActiveDataProvider
+     */
     public static function getDataProviderFilter(UserFilter $filter): ActiveDataProvider
     {
         $conditions = [
@@ -241,13 +248,13 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[UserSetting]].
+     * Gets query for [[UserSettings]].
      *
      * @return ActiveQuery
      */
-    public function getUserSetting(): ActiveQuery
+    public function getUserSettings(): ActiveQuery
     {
-        return $this->hasOne(UserSetting::class, ['user_id' => 'id']);
+        return $this->hasOne(UserSettings::class, ['user_id' => 'id']);
     }
 
     /**
@@ -266,7 +273,7 @@ final class User extends ActiveRecord implements IdentityInterface
      * @return ActiveQuery
      * @throws InvalidConfigException
      */
-    public function getCategories(): ActiveQuery
+    public function getSpecialties(): ActiveQuery
     {
         return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('users_specialty', ['user_id' => 'id']);
@@ -277,26 +284,45 @@ final class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password);
     }
 
+    /**
+     * @param int|string $id
+     * @return User|IdentityInterface|null
+     */
     public static function findIdentity($id)
     {
         return self::findOne($id);
     }
 
+    /**
+     * @param mixed $token
+     * @param null $type
+     * @return void|IdentityInterface|null
+     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
         // TODO: Implement findIdentityByAccessToken() method.
     }
 
+    /**
+     * @return array|int|mixed|string|null
+     */
     public function getId()
     {
         return $this->getPrimaryKey();
     }
 
+    /**
+     * @return string|void|null
+     */
     public function getAuthKey()
     {
         // TODO: Implement getAuthKey() method.
     }
 
+    /**
+     * @param string $authKey
+     * @return bool|void|null
+     */
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.

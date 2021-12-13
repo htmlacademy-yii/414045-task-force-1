@@ -8,6 +8,7 @@ use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\models\City;
 use frontend\models\User;
+use frontend\models\UserSettings;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -39,6 +40,13 @@ final class RegistrationController extends Controller
                 $user->password = Yii::$app->getSecurity()->generatePasswordHash($user->password);
                 $user->role = UserConstants::USER_ROLE_CUSTOMER;
                 $user->save();
+                $userSettings = new UserSettings();
+                $userSettings->is_message_ntf_enabled = 1;
+                $userSettings->is_action_ntf_enabled = 1;
+                $userSettings->is_new_review_ntf_enabled = 1;
+                $userSettings->is_hidden = 0;
+                $userSettings->is_active = 1;
+                $userSettings->save();
                 $this->redirect(Route::getTasks());
             }
         }

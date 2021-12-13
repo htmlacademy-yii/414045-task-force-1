@@ -20,7 +20,7 @@ use yii\db\ActiveRecord;
  *
  * @property User $user
  */
-final class UserSetting extends ActiveRecord
+final class UserSettings extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -38,7 +38,6 @@ final class UserSetting extends ActiveRecord
         return [
             [
                 [
-                    'user_id',
                     'is_message_ntf_enabled',
                     'is_action_ntf_enabled',
                     'is_new_review_ntf_enabled',
@@ -57,7 +56,6 @@ final class UserSetting extends ActiveRecord
                 ],
                 'boolean',
             ],
-            [['created_at', 'updated_at'], 'datetime'],
             [['user_id'], 'unique'],
             [
                 ['user_id'],

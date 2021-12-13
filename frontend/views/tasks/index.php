@@ -7,7 +7,6 @@
 
 use frontend\models\TaskFilter;
 use yii\data\ActiveDataProvider;
-use yii\bootstrap\ActiveField;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\ListView;
 

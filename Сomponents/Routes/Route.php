@@ -53,11 +53,21 @@ final class Route
         return Url::to(['/create']);
     }
 
+    /**
+     * @param $taskId
+     * @param $responseId
+     * @return string
+     */
     public static function getTaskResponseAccept($taskId, $responseId)
     {
         return Url::to([self::getTaskView($taskId) . '/response-accept/' . $responseId]);
     }
 
+    /**
+     * @param $taskId
+     * @param $responseId
+     * @return string
+     */
     public static function getTaskResponseRefuse($taskId, $responseId)
     {
         return Url::to([self::getTaskView($taskId) . '/response-refuse/' . $responseId]);
@@ -103,4 +113,8 @@ final class Route
         return Url::to(['/logout']);
     }
 
+    public static function getAccount(): string
+    {
+        return Url::to(['/account']);
+    }
 }

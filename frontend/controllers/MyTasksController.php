@@ -2,18 +2,25 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Task;
+use Components\Constants\MyTaskListFilterConstants;
+use Components\Tasks\TaskService;
 use frontend\models\User;
+use yii\data\ActiveDataProvider;
 
 class MyTasksController extends SecuredController
 {
-    public function actionIndex()
+    public function actionIndex($filter = MyTaskListFilterConstants::NEW)
     {
+        $pageSize = 10;
         $user = User::findOne(\Yii::$app->user->id);
-        $tasks = Task::find()
-            ->where(['executor_id' => $user->id])
-            ->all();
+        $tasks = (new TaskService())->getFilteredTasks($user->id, $filter);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $tasks,
+            'pagination' => [
+                'pageSize' => $pageSize
+            ]
+        ]);
 
-        return $this->render('index', compact('tasks'));
+        return $this->render('index', compact('dataProvider', 'filter'));
     }
 }

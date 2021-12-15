@@ -1,5 +1,6 @@
 <?php
 
+use frontend\assets\AccountAsset;
 use frontend\models\AccountSettingsForm;
 use frontend\models\User;
 use yii\widgets\ActiveForm;
@@ -9,6 +10,7 @@ use yii\widgets\ActiveForm;
  * @var AccountSettingsForm $accountSettings
  */
 
+AccountAsset::register($this);
 ?>
 
 <section class="account__redaction-wrapper">
@@ -24,8 +26,15 @@ use yii\widgets\ActiveForm;
         <div class="account__redaction-section-wrapper">
             <div class="account__redaction-avatar">
                 <img src="<?= $user->avatar_src ?? './img/user.png' ?>" width="156" height="156">
-                <input type="file" name="avatar" id="upload-avatar">
-                <label for="upload-avatar" class="link-regular">Сменить аватар</label>
+                <?= $form->field($accountSettings, 'avatar', [
+                    'options' => [
+                        'tag' => null,
+                    ],
+                    'template' => '{input}{label}',
+                    'labelOptions' => [
+                        'class' => 'link-regular'
+                    ]
+                ])->fileInput(['hidden' => true]) ?>
             </div>
             <div class="account__redaction">
                 <?= $form->field($accountSettings, 'name', [
@@ -39,7 +48,7 @@ use yii\widgets\ActiveForm;
                 ])->textInput(['class' => 'input textarea', 'placeholder' => $user->full_address]) ?>
                 <?= $form->field($accountSettings, 'birthday', [
                     'options' => ['class' => 'field-container account__input account__input--date'],
-                ])->textInput(['class' => 'input-middle input input-date', 'placeholder' => $user->birthday]) ?>
+                ])->input('date', ['class' => 'input-middle input input-date', 'placeholder' => $user->birthday]) ?>
                 <?= $form->field($accountSettings, 'about', [
                     'options' => ['class' => 'field-container account__input account__input--info'],
                 ])->textarea([
@@ -158,4 +167,3 @@ use yii\widgets\ActiveForm;
     </div>
     <button form="AccountSettingsForm" class="button" type="submit">Сохранить изменения</button>
     <?php ActiveForm::end(); ?>
-</section>

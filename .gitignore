@@ -40,9 +40,10 @@ phpunit.phar
 /frontend/web/robots.txt
 /frontend/web/uploads/*
 /frontend/web/uploads/avatars/*
+/frontend/web/uploads/portfolio/*
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
 
-!/frontend/web/uploads/avatars
-!/frontend/web/uploads/portfolio
+!/frontend/web/uploads/avatars/.gitkeep
+!/frontend/web/uploads/portfolio/.gitkeep

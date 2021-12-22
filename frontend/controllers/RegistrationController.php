@@ -41,6 +41,7 @@ final class RegistrationController extends Controller
                 $user->role = UserConstants::USER_ROLE_CUSTOMER;
                 $user->save();
                 $userSettings = new UserSettings();
+                $userSettings->user_id = $user->id;
                 $userSettings->is_message_ntf_enabled = 1;
                 $userSettings->is_action_ntf_enabled = 1;
                 $userSettings->is_new_review_ntf_enabled = 1;

@@ -104,7 +104,7 @@ AppAsset::register($this);
                             </li>
                         <?php endif; ?>
                         <li class="site-list__item">
-                            <a href="account.html">Мой профиль</a>
+                            <a href="/account">Мой профиль</a>
                         </li>
                     </ul>
                 </div>

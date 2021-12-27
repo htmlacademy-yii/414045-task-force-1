@@ -25,6 +25,8 @@ return [
                 'tasks/view/<id:\d+>/complete' => 'tasks/complete',
                 'tasks/view/<id:\d+>/refuse' => 'tasks/refuse',
                 'tasks/view/<id:\d+>/cancel' => 'tasks/cancel',
+                'my-tasks' => 'my-tasks/index',
+                'account' => 'account/index',
                 'users' => 'users/index',
                 'users/view/<id:\d+>' => 'users/get-view',
                 'registration' => 'registration/index',

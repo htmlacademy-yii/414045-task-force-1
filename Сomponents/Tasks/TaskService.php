@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Components\Tasks;
 
 use Components\Constants\ActionConstants;
+use Components\Constants\MyTaskListFilterConstants;
 use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 use Components\Responses\ResponseService;
 use frontend\models\Task;
+use yii\db\Query;
 
 /**
  * Class TaskService
@@ -214,5 +216,46 @@ class TaskService
         }
 
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
+    }
+
+    public function getFilteredTasks($userId, $filter)
+    {
+        $tasks = Task::find();
+
+        if ($filter === null) {
+            $tasks->orWhere(['executor_id' => $userId])->orWhere(['customer_id' => $userId]);
+        }
+
+        if ($filter === MyTaskListFilterConstants::COMPLETED) {
+            $tasks->orWhere(['executor_id' => $userId])
+                ->orWhere(['customer_id' => $userId])
+                ->where(['state' => TaskConstants::DONE_TASK_STATUS_NAME]);
+        }
+
+        if ($filter === MyTaskListFilterConstants::NEW) {
+            $tasks->where(['customer_id' => $userId, 'state' => TaskConstants::NEW_TASK_STATUS_NAME]);
+        }
+
+        if ($filter === MyTaskListFilterConstants::ACTIVE) {
+            $tasks->orWhere(['executor_id' => $userId])
+                ->orWhere(['customer_id' => $userId])
+                ->where(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME]);
+        }
+
+        if ($filter === MyTaskListFilterConstants::CANCELED) {
+            $tasks->orWhere(['executor_id' => $userId, 'state' => TaskConstants::CANCELED_TASK_STATUS_NAME])
+                ->orWhere(['executor_id' => $userId, 'state' => TaskConstants::FAILED_TASK_STATUS_NAME])
+                ->orWhere(['customer_id' => $userId, 'state' => TaskConstants::CANCELED_TASK_STATUS_NAME])
+                ->orWhere(['customer_id' => $userId, 'state' => TaskConstants::FAILED_TASK_STATUS_NAME]);
+        }
+
+        if ($filter === MyTaskListFilterConstants::EXPIRED) {
+            $tasks->orWhere(['executor_id' => $userId])
+                ->orWhere(['customer_id' => $userId])
+                ->where(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME])
+                ->andWhere(['<', 'deadline', date('Y-m-d')]);
+        }
+
+        return $tasks;
     }
 }

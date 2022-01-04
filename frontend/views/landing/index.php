@@ -311,6 +311,10 @@ use yii\widgets\ActiveForm;
         ])->passwordInput() ?>
         <?= Html::submitButton('Войти', ['class' => 'button']) ?>
         <?php $form::end() ?>
+        <?= yii\authclient\widgets\AuthChoice::widget([
+            'baseAuthUrl' => ['site/auth'],
+            'popupMode' => false,
+        ]) ?>
     </section>
 </div>
 <div class="overlay"></div>

@@ -34,6 +34,8 @@ use yii\web\IdentityInterface;
  * @property int|null $rating
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property string $auth_key
+ * @property string $password_reset_token
  *
  * @property Message[] $messages
  * @property Portfolio[] $portfolios
@@ -134,11 +136,12 @@ final class User extends ActiveRecord implements IdentityInterface
             ['password', 'string', 'min' => 8, 'tooShort' => 'Длина пароля от 8 символов'],
             ['about', 'string'],
             [
-                ['name', 'password', 'avatar_src', 'skype', 'over_messenger'],
+                ['name', 'password', 'skype', 'over_messenger'],
                 'string',
                 'max' => 128,
             ],
             ['email', 'string', 'max' => 64],
+            ['avatar_src', 'string', 'max' => 256],
             ['full_address', 'string', 'max' => 256],
             ['phone', 'string', 'max' => 20],
             [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
@@ -326,5 +329,21 @@ final class User extends ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
+    }
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * Generates new password reset token
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 }

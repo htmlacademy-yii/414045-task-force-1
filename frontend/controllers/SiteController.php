@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
-use Components\Users\UserService;
-use frontend\models\LoginForm;
 use Components\Routes\Route;
 use Yii;
-use yii\base\InvalidArgumentException;
+use yii\captcha\CaptchaAction;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-
+use Components\AuthHandler\AuthHandler;
+use yii\web\ErrorAction;
 
 /**
  * Site controller
@@ -33,6 +30,11 @@ final class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'allow' => true,
+                        'actions' => ['auth'],
+                        'roles' => ['?'],
+                    ]
                 ],
             ],
         ];
@@ -44,6 +46,10 @@ final class SiteController extends Controller
     public function actions()
     {
         return [
+            'auth' => [
+                'class' => 'yii\authclient\AuthAction',
+                'successCallback' => [$this, 'onAuthSuccess'],
+            ],
             'error' => [
                 'class' => ErrorAction::class,
             ],
@@ -74,5 +80,10 @@ final class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function onAuthSuccess($client)
+    {
+        (new AuthHandler($client))->handle();
     }
 }

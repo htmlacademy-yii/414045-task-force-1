@@ -43,14 +43,17 @@ return [
         'formatter' => [
             'dateFormat' => 'yyyy-MM-dd',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\vkontakte',
+                    'clientId' => '8041531',
+                    'clientSecret' => 'kaByfLuf8UQSbNmRIOJP',
+                    'scope' => 'email',
+                ],
             ],
-        ],
-        */
+        ]
     ],
     'params' => $params,
 ];

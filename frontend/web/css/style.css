@@ -2634,3 +2634,7 @@ footer {
 .has-error span {
   color: #FF116E; }
 /*# sourceMappingURL=style.css.map */
+
+.oauth-link {
+  margin-top: 10px;
+}

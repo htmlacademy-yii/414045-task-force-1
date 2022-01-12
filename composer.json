@@ -21,7 +21,8 @@
         "tightenco/collect": "^8.34",
         "yiisoft/yii2-jui": "^2.0",
         "perminder-klair/yii2-dropzone": "dev-master",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "yiisoft/yii2-redis": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -43,6 +44,9 @@
         "process-timeout": 1800,
         "fxp-asset": {
             "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
         }
     },
     "repositories": [

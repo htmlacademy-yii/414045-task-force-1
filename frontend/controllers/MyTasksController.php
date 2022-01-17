@@ -9,7 +9,11 @@ use yii\data\ActiveDataProvider;
 
 class MyTasksController extends SecuredController
 {
-    public function actionIndex($filter = MyTaskListFilterConstants::NEW)
+    /**
+     * @param string $filter
+     * @return string
+     */
+    public function actionIndex(string $filter = MyTaskListFilterConstants::NEW): string
     {
         $pageSize = 10;
         $user = User::findOne(\Yii::$app->user->id);

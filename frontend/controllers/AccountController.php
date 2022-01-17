@@ -7,7 +7,7 @@ use Components\Users\UserService;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Portfolio;
 use frontend\models\User;
-use \Yii;
+use Yii;
 use yii\web\UploadedFile;
 
 class AccountController extends SecuredController
@@ -17,7 +17,7 @@ class AccountController extends SecuredController
     /**
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $user = User::findOne(Yii::$app->user->id);
         $accountSettings = new AccountSettingsForm();

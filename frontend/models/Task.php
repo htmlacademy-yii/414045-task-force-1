@@ -36,6 +36,7 @@ use Components\Categories\CategoryService;
  * @property User $customer
  * @property User $executor
  * @property Category $category
+ * @property mixed|null $messages
  */
 final class Task extends ActiveRecord
 {
@@ -268,7 +269,7 @@ final class Task extends ActiveRecord
         return $this->hasMany(Message::class, ['task_id' => 'id']);
     }
 
-    public function fields()
+    public function fields(): array
     {
         return [
             'title',

@@ -6,19 +6,21 @@ namespace frontend\controllers;
 
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
+use Components\Exceptions\TimeException;
 use Components\Time\TimeDifference;
 use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\User;
-use yii\web\Controller;
 use yii\web\HttpException;
-use yii\web\Response;
 
 final class UsersController extends SecuredController
 {
     public const MESSAGE_USER_NOT_FOUND = 'Пользователь не найден.';
     public const RESPONSE_STATUS_CODE = 404;
 
+    /**
+     * @return string
+     */
     public function actionIndex(): string
     {
         $userFilter = User::getUserFilter();
@@ -27,6 +29,10 @@ final class UsersController extends SecuredController
         return $this->render('index', compact('dataProvider', 'userFilter'));
     }
 
+    /**
+     * @throws TimeException
+     * @throws HttpException
+     */
     public function actionGetView(int $id = null): string
     {
         if (!$id || User::findOne($id)->role !== UserConstants::USER_ROLE_EXECUTOR) {

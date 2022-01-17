@@ -8,8 +8,11 @@ use Components\Locations\LocationService;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Category;
 use frontend\models\UsersSpecialty;
+use Throwable;
 use Yii;
 use frontend\models\User;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 
 /**
  * class UserService
@@ -43,7 +46,7 @@ final class UserService
      * @param int $id
      * @return false|string
      */
-    public function getUserLocation(int $id)
+    public function getUserLocation(int $id): bool|string
     {
         $user = User::findOne($id);
 
@@ -54,7 +57,7 @@ final class UserService
      * @param int $id
      * @return array
      */
-    public function getUserCategories(int $id)
+    public function getUserCategories(int $id): array
     {
         $user = User::findOne($id);
         $userSpecialties = $user->specialties;
@@ -71,6 +74,11 @@ final class UserService
     {
     }
 
+    /**
+     * @throws StaleObjectException
+     * @throws Exception
+     * @throws Throwable
+     */
     public function updateAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
         if ($accountSettings->validate() && $user->validate()) {
@@ -99,6 +107,7 @@ final class UserService
     /**
      * @param User $user
      * @param AccountSettingsForm $accountSettings
+     * @throws Exception
      */
     public function updateUserFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
@@ -140,6 +149,8 @@ final class UserService
     /**
      * @param User $user
      * @param AccountSettingsForm $accountSettings
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function updateUserSpecialitiesFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
@@ -177,8 +188,6 @@ final class UserService
      */
     public function saveAvatar(User $user, AccountSettingsForm $accountSettings)
     {
-        if ($accountSettings->avatar) {
-            $accountSettings->upload($user);
-        }
+        $accountSettings->upload($user);
     }
 }

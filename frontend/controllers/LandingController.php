@@ -15,7 +15,10 @@ final class LandingController extends Controller
 {
     public $layout = 'landing';
 
-    public function behaviors()
+    /**
+     * @return array[]
+     */
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -30,7 +33,7 @@ final class LandingController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex(): Response|array|string
     {
         $loginForm = new LoginForm();
         if (Yii::$app->request->getIsPost()) {

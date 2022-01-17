@@ -10,12 +10,16 @@ use frontend\models\City;
 use frontend\models\User;
 use frontend\models\UserSettings;
 use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
 final class RegistrationController extends Controller
 {
-    public function behaviors()
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -30,6 +34,10 @@ final class RegistrationController extends Controller
         ];
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function actionIndex(): string
     {
         $user = new User();

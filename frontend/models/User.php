@@ -7,11 +7,11 @@ namespace frontend\models;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use frontend\models\Category;
 use Components\Categories\CategoryService;
 use yii\web\IdentityInterface;
 
@@ -93,17 +93,9 @@ final class User extends ActiveRecord implements IdentityInterface
             $query->leftJoin(['t' => 'tasks'], 't.executor_id = users.id')->andWhere($conditionUserIsFree);
         }
 
-        if ($filter->isOnline) {
-            //
-        }
-
         if ($filter->hasReview) {
             $conditionsHasReview = 'addressee_id = users.id';
             $query->leftJoin('reviews', 'addressee_id = users.id')->andWhere($conditionsHasReview);
-        }
-
-        if ($filter->isFavorites) {
-            //
         }
 
         if ($filter->userName) {
@@ -291,7 +283,7 @@ final class User extends ActiveRecord implements IdentityInterface
      * @param int|string $id
      * @return User|IdentityInterface|null
      */
-    public static function findIdentity($id)
+    public static function findIdentity($id): User|IdentityInterface|null
     {
         return self::findOne($id);
     }
@@ -299,7 +291,7 @@ final class User extends ActiveRecord implements IdentityInterface
     /**
      * @param mixed $token
      * @param null $type
-     * @return void|IdentityInterface|null
+     * @return void
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -309,13 +301,13 @@ final class User extends ActiveRecord implements IdentityInterface
     /**
      * @return array|int|mixed|string|null
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->getPrimaryKey();
     }
 
     /**
-     * @return string|void|null
+     * @return void
      */
     public function getAuthKey()
     {
@@ -324,7 +316,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @param string $authKey
-     * @return bool|void|null
+     * @return void
      */
     public function validateAuthKey($authKey)
     {
@@ -333,6 +325,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @throws Exception
      */
     public function generateAuthKey()
     {
@@ -341,6 +334,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new password reset token
+     * @throws Exception
      */
     public function generatePasswordResetToken()
     {

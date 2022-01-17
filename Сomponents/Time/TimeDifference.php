@@ -12,7 +12,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 
-final class TimeDifference extends Time
+final class TimeDifference
 {
     public function __construct(
         protected string $firstDateTimeStringPoint,

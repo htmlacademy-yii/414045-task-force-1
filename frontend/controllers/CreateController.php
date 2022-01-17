@@ -21,6 +21,9 @@ final class CreateController extends SecuredController
 {
     public Task $task;
 
+    /**
+     * @return string
+     */
     public function actionIndex(): string
     {
         $user = User::findOne(Yii::$app->user->id);
@@ -35,6 +38,9 @@ final class CreateController extends SecuredController
         return $this->render('index', compact('task', 'categories'));
     }
 
+    /**
+     * @return Response
+     */
     public function actionCheckForm(): Response
     {
         $user = User::findOne(Yii::$app->user->id);
@@ -61,6 +67,9 @@ final class CreateController extends SecuredController
         return $this->redirect(Route::getTaskCreate());
     }
 
+    /**
+     * @return void
+     */
     public function actionUpload()
     {
         if (Yii::$app->request->isPost) {

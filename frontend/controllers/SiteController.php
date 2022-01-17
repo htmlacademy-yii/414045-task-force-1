@@ -20,7 +20,7 @@ final class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -43,7 +43,7 @@ final class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function actions()
+    public function actions(): array
     {
         return [
             'auth' => [
@@ -65,7 +65,7 @@ final class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex(): mixed
     {
         $this->redirect(Route::getTasks());
     }
@@ -75,7 +75,7 @@ final class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
+    public function actionLogout(): mixed
     {
         Yii::$app->user->logout();
 

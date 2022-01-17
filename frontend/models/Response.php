@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace frontend\models;
 
-use phpDocumentor\Reflection\Types\Self_;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\db\Query;
 
 /**
  * This is the model class for table "responses".

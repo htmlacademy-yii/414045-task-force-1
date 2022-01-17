@@ -11,7 +11,7 @@ use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
 use Components\Responses\ResponseService;
 use frontend\models\Task;
-use yii\db\Query;
+use yii\db\ActiveQuery;
 
 /**
  * Class TaskService
@@ -218,7 +218,7 @@ class TaskService
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
     }
 
-    public function getFilteredTasks($userId, $filter)
+    public function getFilteredTasks($userId, $filter): ActiveQuery
     {
         $tasks = Task::find();
 

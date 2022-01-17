@@ -1,15 +1,21 @@
 <?php
 
+/**
+ * @var User $model
+ */
+
 use Components\Constants\UserConstants;
 use Components\Users\UserService;
+use frontend\models\User;
 
 $rating = (new UserService())->getCountRatingStars($model->rating)
 ?>
 
 <div class="feedback-card__top">
     <div class="user__search-icon">
-        <a href="/users/view/<?= $model->id ?>"><img src="<?= $model->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
-                                                     width="65" height="65"></a>
+        <a href="/users/view/<?= $model->id ?>"><img
+                    src="<?= $model->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
+                    width="65" height="65"></a>
         <span><?= count($model->tasks) ?> заданий</span>
         <span><?= count($model->reviews) ?> отзывов</span>
     </div>

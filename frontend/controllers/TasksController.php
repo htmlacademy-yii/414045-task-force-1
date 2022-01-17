@@ -121,7 +121,7 @@ final class TasksController extends SecuredController
         $dataProvider = $isUserSentResponse ? Response::getResponsesDataProvider($task->id,
             $userId) : Response::getResponsesDataProvider($task->id);
         $location = $task->location_point ?? (new UserService())->getUserLocation($task->customer_id);
-        $locationService = new LocationService($location);
+        $locationService = new LocationService(address: false, point: $location);
         $locationName = $locationService->getLocationName() ?? '';
         $locationDescription = $locationService->getLocationDescription() ?? '';
         $locationPoint = $locationService->getLocationPointForMap();

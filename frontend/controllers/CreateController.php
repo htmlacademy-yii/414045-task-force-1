@@ -50,7 +50,7 @@ final class CreateController extends SecuredController
             $task->load(Yii::$app->request->post());
             $task->customer_id = $user->id;
             $task->state = TaskConstants::NEW_TASK_STATUS_NAME;
-            $task->location_point = $task->address !== null ? (new LocationService($task->address))->getLocationPoint() : '';
+            $task->location_point = $task->address !== null ? (new LocationService(address: $task->address, point: false))->getLocationPoint() : '';
 
             if ($task->validate()) {
                 $task->save();

@@ -50,7 +50,7 @@ final class UserService
     {
         $user = User::findOne($id);
 
-        return (new LocationService($user->city->title))->getLocationPoint();
+        return (new LocationService(address: $user->city->title, point: false))->getLocationPoint();
     }
 
     /**

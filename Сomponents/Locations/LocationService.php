@@ -6,6 +6,7 @@ namespace Components\Locations;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Yii;
 
 /**
  * Class LocationService
@@ -14,19 +15,60 @@ use GuzzleHttp\Exception\GuzzleException;
  */
 final class LocationService
 {
-    public array|false $location;
-    public string $addressOrPoint;
+    public const DAY_CACHE_DURATION = 86400;
 
-    public function __construct(string $addressOrPoint)
+    public array|false $location;
+    public string|false $address;
+    public string|false $point;
+
+    /**
+     * @param string|false $address
+     * @param string|false $point
+     */
+    public function __construct(string|false $address, string|false $point)
     {
-        $this->getLocation($addressOrPoint);
+        $this->address = $address;
+        $this->point = $point;
+
+        $this->getLocation();
+    }
+
+    /**
+     * @return void
+     */
+    private function getLocation(): void
+    {
+        if ($this->point !== false) {
+            $location = $this->getLocationFromApi($this->point);
+
+            Yii::$app->cache->set(md5($location['name']), $location, self::DAY_CACHE_DURATION);
+
+            $this->location = $location;
+            return;
+        } elseif ($this->address !== false) {
+            $locationCache = Yii::$app->cache->get(md5($this->address));
+
+            if ($locationCache !== false) {
+                $this->location = $locationCache;
+                return;
+            }
+
+            $location = $this->getLocationFromApi($this->address);
+
+            Yii::$app->cache->set(md5($location['name']), $location, self::DAY_CACHE_DURATION);
+
+            $this->location = $location;
+            return;
+        }
+
+        $this->location = false;
     }
 
     /**
      * @param string $addressOrPoint
-     * @return array|false
+     * @return false|mixed
      */
-    public function getLocation(string $addressOrPoint): bool|array
+    private function getLocationFromApi(string $addressOrPoint): mixed
     {
         $client = new Client([
             'base_uri' => 'https://geocode-maps.yandex.ru/',
@@ -43,17 +85,16 @@ final class LocationService
 
             $content = $response->getBody()->getContents();
             $response_data = json_decode($content, true);
-
             $result = false;
 
             if (is_array($response_data)) {
-                $result = $response_data;
+                $result = $response_data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'];
             }
-        } catch (GuzzleException $e) {
-            return $this->location = false;
+        } catch (GuzzleException) {
+            return false;
         }
 
-        return $this->location = $result;
+        return $result;
     }
 
     /**
@@ -65,7 +106,7 @@ final class LocationService
             return false;
         }
 
-        return $this->location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'];
+        return $this->location['Point']['pos'];
     }
 
     /**
@@ -77,7 +118,7 @@ final class LocationService
             return false;
         }
 
-        return explode(' ', $this->location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos']);
+        return explode(' ', $this->location['Point']['pos']);
     }
 
     /**
@@ -89,7 +130,7 @@ final class LocationService
             return false;
         }
 
-        return $this->location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['name'];
+        return $this->location['name'];
     }
 
     /**
@@ -101,6 +142,6 @@ final class LocationService
             return false;
         }
 
-        return $this->location['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['description'];
+        return $this->location['description'];
     }
 }

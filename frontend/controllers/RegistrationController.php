@@ -13,6 +13,7 @@ use Yii;
 use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\Response;
 
 final class RegistrationController extends Controller
 {
@@ -35,10 +36,10 @@ final class RegistrationController extends Controller
     }
 
     /**
-     * @return string
+     *
      * @throws Exception
      */
-    public function actionIndex(): string
+    public function actionIndex(): Response|string
     {
         $user = new User();
         $cities = City::getCitiesForOptionsList();
@@ -56,7 +57,9 @@ final class RegistrationController extends Controller
                 $userSettings->is_hidden = 0;
                 $userSettings->is_active = 1;
                 $userSettings->save();
-                $this->redirect(Route::getTasks());
+                Yii::$app->user->login($user);
+                
+                return $this->redirect(Route::getTasks());
             }
         }
 

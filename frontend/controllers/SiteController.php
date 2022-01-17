@@ -61,8 +61,6 @@ final class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
      * @return mixed
      */
     public function actionIndex(): mixed
@@ -71,8 +69,6 @@ final class SiteController extends Controller
     }
 
     /**
-     * Logs out the current user.
-     *
      * @return mixed
      */
     public function actionLogout(): mixed

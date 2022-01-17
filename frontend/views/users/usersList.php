@@ -34,9 +34,9 @@ $rating = (new UserService())->getCountRatingStars($model->rating)
     <span class="new-task__time">Был на сайте 25 минут назад</span>
 </div>
 <div class="link-specialization user__search-link--bottom">
-    <?php foreach ($model->categories as $category) : ?>
+    <?php foreach ($model->specialties as $specialty) : ?>
         <a href="browse.html"
-           class="link-regular"><?= $category->title ?></a>
+           class="link-regular"><?= $specialty->title ?></a>
     <?php endforeach; ?>
 </div>
 

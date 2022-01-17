@@ -112,6 +112,25 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @param int|string $id
+     * @return User|IdentityInterface|null
+     */
+    public static function findIdentity($id): User|IdentityInterface|null
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * @param mixed $token
+     * @param null $type
+     * @return void
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules(): array
@@ -136,7 +155,7 @@ final class User extends ActiveRecord implements IdentityInterface
             ['avatar_src', 'string', 'max' => 256],
             ['full_address', 'string', 'max' => 256],
             ['phone', 'string', 'max' => 20],
-            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             [
                 ['city_id'],
                 'exist',
@@ -277,25 +296,6 @@ final class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password): bool
     {
         return Yii::$app->security->validatePassword($password, $this->password);
-    }
-
-    /**
-     * @param int|string $id
-     * @return User|IdentityInterface|null
-     */
-    public static function findIdentity($id): User|IdentityInterface|null
-    {
-        return self::findOne($id);
-    }
-
-    /**
-     * @param mixed $token
-     * @param null $type
-     * @return void
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        // TODO: Implement findIdentityByAccessToken() method.
     }
 
     /**

@@ -103,6 +103,7 @@ final class Route
     {
         return Url::to(['/landing']);
     }
+
     /**
      * Logout
      *
@@ -113,8 +114,24 @@ final class Route
         return Url::to(['/logout']);
     }
 
+    /**
+     * Возвращает путь к странице аккаунта
+     *
+     * @return string
+     */
     public static function getAccount(): string
     {
         return Url::to(['/account']);
+    }
+
+    /**
+     * Добавление исполнителя в избранное
+     *
+     * @param int $executorId
+     * @return string
+     */
+    public static function addInFavorite(int $executorId): string
+    {
+        return Url::to(['/users/add-in-favorite/' . $executorId]);
     }
 }

@@ -34,7 +34,7 @@ $lastActivity = (new UserService())->getLastActivity($model);
             <?= $model->about ?>
         </p>
     </div>
-    <span class="new-task__time">Был на сайте <?= $lastActivity ?> назад</span>
+    <span class="new-task__time"><?= $lastActivity ?></span>
 </div>
 <div class="link-specialization user__search-link--bottom">
     <?php foreach ($model->specialties as $specialty) : ?>

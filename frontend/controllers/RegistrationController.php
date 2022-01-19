@@ -58,7 +58,7 @@ final class RegistrationController extends Controller
                 $userSettings->is_active = 1;
                 $userSettings->save();
                 Yii::$app->user->login($user);
-                
+
                 return $this->redirect(Route::getTasks());
             }
         }

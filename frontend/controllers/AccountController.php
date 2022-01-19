@@ -7,13 +7,21 @@ use Components\Users\UserService;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Portfolio;
 use frontend\models\User;
+use Throwable;
 use Yii;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 use yii\web\UploadedFile;
 
 class AccountController extends SecuredController
 {
     public $enableCsrfValidation = false;
 
+    /**
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws Exception
+     */
     public function actionIndex()
     {
         $user = User::findOne(Yii::$app->user->id);

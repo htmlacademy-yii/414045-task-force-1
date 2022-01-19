@@ -73,10 +73,6 @@ final class UserService
         return $result;
     }
 
-    public function savePhotos()
-    {
-    }
-
     /**
      * @throws StaleObjectException
      * @throws Exception
@@ -223,6 +219,48 @@ final class UserService
      */
     public function getLastActivity(User $user): string
     {
-        return (new TimeDifference(date(DATE_W3C), $user->last_activity))->getCountTimeUnits(['year' => 'y', 'day' => 'd', 'hour' => 'H', 'minute' => 'i']);
+        $lastAction = (new TimeDifference(date('Y-m-d h:i:s'), $user->last_activity))->getCountTimeUnits([
+            'year' => 'y',
+            'day' => 'd',
+            'hour' => 'H',
+            'minute' => 'i'
+        ]);
+
+        if ($lastAction === '') {
+            return 'Онлайн';
+        }
+
+        return 'Был на сайте ' . $lastAction . 'назад';
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws TimeException
+     */
+    public function getTimeOnSite(User $user): string
+    {
+        return (new TimeDifference(date('Y-m-d h:i:s'), $user->created_at))->getCountTimeUnits([
+            'year' => 'y',
+            'day' => 'd'
+        ]);
+    }
+
+    /**
+     * @param $executorId
+     * @return bool
+     */
+    public function isFavoriteExecutor($executorId): bool
+    {
+        $user = $this->getUser();
+        $favoriteExecutors = $user->favoriteExecutors;
+
+        foreach ($favoriteExecutors as $executor) {
+            if ($executor->id === $executorId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

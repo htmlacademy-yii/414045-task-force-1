@@ -60,7 +60,7 @@ return [
     'params' => $params,
     'on beforeAction' => function(){
         if(!Yii::$app->user->isGuest){
-            User::updateAll(['last_activity'=>date(DATE_W3C)],['id'=>Yii::$app->user->id]);
+            User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
         }
     },
 ];

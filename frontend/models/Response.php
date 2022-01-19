@@ -41,7 +41,7 @@ final class Response extends ActiveRecord
         return [
             [['task_id', 'user_id'], 'required'],
             [['content'], 'string'],
-            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             [['price'], 'match', 'pattern' => '/^[0-9]*$/', 'message' => 'Введите целое число'],
             [
                 ['task_id'],
@@ -71,7 +71,7 @@ final class Response extends ActiveRecord
             'task_id' => 'Task ID',
             'user_id' => 'User ID',
             'content' => 'Комментарий',
-            'price' =>  'Ваша цена',
+            'price' => 'Ваша цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

@@ -31,6 +31,7 @@ return [
                 'tasks/view/<id:\d+>/complete' => 'tasks/complete',
                 'tasks/view/<id:\d+>/refuse' => 'tasks/refuse',
                 'tasks/view/<id:\d+>/cancel' => 'tasks/cancel',
+                'users/add-in-favorite/<executorId:\d+>' => 'users/add-in-favorite',
                 'my-tasks' => 'my-tasks/index',
                 'account' => 'account/index',
                 'users' => 'users/index',

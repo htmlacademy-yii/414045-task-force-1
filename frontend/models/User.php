@@ -46,6 +46,7 @@ use yii\web\IdentityInterface;
  * @property UserSettings $userSettings
  * @property City $city
  * @property Category[] $specialties
+ * @property User[] $favoriteExecutors
  */
 final class User extends ActiveRecord implements IdentityInterface
 {
@@ -95,7 +96,8 @@ final class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($filter->isOnline) {
-            //
+            $conditionIsOnline = ['>', 'last_activity', date('Y-m-d h:i:s', strtotime('-30 minutes'))];
+            $query->andWhere($conditionIsOnline);
         }
 
         if ($filter->hasReview) {
@@ -104,7 +106,9 @@ final class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($filter->isFavorites) {
-            //
+            $conditionsIsFavorites = 'favorite_executors.executor_id = users.id';
+            $query->leftJoin('favorite_executors',
+                'favorite_executors.executor_id = users.id')->andWhere($conditionsIsFavorites);
         }
 
         if ($filter->userName) {
@@ -268,6 +272,12 @@ final class User extends ActiveRecord implements IdentityInterface
         }
 
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
+    }
+
+    public function getFavoriteExecutors(): ActiveQuery
+    {
+        return $this->hasMany(User::class, ['id' => 'executor_id'])
+            ->viaTable('favorite_executors', ['user_id' => 'id']);
     }
 
     /**

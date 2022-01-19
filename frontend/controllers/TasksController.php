@@ -29,8 +29,11 @@ final class TasksController extends SecuredController
 
     public function actionIndex(): string
     {
+        $user = (new UserService())->getUser();
+        $cityId = (int)Yii::$app->request->get('city') ?? $user->city_id;
+        Yii::$app->session->set('cityId', $cityId);
         $taskFilter = $this->getTaskFilter();
-        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE);
+        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE, $cityId);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }

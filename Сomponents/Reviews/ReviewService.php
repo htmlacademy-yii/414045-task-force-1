@@ -36,8 +36,7 @@ class ReviewService
                 ? TaskConstants::DONE_TASK_STATUS_NAME
                 : TaskConstants::FAILED_TASK_STATUS_NAME;
 
-            if ($this->saveReview($task, $review))
-            {
+            if ($this->saveReview($task, $review)) {
                 return true;
             }
         }

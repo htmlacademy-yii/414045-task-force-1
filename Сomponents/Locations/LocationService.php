@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Components\Locations;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use phpDocumentor\Reflection\Types\False_;
 use Yii;
 
 /**
@@ -55,6 +57,11 @@ final class LocationService
 
             $location = $this->getLocationFromApi($this->address);
 
+            if ($location === false) {
+                $this->location = false;
+                return;
+            }
+
             Yii::$app->cache->set(md5($location['name']), $location, self::DAY_CACHE_DURATION);
 
             $this->location = $location;
@@ -90,7 +97,7 @@ final class LocationService
             if (is_array($response_data)) {
                 $result = $response_data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'];
             }
-        } catch (GuzzleException) {
+        } catch (Exception) {
             return false;
         }
 
@@ -143,5 +150,26 @@ final class LocationService
         }
 
         return $this->location['description'];
+    }
+
+    /**
+     * @return false|string|null
+     */
+    public function getCityName()
+    {
+        if (!is_array($this->location)) {
+            return false;
+        }
+
+        $cityName = null;
+        $components = $this->location['metaDataProperty']['GeocoderMetaData']['Address']['Components'];
+
+        foreach ($components as $component) {
+            if ($component['kind'] === 'locality') {
+                $cityName = $component['name'];
+            }
+        }
+
+        return $cityName;
     }
 }

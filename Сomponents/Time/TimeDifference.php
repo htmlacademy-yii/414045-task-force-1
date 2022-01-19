@@ -100,8 +100,8 @@ final class TimeDifference
      */
     public function getDiff(): DateInterval|bool
     {
-        $firstTimePoint = new DateTime($this->firstDateTimeStringPoint);
-        $secondTimePoint = new DateTime($this->secondDateTimeStringPoint);
+        $firstTimePoint = new DateTime($this->firstDateTimeStringPoint, null);
+        $secondTimePoint = new DateTime($this->secondDateTimeStringPoint, null);
 
         return $firstTimePoint->diff($secondTimePoint);
     }

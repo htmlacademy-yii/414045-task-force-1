@@ -3,16 +3,19 @@
 /**
  * @var $this View;
  * @var $content string;
+ * @var $city City;
  */
 
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
+use frontend\models\City;
 use yii\web\View;
 use Components\Users\UserService;
-use yii\web\Request;
 
 $user = (new UserService())->getUser();
+$cities = City::find()->all();
+$cityId = (int) Yii::$app->session->get('cityId');
 
 AppAsset::register($this);
 ?>
@@ -116,11 +119,12 @@ AppAsset::register($this);
                     <div class="header__town">
                         <select class="multiple-select input town-select" size="1"
                                 name="town[]">
-                            <option value="Moscow">Москва</option>
-                            <option selected value="SPB">Санкт-Петербург</option>
-                            <option value="Krasnodar">Краснодар</option>
-                            <option value="Irkutsk">Иркутск</option>
-                            <option value="Vladivostok">Владивосток</option>
+                            <?php foreach ($cities as $city): ?>
+                                <option value="<?= $city->id ?>"
+                                        <?php if ($city->id === $cityId): ?>selected<?php endif; ?>>
+                                    <?= $city->title ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="header__lightbulb"></div>

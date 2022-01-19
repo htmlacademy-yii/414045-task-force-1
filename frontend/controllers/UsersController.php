@@ -7,12 +7,17 @@ namespace frontend\controllers;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Exceptions\TimeException;
+use Components\Routes\Route;
 use Components\Time\TimeDifference;
 use Components\Users\UserService;
+use frontend\models\FavoriteExecutors;
 use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\User;
+use Throwable;
+use yii\db\StaleObjectException;
 use yii\web\HttpException;
+use yii\web\Response;
 
 final class UsersController extends SecuredController
 {
@@ -40,15 +45,48 @@ final class UsersController extends SecuredController
             throw new HttpException(self::RESPONSE_STATUS_CODE, self::MESSAGE_USER_NOT_FOUND);
         }
 
+        $userService = new UserService();
         $user = User::findOne($id);
-        $lastActivity = (new UserService())->getLastActivity($user);
-        $userAge = (new TimeDifference(date('Y-m-d'), $user->birthday))->getCountTimeUnits(['year' => 'Y']);
+        $isFavorite = $userService->isFavoriteExecutor($id);
+        $lastActivity = $userService->getLastActivity($user);
+        $userAge = $user->birthday !== null ? (new TimeDifference(date('Y-m-d'),
+            $user->birthday))->getCountTimeUnits(['year' => 'Y']) : '';
         $countUserTasksDone = Task::find()->where([
             'executor_id' => $user->id,
             'state' => TaskConstants::DONE_TASK_STATUS_NAME
         ])->count();
         $dataProvider = Review::getDataProviderReviews($user->id);
 
-        return $this->render('view', compact('user', 'userAge', 'countUserTasksDone', 'dataProvider', 'lastActivity'));
+        return $this->render('view',
+            compact('user', 'userAge', 'countUserTasksDone', 'dataProvider', 'lastActivity', 'isFavorite'));
+    }
+
+    /**
+     * @param int $executorId
+     * @return Response
+     * @throws StaleObjectException|Throwable
+     */
+    public function actionAddInFavorite(int $executorId): Response
+    {
+        $user = (new UserService())->getUser();
+        $favoriteExecutors = $user->favoriteExecutors;
+
+        foreach ($favoriteExecutors as $executor) {
+            if ($executor->id === $executorId) {
+                FavoriteExecutors::find()->where([
+                    'user_id' => $user->id,
+                    'executor_id' => $executor->id
+                ])->one()->delete();
+
+                return $this->redirect(Route::getUserView($executorId));
+            }
+        }
+
+        $favorite = new FavoriteExecutors();
+        $favorite->user_id = $user->id;
+        $favorite->executor_id = $executorId;
+        $favorite->save();
+
+        return $this->redirect(Route::getUserView($executorId));
     }
 }

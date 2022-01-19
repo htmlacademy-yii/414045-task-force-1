@@ -15,7 +15,10 @@ final class LandingController extends Controller
 {
     public $layout = 'landing';
 
-    public function behaviors()
+    /**
+     * @return array[]
+     */
+    public function behaviors(): array
     {
         return [
             'access' => [

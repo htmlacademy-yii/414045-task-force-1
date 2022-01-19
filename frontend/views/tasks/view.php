@@ -3,6 +3,7 @@
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
+use Components\Users\UserService;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\User;
@@ -32,6 +33,8 @@ use frontend\assets\TaskViewAsset;
  */
 
 TaskViewAsset::register($this);
+$createdTime = (new TaskService())->getTimeCreateDifference($task);
+$timeOnSite = (new UserService())->getTimeOnSite($customer);
 ?>
 
 <section class="content-view">
@@ -43,11 +46,13 @@ TaskViewAsset::register($this);
                     <span>Размещено в категории
                                     <a href="<?= Route::getTasks($categoryId) ?>"
                                        class="link-regular"><?= $categoryName ?></a>
-                                    25 минут назад</span>
+                                    <?= $createdTime ?> назад</span>
                 </div>
-                <b class="new-task__price new-task__price--<?= $categoryClassName ?> content-view-price"><?= $task->price ?>
-                    <b>
-                        ₽</b></b>
+                    <?php if ($task->price > 0): ?>
+                        <b class="new-task__price new-task__price--<?= $categoryClassName ?> content-view-price">
+                        <?= $task->price ?>
+                        <b> ₽</b></b>
+                    <?php endif; ?>
                 <div class="new-task__icon new-task__icon--<?= $categoryClassName ?> content-view-icon"></div>
             </div>
             <div class="content-view__description">
@@ -109,14 +114,14 @@ TaskViewAsset::register($this);
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="<?= $customer->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
+                <img src="<?= $customer->avatar_src ? Yii::$app->homeUrl . $customer->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
                      alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
                     <p><?= $customer->name ?></p>
                 </div>
             </div>
             <p class="info-customer"><span><?= $countCustomerTasks ?> заданий</span><span
-                        class="last-">2 года на сайте</span></p>
+                        class="last-"><?= $timeOnSite ?> на сайте</span></p>
             <a href="#" class="link-regular">Смотреть профиль</a>
         </div>
     </div>

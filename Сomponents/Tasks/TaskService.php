@@ -9,9 +9,11 @@ use Components\Constants\MyTaskListFilterConstants;
 use Components\Constants\TaskConstants;
 use Components\Exceptions\TaskActionException;
 use Components\Exceptions\TaskStateException;
+use Components\Exceptions\TimeException;
 use Components\Responses\ResponseService;
+use Components\Time\TimeDifference;
 use frontend\models\Task;
-use yii\db\Query;
+use yii\db\ActiveQuery;
 
 /**
  * Class TaskService
@@ -218,7 +220,7 @@ class TaskService
         return TaskConstants::STATE_AFTER_ACTION[$action] ?? null;
     }
 
-    public function getFilteredTasks($userId, $filter)
+    public function getFilteredTasks($userId, $filter): ActiveQuery
     {
         $tasks = Task::find();
 
@@ -257,5 +259,20 @@ class TaskService
         }
 
         return $tasks;
+    }
+
+    /**
+     * @param Task $task
+     * @return string
+     * @throws TimeException
+     */
+    public function getTimeCreateDifference(Task $task): string
+    {
+        return (new TimeDifference(date('Y-m-d h:i:s'), $task->created_at))->getCountTimeUnits([
+            'year' => 'y',
+            'day' => 'd',
+            'hour' => 'H',
+            'minute' => 'i'
+        ]);
     }
 }

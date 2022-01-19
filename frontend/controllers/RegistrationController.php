@@ -10,12 +10,17 @@ use frontend\models\City;
 use frontend\models\User;
 use frontend\models\UserSettings;
 use Yii;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\Response;
 
 final class RegistrationController extends Controller
 {
-    public function behaviors()
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -30,7 +35,11 @@ final class RegistrationController extends Controller
         ];
     }
 
-    public function actionIndex(): string
+    /**
+     *
+     * @throws Exception
+     */
+    public function actionIndex(): Response|string
     {
         $user = new User();
         $cities = City::getCitiesForOptionsList();
@@ -48,7 +57,9 @@ final class RegistrationController extends Controller
                 $userSettings->is_hidden = 0;
                 $userSettings->is_active = 1;
                 $userSettings->save();
-                $this->redirect(Route::getTasks());
+                Yii::$app->user->login($user);
+
+                return $this->redirect(Route::getTasks());
             }
         }
 

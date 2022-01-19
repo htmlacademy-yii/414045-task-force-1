@@ -7,11 +7,11 @@ namespace frontend\models;
 use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use frontend\models\Category;
 use Components\Categories\CategoryService;
 use yii\web\IdentityInterface;
 
@@ -36,6 +36,7 @@ use yii\web\IdentityInterface;
  * @property string|null $updated_at
  * @property string $auth_key
  * @property string $password_reset_token
+ * @property string $last_activity
  *
  * @property Message[] $messages
  * @property Portfolio[] $portfolios
@@ -45,6 +46,7 @@ use yii\web\IdentityInterface;
  * @property UserSettings $userSettings
  * @property City $city
  * @property Category[] $specialties
+ * @property User[] $favoriteExecutors
  */
 final class User extends ActiveRecord implements IdentityInterface
 {
@@ -94,7 +96,8 @@ final class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($filter->isOnline) {
-            //
+            $conditionIsOnline = ['>', 'last_activity', date('Y-m-d h:i:s', strtotime('-30 minutes'))];
+            $query->andWhere($conditionIsOnline);
         }
 
         if ($filter->hasReview) {
@@ -103,7 +106,9 @@ final class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($filter->isFavorites) {
-            //
+            $conditionsIsFavorites = 'favorite_executors.executor_id = users.id';
+            $query->leftJoin('favorite_executors',
+                'favorite_executors.executor_id = users.id')->andWhere($conditionsIsFavorites);
         }
 
         if ($filter->userName) {
@@ -117,6 +122,25 @@ final class User extends ActiveRecord implements IdentityInterface
                 'pageSize' => 5,
             ],
         ]);
+    }
+
+    /**
+     * @param int|string $id
+     * @return User|IdentityInterface|null
+     */
+    public static function findIdentity($id): User|IdentityInterface|null
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * @param mixed $token
+     * @param null $type
+     * @return void
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
     }
 
     /**
@@ -144,7 +168,7 @@ final class User extends ActiveRecord implements IdentityInterface
             ['avatar_src', 'string', 'max' => 256],
             ['full_address', 'string', 'max' => 256],
             ['phone', 'string', 'max' => 20],
-            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             [
                 ['city_id'],
                 'exist',
@@ -250,6 +274,12 @@ final class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
 
+    public function getFavoriteExecutors(): ActiveQuery
+    {
+        return $this->hasMany(User::class, ['id' => 'executor_id'])
+            ->viaTable('favorite_executors', ['user_id' => 'id']);
+    }
+
     /**
      * Gets query for [[UserSettings]].
      *
@@ -288,34 +318,15 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param int|string $id
-     * @return User|IdentityInterface|null
-     */
-    public static function findIdentity($id)
-    {
-        return self::findOne($id);
-    }
-
-    /**
-     * @param mixed $token
-     * @param null $type
-     * @return void|IdentityInterface|null
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        // TODO: Implement findIdentityByAccessToken() method.
-    }
-
-    /**
      * @return array|int|mixed|string|null
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->getPrimaryKey();
     }
 
     /**
-     * @return string|void|null
+     * @return void
      */
     public function getAuthKey()
     {
@@ -324,7 +335,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @param string $authKey
-     * @return bool|void|null
+     * @return void
      */
     public function validateAuthKey($authKey)
     {
@@ -333,6 +344,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     * @throws Exception
      */
     public function generateAuthKey()
     {
@@ -341,6 +353,7 @@ final class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates new password reset token
+     * @throws Exception
      */
     public function generatePasswordResetToken()
     {

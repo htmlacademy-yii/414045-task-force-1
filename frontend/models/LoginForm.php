@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\models;
 
 use yii\base\Model;
@@ -8,10 +10,12 @@ class LoginForm extends Model
 {
     public string $email = '';
     public string $password = '';
+    private ?User $user = null;
 
-    private $user;
-
-    public function rules()
+    /**
+     * {@inheritdoc}
+     */
+    public function rules(): array
     {
         return [
             ['password', 'validatePassword'],
@@ -21,6 +25,11 @@ class LoginForm extends Model
         ];
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     * @return void
+     */
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
@@ -31,7 +40,7 @@ class LoginForm extends Model
         }
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         if ($this->user === null) {
             $this->user = User::findOne(['email' => $this->email]);

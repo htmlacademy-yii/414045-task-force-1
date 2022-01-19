@@ -7,7 +7,10 @@ use Components\Users\UserService;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Portfolio;
 use frontend\models\User;
-use \Yii;
+use Throwable;
+use Yii;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 use yii\web\UploadedFile;
 
 class AccountController extends SecuredController
@@ -15,7 +18,9 @@ class AccountController extends SecuredController
     public $enableCsrfValidation = false;
 
     /**
-     * @return string
+     * @throws StaleObjectException
+     * @throws Throwable
+     * @throws Exception
      */
     public function actionIndex()
     {
@@ -30,7 +35,7 @@ class AccountController extends SecuredController
                     if ($file->saveAs($src)) {
                         $portfolio = new Portfolio();
                         $portfolio->user_id = $user->id;
-                        $portfolio->img_src = $src;
+                        $portfolio->img_src = '/' . $src;
                         $portfolio->save();
                     }
                 }

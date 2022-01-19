@@ -25,7 +25,7 @@ final class UserFilter extends ActiveRecord
         $this->categories = (new CategoryService())->getCategoryNames();
     }
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'categories' => 'Категории',
@@ -37,7 +37,7 @@ final class UserFilter extends ActiveRecord
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['showCategories', 'categories', 'isFree', 'isOnline', 'hasReview', 'isFavorites', 'userName'], 'safe'],

@@ -11,11 +11,12 @@ use Components\Users\UserService;
 use frontend\models\Response;
 
 $rating = (new UserService())->getCountRatingStars($model->user->rating);
+$lastActivity = (new UserService())->getLastActivity($model->user);
 ?>
 
     <div class="feedback-card__top">
         <a href="<?= Route::getUserView($model->user_id) ?>"><img
-                    src="<?= $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55"
+                    src="<?= Yii::$app->homeUrl . $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55"
                     height="55"></a>
         <div class="feedback-card__top--name">
             <p><a href="<?= Route::getUserView($model->user_id) ?>" class="link-regular"><?= $model->user->name ?></a>
@@ -25,7 +26,7 @@ $rating = (new UserService())->getCountRatingStars($model->user->rating);
             <?php endfor; ?>
             <b><?= $rating ?></b>
         </div>
-        <span class="new-task__time">25 минут назад</span>
+        <span class="new-task__time"><?= $lastActivity ?> назад</span>
     </div>
     <div class="feedback-card__content">
         <p>

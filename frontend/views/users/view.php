@@ -4,6 +4,8 @@
  * @var string $userAge ;
  * @var string $countUserTasksDone
  * @var ActiveDataProvider $dataProvider ;
+ * @var string $lastActivity ;
+ * @var bool $isFavorite ;
  */
 
 use Components\Constants\UserConstants;
@@ -19,7 +21,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
 <section class="content-view">
     <div class="user__card-wrapper">
         <div class="user__card">
-            <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="120" height="120"
+            <img src="<?= $user->avatar_src ? Yii::$app->homeUrl . $user->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="120" height="120"
                  alt="Аватар пользователя">
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>
@@ -33,9 +35,9 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
                 <b class="done-task">Выполнил <?= $countUserTasksDone ?> заказов</b><b class="done-review">Получил <?= count($user->reviews) ?>
                     отзывов</b>
             </div>
-            <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
-                <span>Был на сайте 25 минут назад</span>
-                <a href="#"><b></b></a>
+            <div class="content-view__headline user__card-bookmark <?= $isFavorite ? 'user__card-bookmark--current' : '' ?>">
+                <span><?= $lastActivity ?></span>
+                <a href="<?= Route::addInFavorite($user->id) ?>"><b></b></a>
             </div>
         </div>
         <div class="content-view__description">
@@ -45,7 +47,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
             <div class="user__card-info">
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
-                    <?php foreach ($user->categories as $specialty): ?>
+                    <?php foreach ($user->specialties as $specialty): ?>
                         <a href="<?= Route::getTasks($specialty->id) ?>" class="link-regular"><?= $specialty->title ?></a>
                     <?php endforeach; ?>
                 </div>
@@ -61,7 +63,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
                 <?php foreach ($user->portfolios as $portfolio): ?>
-                    <a href="#"><img src="<?= $portfolio->img_src ?>" width="85" height="86" alt="Фото работы"></a>
+                    <a href="<?= $portfolio->img_src ?>"><img src="<?= $portfolio->img_src ?>" width="85" height="86" alt="Фото работы"></a>
                 <?php endforeach; ?>
             </div>
         </div>

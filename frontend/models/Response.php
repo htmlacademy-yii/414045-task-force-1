@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace frontend\models;
 
-use phpDocumentor\Reflection\Types\Self_;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\db\Query;
 
 /**
  * This is the model class for table "responses".
@@ -43,7 +41,7 @@ final class Response extends ActiveRecord
         return [
             [['task_id', 'user_id'], 'required'],
             [['content'], 'string'],
-            [['created_at', 'updated_at'], 'date', 'format'=>'yyyy-M-d H:m:s'],
+            [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
             [['price'], 'match', 'pattern' => '/^[0-9]*$/', 'message' => 'Введите целое число'],
             [
                 ['task_id'],
@@ -73,7 +71,7 @@ final class Response extends ActiveRecord
             'task_id' => 'Task ID',
             'user_id' => 'User ID',
             'content' => 'Комментарий',
-            'price' =>  'Ваша цена',
+            'price' => 'Ваша цена',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

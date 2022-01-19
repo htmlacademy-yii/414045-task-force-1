@@ -12,11 +12,11 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int $user_id
- * @property int $is_message_ntf_enabled
- * @property int $is_action_ntf_enabled
- * @property int $is_new_review_ntf_enabled
- * @property int $is_hidden
- * @property int $is_active
+ * @property bool $is_message_ntf_enabled
+ * @property bool $is_action_ntf_enabled
+ * @property bool $is_new_review_ntf_enabled
+ * @property bool $is_hidden
+ * @property bool $is_active
  *
  * @property User $user
  */

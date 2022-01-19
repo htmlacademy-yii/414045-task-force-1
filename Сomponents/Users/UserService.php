@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Components\Users;
 
+use Components\Constants\UserConstants;
+use Components\Exceptions\TimeException;
 use Components\Locations\LocationService;
+use Components\Time\TimeDifference;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Category;
 use frontend\models\UsersSpecialty;
+use Throwable;
 use Yii;
 use frontend\models\User;
+use yii\base\Exception;
+use yii\db\StaleObjectException;
 
 /**
  * class UserService
@@ -43,7 +49,7 @@ final class UserService
      * @param int $id
      * @return false|string
      */
-    public function getUserLocation(int $id)
+    public function getUserLocation(int $id): bool|string
     {
         $user = User::findOne($id);
 
@@ -54,7 +60,7 @@ final class UserService
      * @param int $id
      * @return array
      */
-    public function getUserCategories(int $id)
+    public function getUserCategories(int $id): array
     {
         $user = User::findOne($id);
         $userSpecialties = $user->specialties;
@@ -67,10 +73,11 @@ final class UserService
         return $result;
     }
 
-    public function savePhotos()
-    {
-    }
-
+    /**
+     * @throws StaleObjectException
+     * @throws Exception
+     * @throws Throwable
+     */
     public function updateAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
         if ($accountSettings->validate() && $user->validate()) {
@@ -99,6 +106,7 @@ final class UserService
     /**
      * @param User $user
      * @param AccountSettingsForm $accountSettings
+     * @throws Exception
      */
     public function updateUserFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
@@ -140,6 +148,8 @@ final class UserService
     /**
      * @param User $user
      * @param AccountSettingsForm $accountSettings
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function updateUserSpecialitiesFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
@@ -152,14 +162,14 @@ final class UserService
             ])->one();
 
             if (!$userSpecialty) {
-                if (!in_array($categoryId - 1, (array) $accountSettings->userSpecialties)) {
+                if (!in_array($categoryId - 1, (array)$accountSettings->userSpecialties)) {
                     continue;
                 }
 
                 $userSpecialty = new UsersSpecialty();
             }
 
-            if (!in_array($categoryId - 1, (array) $accountSettings->userSpecialties)) {
+            if (!in_array($categoryId - 1, (array)$accountSettings->userSpecialties)) {
                 $userSpecialty->delete();
 
                 continue;
@@ -169,6 +179,26 @@ final class UserService
             $userSpecialty->category_id = $categoryId;
             $userSpecialty->save();
         }
+
+        $user->role = $this->getUserRole($user->id);
+        $user->save();
+    }
+
+    /**
+     * @param int $userId
+     * @return int
+     */
+    public function getUserRole(int $userId): int
+    {
+        $user = User::findOne($userId);
+        $role = UserConstants::USER_ROLE_CUSTOMER;
+        $userSpecialties = $user->specialties;
+
+        if (count($userSpecialties) > 0) {
+            $role = UserConstants::USER_ROLE_EXECUTOR;
+        }
+
+        return $role;
     }
 
     /**
@@ -177,8 +207,60 @@ final class UserService
      */
     public function saveAvatar(User $user, AccountSettingsForm $accountSettings)
     {
-        if ($accountSettings->avatar) {
+        if ($accountSettings->avatar !== null) {
             $accountSettings->upload($user);
         }
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws TimeException
+     */
+    public function getLastActivity(User $user): string
+    {
+        $lastAction = (new TimeDifference(date('Y-m-d h:i:s'), $user->last_activity))->getCountTimeUnits([
+            'year' => 'y',
+            'day' => 'd',
+            'hour' => 'H',
+            'minute' => 'i'
+        ]);
+
+        if ($lastAction === '') {
+            return 'Онлайн';
+        }
+
+        return 'Был на сайте ' . $lastAction . 'назад';
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws TimeException
+     */
+    public function getTimeOnSite(User $user): string
+    {
+        return (new TimeDifference(date('Y-m-d h:i:s'), $user->created_at))->getCountTimeUnits([
+            'year' => 'y',
+            'day' => 'd'
+        ]);
+    }
+
+    /**
+     * @param $executorId
+     * @return bool
+     */
+    public function isFavoriteExecutor($executorId): bool
+    {
+        $user = $this->getUser();
+        $favoriteExecutors = $user->favoriteExecutors;
+
+        foreach ($favoriteExecutors as $executor) {
+            if ($executor->id === $executorId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

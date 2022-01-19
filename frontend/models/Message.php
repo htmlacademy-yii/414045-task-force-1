@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\models;
 
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -127,7 +128,7 @@ final class Message extends ActiveRecord
             'message' => 'content',
             'published_at' => 'created_at',
             'is_mine' => function () {
-                return \Yii::$app->user->id === $this->sender_id;
+                return Yii::$app->user->id === $this->sender_id;
             },
         ];
     }

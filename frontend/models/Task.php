@@ -23,6 +23,7 @@ use Components\Categories\CategoryService;
  * @property int $category_id
  * @property string $state
  * @property int $price
+ * @property int $city_id
  * @property string|null $deadline
  * @property string|null $address
  * @property string|null $location_point
@@ -36,6 +37,7 @@ use Components\Categories\CategoryService;
  * @property User $customer
  * @property User $executor
  * @property Category $category
+ * @property mixed|null $messages
  */
 final class Task extends ActiveRecord
 {
@@ -47,8 +49,11 @@ final class Task extends ActiveRecord
         return 'tasks';
     }
 
-    public static function getTaskDataProvider(TaskFilter $filter, int $page_size): ActiveDataProvider
-    {
+    public static function getTaskDataProvider(
+        TaskFilter $filter,
+        int $page_size,
+        int $cityId = null
+    ): ActiveDataProvider {
         $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
         $query = self::find()->where($conditions);
 
@@ -58,13 +63,20 @@ final class Task extends ActiveRecord
             $query->filterWhere($conditionCategoryId);
         }
 
+        if ($cityId !== null) {
+            $conditionCityId = ['city_id' => $cityId];
+            $conditionCityNull = ['city_id' => null];
+            $query->andWhere($conditionCityId)
+                ->orWhere($conditionCityNull);
+        }
+
         if ($filter->isNotExecutor) {
             $isNotExecutor = ['executor_id' => null];
             $query->andWhere($isNotExecutor);
         }
 
         if ($filter->isRemoteWork) {
-            $conditionsIsRemoteWork = ['address' => null];
+            $conditionsIsRemoteWork = ['city_id' => null];
             $query->andWhere($conditionsIsRemoteWork);
         }
 
@@ -268,7 +280,7 @@ final class Task extends ActiveRecord
         return $this->hasMany(Message::class, ['task_id' => 'id']);
     }
 
-    public function fields()
+    public function fields(): array
     {
         return [
             'title',

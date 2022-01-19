@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace frontend\modules\api;
 
 class Module extends \yii\base\Module

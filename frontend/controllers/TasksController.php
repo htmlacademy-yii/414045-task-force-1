@@ -13,7 +13,7 @@ use Components\Reviews\ReviewService;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
 use Components\Users\UserService;
-use frontend\models\Response;
+use frontend\models\Response as ResponseForm;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\TaskFilter;
@@ -21,6 +21,7 @@ use Yii;
 use yii\db\Exception;
 use yii\web\HttpException;
 use Components\Exceptions\TaskStateException;
+use yii\web\Response;
 
 final class TasksController extends SecuredController
 {
@@ -28,8 +29,11 @@ final class TasksController extends SecuredController
 
     public function actionIndex(): string
     {
+        $user = (new UserService())->getUser();
+        $cityId = (int)Yii::$app->request->get('city') ?? $user->city_id;
+        Yii::$app->session->set('cityId', $cityId);
         $taskFilter = $this->getTaskFilter();
-        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE);
+        $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE, $cityId);
 
         return $this->render('index', compact('dataProvider', 'taskFilter'));
     }
@@ -47,10 +51,10 @@ final class TasksController extends SecuredController
         return $taskFilter;
     }
 
-    public function actionResponseAccept($id, $responseId): \yii\web\Response
+    public function actionResponseAccept($id, $responseId): Response
     {
         $task = Task::findOne($id);
-        $response = Response::findOne($responseId);
+        $response = ResponseForm::findOne($responseId);
 
         if (Yii::$app->user->id === $task->customer_id || $response !== null) {
             $transaction = Yii::$app->db->beginTransaction();
@@ -77,10 +81,10 @@ final class TasksController extends SecuredController
         return $this->redirect(Route::getTaskView($id));
     }
 
-    public function actionResponseRefuse($id, $responseId): \yii\web\Response
+    public function actionResponseRefuse($id, $responseId): Response
     {
         $task = Task::findOne($id);
-        $response = Response::findOne($responseId);
+        $response = ResponseForm::findOne($responseId);
 
         if (Yii::$app->user->id === $task->customer_id || $response !== null) {
             $response->state = ResponseConstants::REFUSE_STATUS_NAME;
@@ -108,7 +112,7 @@ final class TasksController extends SecuredController
 
         $userId = Yii::$app->user->id;
         $taskCompleteForm = new TaskCompleteForm();
-        $response = new Response();
+        $response = new ResponseForm();
         $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
         $possibleTaskActions = (new TaskService())->getPossibleActions($task);
         $customer = $task->customer;
@@ -118,8 +122,8 @@ final class TasksController extends SecuredController
         $categoryName = $task->category->title;
         $categoryMap = array_flip(CategoryConstants::NAME_MAP);
         $categoryClassName = $categoryMap[$categoryName];
-        $dataProvider = $isUserSentResponse ? Response::getResponsesDataProvider($task->id,
-            $userId) : Response::getResponsesDataProvider($task->id);
+        $dataProvider = $isUserSentResponse ? ResponseForm::getResponsesDataProvider($task->id,
+            $userId) : ResponseForm::getResponsesDataProvider($task->id);
         $location = $task->location_point ?? (new UserService())->getUserLocation($task->customer_id);
         $locationService = new LocationService(address: false, point: $location);
         $locationName = $locationService->getLocationName() ?? '';
@@ -147,9 +151,11 @@ final class TasksController extends SecuredController
     }
 
     /**
+     * @param int $id
+     * @return Response
      * @throws TaskStateException
      */
-    public function actionResponse($id): \yii\web\Response
+    public function actionResponse(int $id): Response
     {
         $task = Task::findOne($id);
 
@@ -163,7 +169,7 @@ final class TasksController extends SecuredController
     /**
      * @throws TaskStateException
      */
-    public function actionComplete($id): \yii\web\Response
+    public function actionComplete(int $id): Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
@@ -180,7 +186,7 @@ final class TasksController extends SecuredController
     /**
      * @throws TaskStateException
      */
-    public function actionRefuse($id): \yii\web\Response
+    public function actionRefuse(int $id): Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;
@@ -198,7 +204,7 @@ final class TasksController extends SecuredController
     /**
      * @throws TaskStateException
      */
-    public function actionCancel($id): \yii\web\Response
+    public function actionCancel(int $id): Response
     {
         $task = Task::findOne($id);
         $userId = Yii::$app->user->id;

@@ -38,7 +38,7 @@ final class Route
      * @param int $taskId id задачи
      * @return string
      */
-    public static function getTaskView($taskId): string
+    public static function getTaskView(int $taskId): string
     {
         return Url::to(['/tasks/view/' . $taskId]);
     }
@@ -58,7 +58,7 @@ final class Route
      * @param $responseId
      * @return string
      */
-    public static function getTaskResponseAccept($taskId, $responseId)
+    public static function getTaskResponseAccept($taskId, $responseId): string
     {
         return Url::to([self::getTaskView($taskId) . '/response-accept/' . $responseId]);
     }
@@ -68,7 +68,7 @@ final class Route
      * @param $responseId
      * @return string
      */
-    public static function getTaskResponseRefuse($taskId, $responseId)
+    public static function getTaskResponseRefuse($taskId, $responseId): string
     {
         return Url::to([self::getTaskView($taskId) . '/response-refuse/' . $responseId]);
     }
@@ -103,6 +103,7 @@ final class Route
     {
         return Url::to(['/landing']);
     }
+
     /**
      * Logout
      *
@@ -113,8 +114,24 @@ final class Route
         return Url::to(['/logout']);
     }
 
+    /**
+     * Возвращает путь к странице аккаунта
+     *
+     * @return string
+     */
     public static function getAccount(): string
     {
         return Url::to(['/account']);
+    }
+
+    /**
+     * Добавление исполнителя в избранное
+     *
+     * @param int $executorId
+     * @return string
+     */
+    public static function addInFavorite(int $executorId): string
+    {
+        return Url::to(['/users/add-in-favorite/' . $executorId]);
     }
 }

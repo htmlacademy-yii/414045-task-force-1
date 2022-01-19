@@ -6,10 +6,10 @@ namespace frontend\controllers;
 
 use Components\Categories\CategoryService;
 use Components\Constants\TaskConstants;
-use Components\Constants\UserConstants;
 use Components\Locations\LocationService;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
+use frontend\models\City;
 use frontend\models\Task;
 use frontend\models\TaskAttachment;
 use frontend\models\User;
@@ -21,20 +21,17 @@ final class CreateController extends SecuredController
 {
     public Task $task;
 
-    public function actionIndex(): string
+    public function actionIndex()
     {
-        $user = User::findOne(Yii::$app->user->id);
-
-        if ($user->role !== UserConstants::USER_ROLE_CUSTOMER) {
-            $this->redirect(Route::getTasks());
-        }
-
         $task = $this->task ?? new Task();
         $categories = (new CategoryService())->getCategoryNamesForDB();
 
         return $this->render('index', compact('task', 'categories'));
     }
 
+    /**
+     * @return Response
+     */
     public function actionCheckForm(): Response
     {
         $user = User::findOne(Yii::$app->user->id);
@@ -44,7 +41,17 @@ final class CreateController extends SecuredController
             $task->load(Yii::$app->request->post());
             $task->customer_id = $user->id;
             $task->state = TaskConstants::NEW_TASK_STATUS_NAME;
-            $task->location_point = $task->address !== null ? (new LocationService(address: $task->address, point: false))->getLocationPoint() : '';
+            $locationPoint = '';
+            $cityId = null;
+            if ($task->address !== null) {
+                $location = (new LocationService(address: $task->address, point: false));
+                $cityName = $location->getCityName();
+                $city = City::find()->where(['title' => $cityName])->one();
+                $cityId = $city->id;
+                $locationPoint = $location->getLocationPoint();
+            }
+            $task->city_id = $cityId;
+            $task->location_point = $locationPoint;
 
             if ($task->validate()) {
                 $task->save();
@@ -61,6 +68,9 @@ final class CreateController extends SecuredController
         return $this->redirect(Route::getTaskCreate());
     }
 
+    /**
+     * @return void
+     */
     public function actionUpload()
     {
         if (Yii::$app->request->isPost) {

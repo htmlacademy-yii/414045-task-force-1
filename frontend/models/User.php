@@ -36,6 +36,7 @@ use yii\web\IdentityInterface;
  * @property string|null $updated_at
  * @property string $auth_key
  * @property string $password_reset_token
+ * @property string $last_activity
  *
  * @property Message[] $messages
  * @property Portfolio[] $portfolios
@@ -93,9 +94,17 @@ final class User extends ActiveRecord implements IdentityInterface
             $query->leftJoin(['t' => 'tasks'], 't.executor_id = users.id')->andWhere($conditionUserIsFree);
         }
 
+        if ($filter->isOnline) {
+            //
+        }
+
         if ($filter->hasReview) {
             $conditionsHasReview = 'addressee_id = users.id';
             $query->leftJoin('reviews', 'addressee_id = users.id')->andWhere($conditionsHasReview);
+        }
+
+        if ($filter->isFavorites) {
+            //
         }
 
         if ($filter->userName) {

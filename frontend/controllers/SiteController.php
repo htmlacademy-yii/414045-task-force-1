@@ -60,18 +60,12 @@ final class SiteController extends Controller
         ];
     }
 
-    /**
-     * @return mixed
-     */
-    public function actionIndex(): mixed
+    public function actionIndex()
     {
         $this->redirect(Route::getTasks());
     }
 
-    /**
-     * @return mixed
-     */
-    public function actionLogout(): mixed
+    public function actionLogout()
     {
         Yii::$app->user->logout();
 

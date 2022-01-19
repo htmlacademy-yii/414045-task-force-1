@@ -14,10 +14,7 @@ class AccountController extends SecuredController
 {
     public $enableCsrfValidation = false;
 
-    /**
-     * @return string
-     */
-    public function actionIndex(): string
+    public function actionIndex()
     {
         $user = User::findOne(Yii::$app->user->id);
         $accountSettings = new AccountSettingsForm();
@@ -30,7 +27,7 @@ class AccountController extends SecuredController
                     if ($file->saveAs($src)) {
                         $portfolio = new Portfolio();
                         $portfolio->user_id = $user->id;
-                        $portfolio->img_src = $src;
+                        $portfolio->img_src = '/' . $src;
                         $portfolio->save();
                     }
                 }

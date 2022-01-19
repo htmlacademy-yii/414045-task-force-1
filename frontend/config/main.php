@@ -1,5 +1,7 @@
 <?php
 
+use frontend\models\User;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -56,4 +58,9 @@ return [
         ]
     ],
     'params' => $params,
+    'on beforeAction' => function(){
+        if(!Yii::$app->user->isGuest){
+            User::updateAll(['last_activity'=>date(DATE_W3C)],['id'=>Yii::$app->user->id]);
+        }
+    },
 ];

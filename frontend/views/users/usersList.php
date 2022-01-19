@@ -2,13 +2,16 @@
 
 /**
  * @var User $model
+ * @var string $lastActivity ;
  */
 
 use Components\Constants\UserConstants;
+use Components\Routes\Route;
 use Components\Users\UserService;
 use frontend\models\User;
 
-$rating = (new UserService())->getCountRatingStars($model->rating)
+$rating = (new UserService())->getCountRatingStars($model->rating);
+$lastActivity = (new UserService())->getLastActivity($model);
 ?>
 
 <div class="feedback-card__top">
@@ -31,11 +34,11 @@ $rating = (new UserService())->getCountRatingStars($model->rating)
             <?= $model->about ?>
         </p>
     </div>
-    <span class="new-task__time">Был на сайте 25 минут назад</span>
+    <span class="new-task__time">Был на сайте <?= $lastActivity ?> назад</span>
 </div>
 <div class="link-specialization user__search-link--bottom">
     <?php foreach ($model->specialties as $specialty) : ?>
-        <a href="browse.html"
+        <a href="<?= Route::getTasks($specialty->id) ?>"
            class="link-regular"><?= $specialty->title ?></a>
     <?php endforeach; ?>
 </div>

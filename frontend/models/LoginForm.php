@@ -10,8 +10,7 @@ class LoginForm extends Model
 {
     public string $email = '';
     public string $password = '';
-
-    private ?User $user;
+    private ?User $user = null;
 
     /**
      * {@inheritdoc}

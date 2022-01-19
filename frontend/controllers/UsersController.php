@@ -8,6 +8,7 @@ use Components\Constants\TaskConstants;
 use Components\Constants\UserConstants;
 use Components\Exceptions\TimeException;
 use Components\Time\TimeDifference;
+use Components\Users\UserService;
 use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\User;
@@ -40,14 +41,14 @@ final class UsersController extends SecuredController
         }
 
         $user = User::findOne($id);
-        $timeDiff = new TimeDifference(date('Y-m-d'), $user->birthday);
-        $userAge = $timeDiff->getCountTimeUnits(['year' => 'Y']);
+        $lastActivity = (new UserService())->getLastActivity($user);
+        $userAge = (new TimeDifference(date('Y-m-d'), $user->birthday))->getCountTimeUnits(['year' => 'Y']);
         $countUserTasksDone = Task::find()->where([
             'executor_id' => $user->id,
             'state' => TaskConstants::DONE_TASK_STATUS_NAME
         ])->count();
         $dataProvider = Review::getDataProviderReviews($user->id);
 
-        return $this->render('view', compact('user', 'userAge', 'countUserTasksDone', 'dataProvider'));
+        return $this->render('view', compact('user', 'userAge', 'countUserTasksDone', 'dataProvider', 'lastActivity'));
     }
 }

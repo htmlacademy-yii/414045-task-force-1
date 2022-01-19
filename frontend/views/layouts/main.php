@@ -34,7 +34,13 @@ AppAsset::register($this);
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
-                <a href="<?= Route::getLanding() ?>">
+                <a href="
+                    <?php if (Yii::$app->user->isGuest): ?>
+                        <?= Route::getLanding() ?>
+                    <?php else: ?>
+                        <?= Route::getTasks() ?>
+                    <?php endif; ?>
+                ">
                     <svg class="page-header__logo-image" id="Layer_2"
                          xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 1634 646.35">
@@ -98,11 +104,9 @@ AppAsset::register($this);
                         <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
                             <a href="<?= Route::getUsers() ?>">Исполнители</a>
                         </li>
-                        <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
-                            <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
-                                <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
-                            </li>
-                        <?php endif; ?>
+                        <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
+                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                        </li>
                         <li class="site-list__item">
                             <a href="/account">Мой профиль</a>
                         </li>
@@ -140,7 +144,7 @@ AppAsset::register($this);
                     </div>
                     <div class="header__account">
                         <a class="header__account-photo">
-                            <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
+                            <img src="<?= Yii::$app->homeUrl . $user->avatar_src ?? Yii::$app->homeUrl . UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
                                  width="43" height="44"
                                  alt="Аватар пользователя">
                         </a>

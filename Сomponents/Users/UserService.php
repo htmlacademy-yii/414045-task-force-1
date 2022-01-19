@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Components\Users;
 
+use Components\Constants\UserConstants;
+use Components\Exceptions\TimeException;
 use Components\Locations\LocationService;
+use Components\Time\TimeDifference;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Category;
 use frontend\models\UsersSpecialty;
@@ -163,14 +166,14 @@ final class UserService
             ])->one();
 
             if (!$userSpecialty) {
-                if (!in_array($categoryId - 1, (array) $accountSettings->userSpecialties)) {
+                if (!in_array($categoryId - 1, (array)$accountSettings->userSpecialties)) {
                     continue;
                 }
 
                 $userSpecialty = new UsersSpecialty();
             }
 
-            if (!in_array($categoryId - 1, (array) $accountSettings->userSpecialties)) {
+            if (!in_array($categoryId - 1, (array)$accountSettings->userSpecialties)) {
                 $userSpecialty->delete();
 
                 continue;
@@ -180,6 +183,26 @@ final class UserService
             $userSpecialty->category_id = $categoryId;
             $userSpecialty->save();
         }
+
+        $user->role = $this->getUserRole($user->id);
+        $user->save();
+    }
+
+    /**
+     * @param int $userId
+     * @return int
+     */
+    public function getUserRole(int $userId): int
+    {
+        $user = User::findOne($userId);
+        $role = UserConstants::USER_ROLE_CUSTOMER;
+        $userSpecialties = $user->specialties;
+
+        if (count($userSpecialties) > 0) {
+            $role = UserConstants::USER_ROLE_EXECUTOR;
+        }
+
+        return $role;
     }
 
     /**
@@ -188,6 +211,18 @@ final class UserService
      */
     public function saveAvatar(User $user, AccountSettingsForm $accountSettings)
     {
-        $accountSettings->upload($user);
+        if ($accountSettings->avatar !== null) {
+            $accountSettings->upload($user);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws TimeException
+     */
+    public function getLastActivity(User $user): string
+    {
+        return (new TimeDifference(date(DATE_W3C), $user->last_activity))->getCountTimeUnits(['year' => 'y', 'day' => 'd', 'hour' => 'H', 'minute' => 'i']);
     }
 }

@@ -21,10 +21,7 @@ final class CreateController extends SecuredController
 {
     public Task $task;
 
-    /**
-     * @return string
-     */
-    public function actionIndex(): string
+    public function actionIndex()
     {
         $user = User::findOne(Yii::$app->user->id);
 

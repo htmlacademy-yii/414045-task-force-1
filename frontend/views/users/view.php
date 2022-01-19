@@ -4,6 +4,7 @@
  * @var string $userAge ;
  * @var string $countUserTasksDone
  * @var ActiveDataProvider $dataProvider ;
+ * @var string $lastActivity ;
  */
 
 use Components\Constants\UserConstants;
@@ -34,7 +35,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
                     отзывов</b>
             </div>
             <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
-                <span>Был на сайте 25 минут назад</span>
+                <span>Был на сайте <?= $lastActivity ?> назад</span>
                 <a href="#"><b></b></a>
             </div>
         </div>
@@ -45,7 +46,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
             <div class="user__card-info">
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
-                    <?php foreach ($user->categories as $specialty): ?>
+                    <?php foreach ($user->specialties as $specialty): ?>
                         <a href="<?= Route::getTasks($specialty->id) ?>" class="link-regular"><?= $specialty->title ?></a>
                     <?php endforeach; ?>
                 </div>
@@ -61,7 +62,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
                 <?php foreach ($user->portfolios as $portfolio): ?>
-                    <a href="#"><img src="<?= $portfolio->img_src ?>" width="85" height="86" alt="Фото работы"></a>
+                    <a href="<?= $portfolio->img_src ?>"><img src="<?= $portfolio->img_src ?>" width="85" height="86" alt="Фото работы"></a>
                 <?php endforeach; ?>
             </div>
         </div>

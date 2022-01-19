@@ -11,6 +11,7 @@ use Components\NumberHelpers\NumberHelpersNumEnding;
 use DateInterval;
 use DateTime;
 use Exception;
+use frontend\models\User;
 
 final class TimeDifference
 {
@@ -40,7 +41,6 @@ final class TimeDifference
     public function getCountTimeUnits(array $timeUnits): string
     {
         $result = '';
-        $format = '';
         $timeInterval = $this->getDiff();
         $timeUnitsMap = [
             'year' => [
@@ -83,8 +83,10 @@ final class TimeDifference
                 $countTimeUnit,
                 $timeUnitsMap[$timeUnit]['endings']
             );
-            $format .= '%' . $formatChar . ' ';
-            $result .= $countTimeUnit . ' ' . $timeUnitName . ' ';
+
+            if ($countTimeUnit > 0) {
+                $result .= $countTimeUnit . ' ' . $timeUnitName . ' ';
+            }
         }
 
         return $result;

@@ -12,7 +12,7 @@ use yii\web\UploadedFile;
 
 class AccountSettingsForm extends Model
 {
-    public UploadedFile $avatar;
+    public mixed $avatar = null;
     public string $name = '';
     public string $email = '';
     public string $address = '';
@@ -40,11 +40,11 @@ class AccountSettingsForm extends Model
         $user = User::findOne(Yii::$app->user->id);
         $this->specialties = (new CategoryService())->getCategoryNames();
         $this->userSpecialties = (new UserService())->getUserCategories(Yii::$app->user->id);
-        $this->isMessageNtfEnabled = $user->userSettings->is_message_ntf_enabled;
-        $this->isActionNtfEnabled = $user->userSettings->is_action_ntf_enabled;
-        $this->isNewReviewNtfEnabled = $user->userSettings->is_new_review_ntf_enabled;
-        $this->isActive = $user->userSettings->is_active;
-        $this->isHidden = $user->userSettings->is_hidden;
+        $this->isMessageNtfEnabled = (bool) $user->userSettings->is_message_ntf_enabled;
+        $this->isActionNtfEnabled = (bool) $user->userSettings->is_action_ntf_enabled;
+        $this->isNewReviewNtfEnabled = (bool) $user->userSettings->is_new_review_ntf_enabled;
+        $this->isActive = (bool) $user->userSettings->is_active;
+        $this->isHidden = (bool) $user->userSettings->is_hidden;
     }
 
     /**

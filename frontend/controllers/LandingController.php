@@ -33,7 +33,7 @@ final class LandingController extends Controller
         ];
     }
 
-    public function actionIndex(): Response|array|string
+    public function actionIndex()
     {
         $loginForm = new LoginForm();
         if (Yii::$app->request->getIsPost()) {

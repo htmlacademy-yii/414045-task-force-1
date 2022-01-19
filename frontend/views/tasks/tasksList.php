@@ -18,6 +18,8 @@ use frontend\models\Task;
 <div class="new-task__icon new-task__icon--<?= (new CategoryService())->getCategoryName($model->category->title) ?>"></div>
 <p class="new-task_description"> <?= $model->description ?> </p>
 <b class="new-task__price new-task__price--translation"><?= $model->price ?>
-    <b> ₽</b></b>
+    <?php if ($model->price > 0): ?>
+        <b> ₽</b></b>
+    <?php endif; ?>
 <p class="new-task__place"><?= $model->address ?></p>
 <span class="new-task__time"><?= $model->getTimeDiff() ?></span>

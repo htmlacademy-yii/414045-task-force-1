@@ -53,6 +53,7 @@ return [
                     'clientId' => '8041531',
                     'clientSecret' => 'kaByfLuf8UQSbNmRIOJP',
                     'scope' => 'email',
+                    //  backurl: http://taskforce/
                 ],
             ],
         ]

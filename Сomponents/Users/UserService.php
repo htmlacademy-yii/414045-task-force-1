@@ -110,31 +110,31 @@ final class UserService
      */
     public function updateUserFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
-        if (!$user->email) {
+        if ($accountSettings->email) {
             $user->email = $accountSettings->email;
         }
 
-        if (!$user->full_address) {
+        if ($accountSettings->address) {
             $user->full_address = $accountSettings->address;
         }
 
-        if (!$user->birthday) {
+        if ($accountSettings->birthday) {
             $user->birthday = $accountSettings->birthday;
         }
 
-        if (!$user->about) {
+        if ($accountSettings->about) {
             $user->about = $accountSettings->about;
         }
 
-        if (!$user->phone) {
+        if ($accountSettings->phone) {
             $user->phone = $accountSettings->phone;
         }
 
-        if (!$user->skype) {
+        if ($accountSettings->skype) {
             $user->skype = $accountSettings->skype;
         }
 
-        if (!$user->over_messenger) {
+        if ($accountSettings->overMessenger) {
             $user->over_messenger = $accountSettings->overMessenger;
         }
 

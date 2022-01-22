@@ -148,7 +148,7 @@ AppAsset::register($this);
                     </div>
                     <div class="header__account">
                         <a class="header__account-photo">
-                            <img src="<?= Yii::$app->homeUrl . $user->avatar_src ?? Yii::$app->homeUrl . UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
+                            <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
                                  width="43" height="44"
                                  alt="Аватар пользователя">
                         </a>

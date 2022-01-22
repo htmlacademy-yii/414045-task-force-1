@@ -21,7 +21,7 @@ $rating = (new UserService())->getCountRatingStars($user->rating);
 <section class="content-view">
     <div class="user__card-wrapper">
         <div class="user__card">
-            <img src="<?= $user->avatar_src ? Yii::$app->homeUrl . $user->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="120" height="120"
+            <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="120" height="120"
                  alt="Аватар пользователя">
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>

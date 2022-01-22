@@ -87,6 +87,13 @@ AccountAsset::register($this);
 
         <div class="account__redaction-section-wrapper account__redaction">
             <span class="dropzone">Выбрать фотографии</span>
+            <div class="user__card-photo">
+                <?php foreach ($user->portfolios as $photo): ?>
+                <a href="<?= $photo->img_src ?>">
+                    <img src="<?= $photo->img_src ?>" width="85" height="86">
+                </a>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <h3 class="div-line">Контакты</h3>

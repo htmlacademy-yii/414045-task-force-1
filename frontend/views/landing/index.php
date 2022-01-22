@@ -308,7 +308,7 @@ use yii\widgets\ActiveForm;
                 'tag' => 'span',
                 'class' => 'registration__text-error',
             ],
-        ])->passwordInput() ?>
+        ])->passwordInput()->label('Пароль') ?>
         <?= Html::submitButton('Войти', ['class' => 'button']) ?>
         <?php $form::end() ?>
         <?= yii\authclient\widgets\AuthChoice::widget([

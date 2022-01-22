@@ -12,8 +12,8 @@ class m220103_093133_auth extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('users', 'auth_key', $this->string()->notNull());
-        $this->addColumn('users', 'password_reset_token', $this->string()->notNull());
+        $this->addColumn('users', 'auth_key', $this->string());
+        $this->addColumn('users', 'password_reset_token', $this->string());
 
         $this->createTable('auth', [
             'id' => $this->primaryKey(),

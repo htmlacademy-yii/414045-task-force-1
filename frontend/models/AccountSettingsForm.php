@@ -45,6 +45,7 @@ class AccountSettingsForm extends Model
         $this->isNewReviewNtfEnabled = (bool)$user->userSettings->is_new_review_ntf_enabled;
         $this->isActive = (bool)$user->userSettings->is_active;
         $this->isHidden = (bool)$user->userSettings->is_hidden;
+        $this->birthday = $user->birthday;
     }
 
     /**
@@ -54,7 +55,7 @@ class AccountSettingsForm extends Model
     public function upload(User $user): bool
     {
         if ($this->avatar->saveAs('uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension)) {
-            $user->avatar_src = 'uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension;
+            $user->avatar_src = '/uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension;
 
             if ($user->save()) {
                 return true;

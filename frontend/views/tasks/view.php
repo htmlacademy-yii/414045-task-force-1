@@ -114,7 +114,7 @@ $timeOnSite = (new UserService())->getTimeOnSite($customer);
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="<?= $customer->avatar_src ? Yii::$app->homeUrl . $customer->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
+                <img src="<?= $customer->avatar_src ? $customer->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
                      alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
                     <p><?= $customer->name ?></p>

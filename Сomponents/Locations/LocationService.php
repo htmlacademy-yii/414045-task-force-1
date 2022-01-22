@@ -40,7 +40,7 @@ final class LocationService
      */
     private function getLocation(): void
     {
-        if ($this->point !== false) {
+        if ($this->point) {
             $location = $this->getLocationFromApi($this->point);
 
             Yii::$app->cache->set(md5($location['name']), $location, self::DAY_CACHE_DURATION);

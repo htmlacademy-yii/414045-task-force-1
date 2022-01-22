@@ -41,6 +41,7 @@ use yii\web\IdentityInterface;
  * @property Message[] $messages
  * @property Portfolio[] $portfolios
  * @property Response[] $responses
+ * @property Notification[] $notifications
  * @property Review[] $reviews
  * @property Task[] $tasks
  * @property UserSettings $userSettings
@@ -247,6 +248,16 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Gets query for [[Notifications]].
+     *
+     * @return ActiveQuery
+     */
+    public function getNotifications(): ActiveQuery
+    {
+        return $this->hasMany(Notification::class, ['user_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[Reviews]].
      *
      * @return ActiveQuery
@@ -274,6 +285,12 @@ final class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[FavoriteExecutors]].
+     *
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
     public function getFavoriteExecutors(): ActiveQuery
     {
         return $this->hasMany(User::class, ['id' => 'executor_id'])

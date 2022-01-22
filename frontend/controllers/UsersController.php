@@ -56,9 +56,10 @@ final class UsersController extends SecuredController
             'state' => TaskConstants::DONE_TASK_STATUS_NAME
         ])->count();
         $dataProvider = Review::getDataProviderReviews($user->id);
+        $rating = (new UserService())->getCountRatingStars($user->rating);
 
         return $this->render('view',
-            compact('user', 'userAge', 'countUserTasksDone', 'dataProvider', 'lastActivity', 'isFavorite'));
+            compact('user', 'userAge', 'countUserTasksDone', 'dataProvider', 'lastActivity', 'isFavorite', 'rating'));
     }
 
     /**

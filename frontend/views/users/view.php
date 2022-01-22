@@ -15,7 +15,6 @@ use frontend\models\User;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
 
-$rating = (new UserService())->getCountRatingStars($user->rating);
 ?>
 
 <section class="content-view">

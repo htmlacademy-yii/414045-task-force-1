@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
+use Components\Constants\TaskConstants;
 use frontend\models\LoginForm;
+use frontend\models\Task;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use Yii;
@@ -36,6 +38,7 @@ final class LandingController extends Controller
     public function actionIndex()
     {
         $loginForm = new LoginForm();
+        $latestTasks = Task::find()->orderBy('id desc')->limit(TaskConstants::COUNT_SHOW_TASKS_IN_LANDING_PAGE)->all();
         if (Yii::$app->request->getIsPost()) {
             $loginForm->load(Yii::$app->request->post());
             if (Yii::$app->request->isAjax && $loginForm->load(Yii::$app->request->post())) {
@@ -51,6 +54,6 @@ final class LandingController extends Controller
             }
         }
 
-        return $this->render('index', compact('loginForm'));
+        return $this->render('index', compact('loginForm', 'latestTasks'));
     }
 }

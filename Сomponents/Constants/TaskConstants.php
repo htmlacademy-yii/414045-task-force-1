@@ -27,6 +27,10 @@ final class TaskConstants
     public const TASK_COMPLETE_FORM_STATE_SUCCESS_LABEL = 'Да';
     public const TASK_COMPLETE_FORM_STATE_REFUSE_LABEL = 'Возникли проблемы';
 
+    public const REMOTE_WORK = 'Удалённая работа';
+
+    public const COUNT_SHOW_TASKS_IN_LANDING_PAGE = 4;
+
     public const TRANSFER_MAP
         = [
             self::NEW_TASK_STATUS_NAME => [Cancel::class, Response::class],

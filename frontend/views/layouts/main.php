@@ -7,6 +7,7 @@
  */
 
 use Components\Constants\UserConstants;
+use Components\Notification\NotificationsService;
 use Components\Routes\Route;
 use frontend\assets\AppAsset;
 use frontend\models\City;
@@ -14,6 +15,7 @@ use yii\web\View;
 use Components\Users\UserService;
 
 $user = (new UserService())->getUser();
+$notifications = $user->notifications;
 $cities = City::find()->all();
 $cityId = (int) Yii::$app->session->get('cityId');
 
@@ -111,13 +113,13 @@ AppAsset::register($this);
                             <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
                         </li>
                         <li class="site-list__item">
-                            <a href="/account">Мой профиль</a>
+                            <a href="<?= Route::getAccount() ?>">Мой профиль</a>
                         </li>
                     </ul>
                 </div>
                 <?php if (Yii::$app->user->identity): ?>
                     <div class="header__town">
-                        <select class="multiple-select input town-select" size="1"
+                        <select class="multiple-select input town-select-header" size="1"
                                 name="town[]">
                             <?php foreach ($cities as $city): ?>
                                 <option value="<?= $city->id ?>"
@@ -130,21 +132,12 @@ AppAsset::register($this);
                     <div class="header__lightbulb"></div>
                     <div class="lightbulb__pop-up">
                         <h3>Новые события</h3>
-                        <p class="lightbulb__new-task lightbulb__new-task--message">
-                            Новое сообщение в чате
-                            <a href="view.html" class="link-regular">«Помочь с
-                                курсовой»</a>
+                        <?php foreach ($notifications as $notification): ?>
+                        <p class="lightbulb__new-task <?= (new NotificationsService())->getNotificationClassName($notification->type) ?>">
+                            <?= $notification->content ?>
+                            <a href="<?= Route::getTaskView($notification->task_id) ?>" class="link-regular">«<?= $notification->task->title ?>»</a>
                         </p>
-                        <p class="lightbulb__new-task lightbulb__new-task--executor">
-                            Выбран исполнитель для
-                            <a href="view.html" class="link-regular">«Помочь с
-                                курсовой»</a>
-                        </p>
-                        <p class="lightbulb__new-task lightbulb__new-task--close">
-                            Завершено задание
-                            <a href="view.html" class="link-regular">«Помочь с
-                                курсовой»</a>
-                        </p>
+                        <?php endforeach; ?>
                     </div>
                     <div class="header__account">
                         <a class="header__account-photo">
@@ -198,13 +191,10 @@ AppAsset::register($this);
                             <a href="<?= Route::getTasks() ?>">Задания</a>
                         </li>
                         <li class="links__item">
-                            <a href="account.html">Мой профиль</a>
+                            <a href="<?= Route::getAccount() ?>">Мой профиль</a>
                         </li>
                         <li class="links__item">
                             <a href="<?= Route::getUsers() ?>">Исполнители</a>
-                        </li>
-                        <li class="links__item">
-                            <a href="signup.html">Регистрация</a>
                         </li>
                         <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
                             <li class="links__item">

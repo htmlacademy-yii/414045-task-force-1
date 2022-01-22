@@ -3,7 +3,6 @@
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
 use Components\Tasks\TaskService;
-use Components\Users\UserService;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
 use frontend\models\User;
@@ -30,11 +29,11 @@ use frontend\assets\TaskViewAsset;
  * @var int $categoryId ;
  * @var string $categoryName ;
  * @var string $categoryClassName ;
+ * @var string $createdTime ;
+ * @var string $timeOnSite ;
  */
 
 TaskViewAsset::register($this);
-$createdTime = (new TaskService())->getTimeCreateDifference($task);
-$timeOnSite = (new UserService())->getTimeOnSite($customer);
 ?>
 
 <section class="content-view">
@@ -114,7 +113,7 @@ $timeOnSite = (new UserService())->getTimeOnSite($customer);
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="<?= $customer->avatar_src ? $customer->avatar_src : UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
+                <img src="<?= $customer->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
                      alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
                     <p><?= $customer->name ?></p>

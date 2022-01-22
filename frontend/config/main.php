@@ -1,5 +1,6 @@
 <?php
 
+use Components\Users\UserService;
 use frontend\models\User;
 
 $params = array_merge(
@@ -60,8 +61,17 @@ return [
     ],
     'params' => $params,
     'on beforeAction' => function(){
-        if(!Yii::$app->user->isGuest){
+        if (!Yii::$app->user->isGuest) {
             User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
+        }
+
+        if (Yii::$app->request->get('r') === 'events/index') {
+            $user = (new UserService())->getUser();
+            $notifications = $user->notifications;
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
         }
     },
 ];

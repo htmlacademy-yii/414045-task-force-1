@@ -2,11 +2,15 @@
 
 /**
  * @var $loginForm LoginForm;
+ * @var $latestTasks Task[]
  */
 
+use Components\Categories\CategoryService;
 use frontend\models\LoginForm;
+use frontend\models\Task;
 use yii\helpers\Html;
 use Components\Routes\Route;
+use yii\helpers\StringHelper;
 use yii\widgets\ActiveForm;
 
 ?>
@@ -159,67 +163,24 @@ use yii\widgets\ActiveForm;
             <div class="landing-bottom">
                 <div class="landing-bottom-container">
                     <h2>Последние задания на сайте</h2>
-                    <div class="landing-task">
-                        <div class="landing-task-top task-courier"></div>
-                        <div class="landing-task-description">
-                            <h3><a href="#" class="link-regular">Подключить принтер</a></h3>
-                            <p>Необходимо подключить старый матричный принтер, у него еще LPT порт…</p>
-                        </div>
-                        <div class="landing-task-info">
-                            <div class="task-info-left">
-                                <p><a href="#" class="link-regular">Курьерские услуги</a></p>
-                                <p>25 минут назад</p>
+                    <?php foreach ($latestTasks as $task): ?>
+                        <div class="landing-task">
+                            <div class="landing-task-top task-courier"></div>
+                            <div class="landing-task-description">
+                                <h3><a href="#" class="link-regular"><?= StringHelper::truncate($task->title, 15, '...') ?></a></h3>
+                                <p><?= StringHelper::truncate($task->description, 50, '...') ?></p>
                             </div>
-                            <span>700 <b>₽</b></span>
-                        </div>
-                    </div>
-                    <div class="landing-task">
-                        <div class="landing-task-top task-cargo"></div>
-                        <div class="landing-task-description">
-                            <h3><a href="#" class="link-regular">Офисный переезд</a></h3>
-                            <p>Требуется перевезти офисную мебель
-                                и технику из расчета 5 сотрудников</p>
-                        </div>
-                        <div class="landing-task-info">
-                            <div class="task-info-left">
-                                <p><a href="#" class="link-regular">Грузоперевозки</a></p>
-                                <p>25 минут назад</p>
+                            <div class="landing-task-info">
+                                <div class="task-info-left">
+                                    <p><a href="<?= Route::getRegistration() ?>" class="link-regular"><?= $task->category->title ?></a></p>
+                                    <p><?= $task->getTimeDiff() ?></p>
+                                </div>
+                                <?php if ($task->price): ?>
+                                    <span><?= $task->price ?><b>₽</b></span>
+                                <?php endif; ?>
                             </div>
-                            <span>1 800 <b>₽</b></span>
                         </div>
-                    </div>
-                    <div class="landing-task">
-                        <div class="landing-task-top task-neo"></div>
-                        <div class="landing-task-description">
-                            <h3><a href="#" class="link-regular">Убраться в квартире</a></h3>
-                            <p>Моей хате давно нужна генеральная уборка.
-                                В наличии есть только пылесос. </p>
-                        </div>
-                        <div class="landing-task-info">
-                            <div class="task-info-left">
-                                <p><a href="#" class="link-regular">Уборка</a></p>
-                                <p>1 час назад</p>
-                            </div>
-                            <span>2000 <b>₽</b></span>
-                        </div>
-                    </div>
-                    <div class="landing-task">
-                        <div class="landing-task-top task-flat"></div>
-                        <div class="landing-task-description">
-                            <h3><a href="#" class="link-regular">Празднование ДР</a></h3>
-                            <p>Моему другу нужно
-                                устроить день рождения,
-                                который он никогда не
-                                забудет</p>
-                        </div>
-                        <div class="landing-task-info">
-                            <div class="task-info-left">
-                                <p><a href="#" class="link-regular">Мероприятия</a></p>
-                                <p>1 час назад</p>
-                            </div>
-                            <span>2000 <b>₽</b></span>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
                 <div class="landing-bottom-container">
                     <button type="button" class="button red-button">смотреть все задания</button>
@@ -242,19 +203,19 @@ use yii\widgets\ActiveForm;
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="">Задания</a>
+                        <a href="<?= Route::getRegistration() ?>">Задания</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <a href="<?= Route::getRegistration() ?>">Мой профиль</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Исполнители</a>
+                        <a href="<?= Route::getRegistration() ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Регистрация</a>
+                        <a href="<?= Route::getRegistration() ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <a href="<?= Route::getRegistration() ?>">Создать задание</a>
                     </li>
                     <li class="links__item">
                         <a href="">Справка</a>
@@ -315,6 +276,7 @@ use yii\widgets\ActiveForm;
             'baseAuthUrl' => ['site/auth'],
             'popupMode' => false,
         ]) ?>
+        <button class="form-modal-close" type="button">Закрыть</button>
     </section>
 </div>
 <div class="overlay"></div>

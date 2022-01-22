@@ -43,7 +43,7 @@ final class CreateController extends SecuredController
             $task->state = TaskConstants::NEW_TASK_STATUS_NAME;
             $locationPoint = '';
             $cityId = null;
-            if ($task->address !== null) {
+            if ($task->address) {
                 $location = (new LocationService(address: $task->address, point: false));
                 $cityName = $location->getCityName();
                 $city = City::find()->where(['title' => $cityName])->one();

@@ -10,6 +10,7 @@ use Components\Locations\LocationService;
 use Components\Time\TimeDifference;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Category;
+use frontend\models\UserSettings;
 use frontend\models\UsersSpecialty;
 use Throwable;
 use Yii;
@@ -262,5 +263,21 @@ final class UserService
         }
 
         return false;
+    }
+
+    /**
+     * @param $userId
+     * @return void
+     */
+    public function saveUserSettings($userId)
+    {
+        $userSettings = new UserSettings();
+        $userSettings->user_id = $userId;
+        $userSettings->is_message_ntf_enabled = 1;
+        $userSettings->is_action_ntf_enabled = 1;
+        $userSettings->is_new_review_ntf_enabled = 1;
+        $userSettings->is_hidden = 0;
+        $userSettings->is_active = 1;
+        $userSettings->save();
     }
 }

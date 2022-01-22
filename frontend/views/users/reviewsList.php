@@ -18,7 +18,7 @@ use frontend\models\Review;
     <div class="feedback-card__reviews-content">
         <p class="link-name link"><a href="#"
                                      class="link-regular"><?= $model->sender->name ?></a></p>
-        <p class="review-text"><?= $model->content ?></p>
+        <p class="review-text"><?= $model->comment ?></p>
     </div>
     <div class="card__review-rate">
         <p class="<?= ($model->rating >= 4) ? 'five-rate' : 'three-rate' ?> big-rate"><?= $model->rating ?><span></span></p>

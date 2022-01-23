@@ -280,4 +280,14 @@ final class UserService
         $userSettings->is_active = 1;
         $userSettings->save();
     }
+
+    /**
+     * @return void
+     */
+    public function updateLastAction()
+    {
+        if (!Yii::$app->user->isGuest) {
+            User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
+        }
+    }
 }

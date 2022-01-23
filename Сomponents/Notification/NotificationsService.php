@@ -3,10 +3,12 @@
 namespace Components\Notification;
 
 use Components\Constants\NotificationConstants;
+use Components\Users\UserService;
 use frontend\models\Notification;
 use frontend\models\Task;
 use frontend\models\User;
 use Yii;
+use yii\db\StaleObjectException;
 
 class NotificationsService
 {
@@ -157,5 +159,22 @@ class NotificationsService
     public function getNotificationClassName(int $type): string
     {
         return NotificationConstants::NTF_MAP[$type];
+    }
+
+    /**
+     * @return void
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public function updateNewNotification()
+    {
+        if (Yii::$app->request->get('r') === 'events/index') {
+            $user = (new UserService())->getUser();
+            $notifications = $user->notifications;
+
+            foreach ($notifications as $notification) {
+                $notification->delete();
+            }
+        }
     }
 }

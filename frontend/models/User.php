@@ -329,6 +329,10 @@ final class User extends ActiveRecord implements IdentityInterface
             ->viaTable('users_specialty', ['user_id' => 'id']);
     }
 
+    /**
+     * @param $password
+     * @return bool
+     */
     public function validatePassword($password): bool
     {
         return Yii::$app->security->validatePassword($password, $this->password);

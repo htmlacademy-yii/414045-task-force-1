@@ -15,9 +15,9 @@ use yii\web\View;
 use Components\Users\UserService;
 
 $user = (new UserService())->getUser();
-$notifications = $user->notifications;
+$notifications = $user->notifications ?? [];
 $cities = City::find()->all();
-$cityId = (int) Yii::$app->session->get('cityId');
+$cityId = (int)Yii::$app->session->get('cityId');
 
 AppAsset::register($this);
 ?>
@@ -132,12 +132,17 @@ AppAsset::register($this);
                     <div class="header__lightbulb"></div>
                     <div class="lightbulb__pop-up">
                         <h3>Новые события</h3>
-                        <?php foreach ($notifications as $notification): ?>
-                        <p class="lightbulb__new-task <?= (new NotificationsService())->getNotificationClassName($notification->type) ?>">
-                            <?= $notification->content ?>
-                            <a href="<?= Route::getTaskView($notification->task_id) ?>" class="link-regular">«<?= $notification->task->title ?>»</a>
-                        </p>
-                        <?php endforeach; ?>
+                        <?php if (count($notifications) > 0): ?>
+                            <?php foreach ($notifications as $notification): ?>
+                                <p class="lightbulb__new-task <?= (new NotificationsService())->getNotificationClassName($notification->type) ?>">
+                                    <?= $notification->content ?>
+                                    <a href="<?= Route::getTaskView($notification->task_id) ?>"
+                                       class="link-regular">«<?= $notification->task->title ?>»</a>
+                                </p>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>Новых уведомлений нет</p>
+                        <?php endif; ?>
                     </div>
                     <div class="header__account">
                         <a class="header__account-photo">

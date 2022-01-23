@@ -30,6 +30,13 @@ class AccountController extends SecuredController
         if (Yii::$app->request->getIsPost()) {
             if (array_key_exists('file', $_FILES)) {
                 $files = UploadedFile::getInstancesByName('file');
+
+                $oldPortfolio = $user->portfolios;
+
+                foreach ($oldPortfolio as $photo) {
+                    $photo->delete();
+                }
+
                 foreach ($files as $file) {
                     $src = 'uploads/portfolio/' . $user->id . '_' . $file->name;
                     if ($file->saveAs($src)) {

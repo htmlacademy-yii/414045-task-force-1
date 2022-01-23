@@ -3,6 +3,7 @@
 namespace Components\Notification;
 
 use Components\Constants\NotificationConstants;
+use Components\Routes\Route;
 use Components\Users\UserService;
 use frontend\models\Notification;
 use frontend\models\Task;
@@ -23,7 +24,7 @@ class NotificationsService
             ->setFrom('from@domain.com')
             ->setTo($email)
             ->setSubject('Уведомление от сервиса TaskForce')
-            ->setTextBody($content)
+            ->setHtmlBody($content)
             ->send();
     }
 
@@ -149,7 +150,7 @@ class NotificationsService
      */
     public function getContentForEmailNotification(string $message, Task $task): string
     {
-        return $message . ' - ' . $task->title;
+        return $message . ' - ' . '<a href="' . Yii::$app->request->hostInfo . Route::getTaskView($task->id) . '">' . $task->title . '</a>';
     }
 
     /**

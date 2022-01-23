@@ -290,4 +290,27 @@ final class UserService
             User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
         }
     }
+
+    /**
+     * @param int $userId
+     * @return void
+     */
+    public function updateUserRating(int $userId)
+    {
+        $user = User::findOne($userId);
+        $reviews = $user->reviews;
+        $taskRatings = [];
+        $rating = 0;
+
+        foreach ($reviews as $review) {
+            $taskRatings[] = $review->rating;
+        }
+
+        if (count($taskRatings) > 0) {
+            $rating = round(array_sum($taskRatings)/count($taskRatings) * 100);
+        }
+
+        $user->rating = $rating;
+        $user->save();
+    }
 }

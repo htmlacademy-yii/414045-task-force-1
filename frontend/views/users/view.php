@@ -6,11 +6,11 @@
  * @var ActiveDataProvider $dataProvider ;
  * @var string $lastActivity ;
  * @var bool $isFavorite ;
+ * @var float $rating ;
  */
 
 use Components\Constants\UserConstants;
 use Components\Routes\Route;
-use Components\Users\UserService;
 use frontend\models\User;
 use yii\data\ActiveDataProvider;
 use yii\widgets\ListView;
@@ -24,7 +24,7 @@ use yii\widgets\ListView;
                  alt="Аватар пользователя">
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>
-                <p>Россия, Санкт-Петербург, <?= $userAge ?></p>
+                <p><?= $user->full_address ?>, <?= $userAge ?></p>
                 <div class="profile-mini__name five-stars__rate">
                     <?php for ($i = 0; $i < 5; $i++): ?>
                         <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>

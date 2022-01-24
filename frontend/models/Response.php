@@ -42,7 +42,7 @@ final class Response extends ActiveRecord
             [['task_id', 'user_id'], 'required'],
             [['content'], 'string'],
             [['created_at', 'updated_at'], 'date', 'format' => 'yyyy-M-d H:m:s'],
-            [['price'], 'match', 'pattern' => '/^[0-9]*$/', 'message' => 'Введите целое число'],
+            [['price'], 'match', 'pattern' => '/^[0-9]*$/', 'message' => 'Введите целое положительное число'],
             [
                 ['task_id'],
                 'exist',

@@ -41,8 +41,10 @@ use yii\web\IdentityInterface;
  * @property Message[] $messages
  * @property Portfolio[] $portfolios
  * @property Response[] $responses
+ * @property Notification[] $notifications
  * @property Review[] $reviews
- * @property Task[] $tasks
+ * @property Task[] $tasksWhereUserIsCustomer
+ * @property Task[] $tasksWhereUserIsExecutor
  * @property UserSettings $userSettings
  * @property City $city
  * @property Category[] $specialties
@@ -79,15 +81,16 @@ final class User extends ActiveRecord implements IdentityInterface
     {
         $conditions = [
             'role' => UserConstants::USER_ROLE_EXECUTOR,
-            's.category_id' => array_flip($filter->categories)
+            's.category_id' => array_flip($filter->categories),
+            'us.is_active' => 1,
         ];
         $query = self::find()->leftJoin(['s' => 'users_specialty'],
-            's.user_id = users.id')->where($conditions);
+            's.user_id = users.id')->leftJoin(['us' => 'user_settings'], 'us.user_id = users.id')->where($conditions);
 
         if (!empty($filter->showCategories)) {
             $category = new CategoryService();
             $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
-            $query->filterWhere($conditionCategoryId);
+            $query->andWhere($conditionCategoryId);
         }
 
         if ($filter->isFree) {
@@ -247,6 +250,16 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Gets query for [[Notifications]].
+     *
+     * @return ActiveQuery
+     */
+    public function getNotifications(): ActiveQuery
+    {
+        return $this->hasMany(Notification::class, ['user_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[Reviews]].
      *
      * @return ActiveQuery
@@ -261,19 +274,31 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[TasksWhereUserIsCustomer]].
      *
      * @return ActiveQuery
      */
-    public function getTasks(): ActiveQuery
+    public function getTasksWhereUserIsCustomer(): ActiveQuery
     {
-        if ($this->role === UserConstants::USER_ROLE_CUSTOMER) {
-            return $this->hasMany(Task::class, ['customer_id' => 'id']);
-        }
+        return $this->hasMany(Task::class, ['customer_id' => 'id']);
+    }
 
+    /**
+     * Gets query for [[TasksWhereUserIsExecutor]].
+     *
+     * @return ActiveQuery
+     */
+    public function getTasksWhereUserIsExecutor(): ActiveQuery
+    {
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[FavoriteExecutors]].
+     *
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
     public function getFavoriteExecutors(): ActiveQuery
     {
         return $this->hasMany(User::class, ['id' => 'executor_id'])
@@ -312,6 +337,10 @@ final class User extends ActiveRecord implements IdentityInterface
             ->viaTable('users_specialty', ['user_id' => 'id']);
     }
 
+    /**
+     * @param $password
+     * @return bool
+     */
     public function validatePassword($password): bool
     {
         return Yii::$app->security->validatePassword($password, $this->password);

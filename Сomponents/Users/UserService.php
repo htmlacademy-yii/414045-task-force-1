@@ -10,6 +10,7 @@ use Components\Locations\LocationService;
 use Components\Time\TimeDifference;
 use frontend\models\AccountSettingsForm;
 use frontend\models\Category;
+use frontend\models\UserSettings;
 use frontend\models\UsersSpecialty;
 use Throwable;
 use Yii;
@@ -110,31 +111,31 @@ final class UserService
      */
     public function updateUserFromAccountSettings(User $user, AccountSettingsForm $accountSettings)
     {
-        if (!$user->email) {
+        if ($accountSettings->email) {
             $user->email = $accountSettings->email;
         }
 
-        if (!$user->full_address) {
+        if ($accountSettings->address) {
             $user->full_address = $accountSettings->address;
         }
 
-        if (!$user->birthday) {
+        if ($accountSettings->birthday) {
             $user->birthday = $accountSettings->birthday;
         }
 
-        if (!$user->about) {
+        if ($accountSettings->about) {
             $user->about = $accountSettings->about;
         }
 
-        if (!$user->phone) {
+        if ($accountSettings->phone) {
             $user->phone = $accountSettings->phone;
         }
 
-        if (!$user->skype) {
+        if ($accountSettings->skype) {
             $user->skype = $accountSettings->skype;
         }
 
-        if (!$user->over_messenger) {
+        if ($accountSettings->overMessenger) {
             $user->over_messenger = $accountSettings->overMessenger;
         }
 
@@ -257,6 +258,73 @@ final class UserService
 
         foreach ($favoriteExecutors as $executor) {
             if ($executor->id === $executorId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $userId
+     * @return void
+     */
+    public function saveUserSettings($userId)
+    {
+        $userSettings = new UserSettings();
+        $userSettings->user_id = $userId;
+        $userSettings->is_message_ntf_enabled = 1;
+        $userSettings->is_action_ntf_enabled = 1;
+        $userSettings->is_new_review_ntf_enabled = 1;
+        $userSettings->is_hidden = 0;
+        $userSettings->is_active = 1;
+        $userSettings->save();
+    }
+
+    /**
+     * @return void
+     */
+    public function updateLastAction()
+    {
+        if (!Yii::$app->user->isGuest) {
+            User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
+        }
+    }
+
+    /**
+     * @param int $userId
+     * @return void
+     */
+    public function updateUserRating(int $userId)
+    {
+        $user = User::findOne($userId);
+        $reviews = $user->reviews;
+        $taskRatings = [];
+        $rating = 0;
+
+        foreach ($reviews as $review) {
+            $taskRatings[] = $review->rating;
+        }
+
+        if (count($taskRatings) > 0) {
+            $rating = round(array_sum($taskRatings)/count($taskRatings) * 100);
+        }
+
+        $user->rating = $rating;
+        $user->save();
+    }
+
+    /**
+     * @param int $executorId
+     * @return bool
+     */
+    public function checkUserIsExecutorForCurrentUser(int $executorId): bool
+    {
+        $user = $this->getUser();
+        $tasks = $user->tasksWhereUserIsCustomer;
+
+        foreach ($tasks as $task) {
+            if ($task->executor_id === $executorId) {
                 return true;
             }
         }

@@ -8,6 +8,7 @@ use Components\Constants\CategoryConstants;
 use Components\Constants\ResponseConstants;
 use Components\Constants\TaskConstants;
 use Components\Locations\LocationService;
+use Components\Notification\NotificationsService;
 use Components\Responses\ResponseService;
 use Components\Reviews\ReviewService;
 use Components\Routes\Route;
@@ -30,7 +31,13 @@ final class TasksController extends SecuredController
     public function actionIndex(): string
     {
         $user = (new UserService())->getUser();
-        $cityId = (int)Yii::$app->request->get('city') ?? $user->city_id;
+        $requestCityId = Yii::$app->request->get('city');
+        $cityId = $user->city_id;
+
+        if ($requestCityId !== null) {
+            $cityId = (int) $requestCityId;
+        }
+
         Yii::$app->session->set('cityId', $cityId);
         $taskFilter = $this->getTaskFilter();
         $dataProvider = Task::getTaskDataProvider($taskFilter, self::TASKS_PAGINATION_SIZE, $cityId);
@@ -41,6 +48,7 @@ final class TasksController extends SecuredController
     private function getTaskFilter(): TaskFilter
     {
         $taskFilter = new TaskFilter();
+
         if (Yii::$app->request->getIsPost()) {
             $taskFilter->load(Yii::$app->request->post());
         }
@@ -51,7 +59,7 @@ final class TasksController extends SecuredController
         return $taskFilter;
     }
 
-    public function actionResponseAccept($id, $responseId): Response
+    public function actionResponseAccept(int $id, int $responseId): Response
     {
         $task = Task::findOne($id);
         $response = ResponseForm::findOne($responseId);
@@ -73,6 +81,7 @@ final class TasksController extends SecuredController
                 }
 
                 $transaction->commit();
+                (new NotificationsService())->sendNtfStartTask($id);
             } catch (Exception) {
                 $transaction->rollBack();
             }
@@ -116,7 +125,7 @@ final class TasksController extends SecuredController
         $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
         $possibleTaskActions = (new TaskService())->getPossibleActions($task);
         $customer = $task->customer;
-        $countCustomerTasks = count($customer->tasks);
+        $countCustomerTasks = count($customer->tasksWhereUserIsCustomer);
         $countResponses = count($task->responses);
         $categoryId = $task->category->id;
         $categoryName = $task->category->title;
@@ -124,11 +133,18 @@ final class TasksController extends SecuredController
         $categoryClassName = $categoryMap[$categoryName];
         $dataProvider = $isUserSentResponse ? ResponseForm::getResponsesDataProvider($task->id,
             $userId) : ResponseForm::getResponsesDataProvider($task->id);
-        $location = $task->location_point ?? (new UserService())->getUserLocation($task->customer_id);
+        $location = (new UserService())->getUserLocation($task->customer_id);
+
+        if ($task->location_point) {
+            $location = $task->location_point;
+        }
+
         $locationService = new LocationService(address: false, point: $location);
         $locationName = $locationService->getLocationName() ?? '';
         $locationDescription = $locationService->getLocationDescription() ?? '';
         $locationPoint = $locationService->getLocationPointForMap();
+        $createdTime = (new TaskService())->getTimeCreateDifference($task);
+        $timeOnSite = (new UserService())->getTimeOnSite($customer);
 
         return $this->render('view',
             compact(
@@ -146,7 +162,9 @@ final class TasksController extends SecuredController
                 'locationPoint',
                 'categoryId',
                 'categoryName',
-                'categoryClassName'
+                'categoryClassName',
+                'createdTime',
+                'timeOnSite'
             ));
     }
 
@@ -161,6 +179,7 @@ final class TasksController extends SecuredController
 
         if ((new TaskService())->isTaskCanBeResponse($task) && Yii::$app->request->isPost) {
             (new ResponseService())->createResponse($id);
+            (new NotificationsService())->sendNtfNewTaskResponse($id);
         }
 
         return $this->redirect(Route::getTaskView($id));
@@ -176,6 +195,7 @@ final class TasksController extends SecuredController
 
         if ((new TaskService())->isTaskCanBeComplete($task, $userId) && Yii::$app->request->isPost) {
             (new ReviewService())->createReview($task, $userId);
+            (new NotificationsService())->sendNtfEndTask($id);
 
             return $this->redirect(Route::getTasks());
         }
@@ -194,6 +214,7 @@ final class TasksController extends SecuredController
         if ((new TaskService())->isTaskCanBeRefuse($task, $userId) && Yii::$app->request->isPost) {
             $task->state = TaskConstants::FAILED_TASK_STATUS_NAME;
             $task->save();
+            (new NotificationsService())->sendNtfTaskRefuse($id);
 
             return $this->redirect(Route::getTasks());
         }

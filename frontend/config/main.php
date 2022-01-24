@@ -1,6 +1,7 @@
 <?php
 
-use frontend\models\User;
+use Components\Notification\NotificationsService;
+use Components\Users\UserService;
 
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
@@ -53,14 +54,14 @@ return [
                     'clientId' => '8041531',
                     'clientSecret' => 'kaByfLuf8UQSbNmRIOJP',
                     'scope' => 'email',
+                    //  backurl: http://taskforce/
                 ],
             ],
         ]
     ],
     'params' => $params,
     'on beforeAction' => function(){
-        if(!Yii::$app->user->isGuest){
-            User::updateAll(['last_activity'=>date('Y-m-d h:i:s')],['id'=>Yii::$app->user->id]);
-        }
+        (new UserService())->updateLastAction();
+        (new NotificationsService())->updateNewNotification();
     },
 ];

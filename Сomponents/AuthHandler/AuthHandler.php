@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Components\AuthHandler;
 
 use Components\Constants\UserConstants;
+use Components\Users\UserService;
 use frontend\models\Auth;
 use frontend\models\City;
 use frontend\models\User;
+use frontend\models\UserSettings;
 use Yii;
 use yii\authclient\ClientInterface;
 use yii\helpers\ArrayHelper;
@@ -83,10 +85,11 @@ class AuthHandler
                     ]);
                     $user->generateAuthKey();
                     $user->generatePasswordResetToken();
-
                     $transaction = User::getDb()->beginTransaction();
 
                     if ($user->save()) {
+                        (new UserService())->saveUserSettings($user->id);
+
                         $auth = new Auth([
                             'user_id' => $user->id,
                             'source' => $this->client->getId(),
@@ -122,7 +125,6 @@ class AuthHandler
                 ]);
                 if ($auth->save()) {
                     /** @var User $user */
-                    $user = $auth->user;
                     Yii::$app->getSession()->setFlash('success', [
                         Yii::t('app', 'Linked {client} account.', [
                             'client' => $this->client->getTitle()

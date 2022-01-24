@@ -31,9 +31,5 @@ class m220119_142126_create_favorite_executors_table extends Migration
     public function safeDown()
     {
         $this->dropTable('{{%favorite_executors}}');
-        $this->dropIndex('idx-favorite-executors-user-id', 'favorite_executors');
-        $this->dropForeignKey('fk-favorite-executors-user-id', 'favorite_executors');
-        $this->dropIndex('idx-favorite-executors-executor-id', 'favorite_executors');
-        $this->dropForeignKey('fk-favorite-executors-executor-id', 'favorite_executors');
     }
 }

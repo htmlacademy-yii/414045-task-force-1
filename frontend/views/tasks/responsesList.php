@@ -16,7 +16,7 @@ $lastActivity = (new UserService())->getLastActivity($model->user);
 
     <div class="feedback-card__top">
         <a href="<?= Route::getUserView($model->user_id) ?>"><img
-                    src="<?= Yii::$app->homeUrl . $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55"
+                    src="<?= $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55"
                     height="55"></a>
         <div class="feedback-card__top--name">
             <p><a href="<?= Route::getUserView($model->user_id) ?>" class="link-regular"><?= $model->user->name ?></a>

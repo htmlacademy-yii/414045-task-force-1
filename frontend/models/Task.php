@@ -54,14 +54,7 @@ final class Task extends ActiveRecord
         int $page_size,
         int $cityId = null
     ): ActiveDataProvider {
-        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
-        $query = self::find()->where($conditions);
-
-        if (!empty($filter->showCategories)) {
-            $category = new CategoryService();
-            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
-            $query->filterWhere($conditionCategoryId);
-        }
+        $query = self::find();
 
         if ($cityId !== null) {
             $conditionCityId = ['city_id' => $cityId];
@@ -70,13 +63,22 @@ final class Task extends ActiveRecord
                 ->orWhere($conditionCityNull);
         }
 
+        $conditions['state'] = TaskConstants::NEW_TASK_STATUS_NAME;
+        $query->andwhere($conditions);
+
+        if (!empty($filter->showCategories)) {
+            $category = new CategoryService();
+            $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
+            $query->andWhere($conditionCategoryId);
+        }
+
         if ($filter->isNotExecutor) {
             $isNotExecutor = ['executor_id' => null];
             $query->andWhere($isNotExecutor);
         }
 
         if ($filter->isRemoteWork) {
-            $conditionsIsRemoteWork = ['city_id' => null];
+            $conditionsIsRemoteWork = ['address' => null];
             $query->andWhere($conditionsIsRemoteWork);
         }
 

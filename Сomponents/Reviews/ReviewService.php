@@ -3,6 +3,7 @@
 namespace Components\Reviews;
 
 use Components\Constants\TaskConstants;
+use Components\Users\UserService;
 use frontend\models\Review;
 use frontend\models\Task;
 use frontend\models\TaskCompleteForm;
@@ -37,6 +38,8 @@ class ReviewService
                 : TaskConstants::FAILED_TASK_STATUS_NAME;
 
             if ($this->saveReview($task, $review)) {
+                (new UserService())->updateUserRating($task->executor_id);
+
                 return true;
             }
         }

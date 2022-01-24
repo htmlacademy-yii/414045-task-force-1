@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace frontend\modules\api\controllers;
 
+use Components\Notification\NotificationsService;
 use frontend\models\Message;
 use frontend\models\Task;
 use Yii;
@@ -37,7 +38,7 @@ class MessagesController extends ActiveController
     {
         $requestBody = json_decode(Yii::$app->request->getRawBody());
         $content = $requestBody->message;
-        $task_id = $requestBody->task_id;
+        $task_id = (int) $requestBody->task_id;
 
         if (!$content || !$task_id) {
             Yii::$app->response->statusCode = 412;
@@ -47,7 +48,7 @@ class MessagesController extends ActiveController
 
         $message = new Message();
         $task = Task::findOne($task_id);
-        $message->sender_id = $task->executor_id;
+        $message->sender_id = $task->executor_id ?? Yii::$app->user->id;
         $message->addressee_id = $task->category_id;
         $message->content = $content;
         $message->task_id = $task_id;
@@ -67,5 +68,6 @@ class MessagesController extends ActiveController
         ];
         Yii::$app->response->statusCode = 201;
         Yii::$app->response->content = json_encode($responseBody);
+        (new NotificationsService())->sendNtfNewMessage($task_id);
     }
 }

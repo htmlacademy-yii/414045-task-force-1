@@ -15,16 +15,16 @@ class AccountSettingsForm extends Model
     public mixed $avatar = null;
     public string $name = '';
     public string $email = '';
-    public string $address = '';
-    public string $birthday = '';
-    public string $about = '';
+    public string|null $address = '';
+    public string|null $birthday = '';
+    public string|null $about = '';
     public array|string $userSpecialties = [];
     public array $specialties = [];
     public string $password = '';
     public string $confirmPassword = '';
-    public string $phone = '';
-    public string $skype = '';
-    public string $overMessenger = '';
+    public string|null $phone = '';
+    public string|null $skype = '';
+    public string|null $overMessenger = '';
     public bool $isMessageNtfEnabled;
     public bool $isActionNtfEnabled;
     public bool $isNewReviewNtfEnabled;
@@ -45,6 +45,7 @@ class AccountSettingsForm extends Model
         $this->isNewReviewNtfEnabled = (bool)$user->userSettings->is_new_review_ntf_enabled;
         $this->isActive = (bool)$user->userSettings->is_active;
         $this->isHidden = (bool)$user->userSettings->is_hidden;
+        $this->birthday = $user->birthday;
     }
 
     /**
@@ -54,7 +55,7 @@ class AccountSettingsForm extends Model
     public function upload(User $user): bool
     {
         if ($this->avatar->saveAs('uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension)) {
-            $user->avatar_src = 'uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension;
+            $user->avatar_src = '/uploads/avatars/' . $user->id . '_' . $this->avatar->baseName . '.' . $this->avatar->extension;
 
             if ($user->save()) {
                 return true;

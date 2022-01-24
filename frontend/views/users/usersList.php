@@ -19,7 +19,7 @@ $lastActivity = (new UserService())->getLastActivity($model);
         <a href="/users/view/<?= $model->id ?>"><img
                     src="<?= $model->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>"
                     width="65" height="65"></a>
-        <span><?= count($model->tasks) ?> заданий</span>
+        <span><?= count($model->tasksWhereUserIsExecutor) ?> заданий</span>
         <span><?= count($model->reviews) ?> отзывов</span>
     </div>
     <div class="feedback-card__top--name user__search-card">

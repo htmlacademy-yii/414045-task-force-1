@@ -18,12 +18,12 @@ class NotificationsService
      * @param string $content
      * @return void
      */
-    private function sendNotification(string $email, string $content)
+    private function sendNotification(string $email, string $title, string $content)
     {
         Yii::$app->mailer->compose()
             ->setFrom('from@domain.com')
             ->setTo($email)
-            ->setSubject('Уведомление от сервиса TaskForce')
+            ->setSubject('Уведомление от сервиса TaskForce - ' . $title)
             ->setHtmlBody($content)
             ->send();
     }
@@ -38,9 +38,10 @@ class NotificationsService
         $user = User::findOne($task->customer_id);
 
         if ($user->userSettings->is_action_ntf_enabled) {
+            $title = 'Новый отклик';
             $message = 'Новый отклик на ваше задание';
             $content = $this->getContentForEmailNotification($message, $task);
-            $this->sendNotification($user->email, $content);
+            $this->sendNotification($user->email, $title, $content);
 
             $notification = new Notification();
             $notification->user_id = $user->id;
@@ -61,9 +62,10 @@ class NotificationsService
         $user = User::findOne($task->customer_id);
 
         if ($user->userSettings->is_message_ntf_enabled) {
+            $title = 'Новое сообщение';
             $message = 'Новое сообщение в чате';
             $content = $this->getContentForEmailNotification($message, $task);
-            $this->sendNotification($user->email, $content);
+            $this->sendNotification($user->email, $title, $content);
 
             $notification = new Notification();
             $notification->user_id = $user->id;
@@ -84,9 +86,10 @@ class NotificationsService
         $user = User::findOne($task->customer_id);
 
         if ($user->userSettings->is_action_ntf_enabled) {
+            $title = 'Отказ от задания';
             $message = 'Исполнитель отказался от задания';
             $content = $this->getContentForEmailNotification($message, $task);
-            $this->sendNotification($user->email, $content);
+            $this->sendNotification($user->email, $title, $content);
 
             $notification = new Notification();
             $notification->user_id = $user->id;
@@ -107,9 +110,10 @@ class NotificationsService
         $user = User::findOne($task->executor_id);
 
         if ($user->userSettings->is_action_ntf_enabled) {
+            $title = 'Начато задание';
             $message = 'Начато задание';
             $content = $this->getContentForEmailNotification($message, $task);
-            $this->sendNotification($user->email, $content);
+            $this->sendNotification($user->email, $title, $content);
 
             $notification = new Notification();
             $notification->user_id = $user->id;
@@ -130,9 +134,10 @@ class NotificationsService
         $user = User::findOne($task->executor_id);
 
         if ($user->userSettings->is_action_ntf_enabled) {
+            $title = 'Закончено задание';
             $message = 'Закончено задание';
             $content = $this->getContentForEmailNotification($message, $task);
-            $this->sendNotification($user->email, $content);
+            $this->sendNotification($user->email, $title, $content);
 
             $notification = new Notification();
             $notification->user_id = $user->id;

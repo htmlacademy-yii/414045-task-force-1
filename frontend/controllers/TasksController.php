@@ -125,7 +125,7 @@ final class TasksController extends SecuredController
         $isUserSentResponse = (new ResponseService())->isUserSentResponse($task);
         $possibleTaskActions = (new TaskService())->getPossibleActions($task);
         $customer = $task->customer;
-        $countCustomerTasks = count($customer->tasks);
+        $countCustomerTasks = count($customer->tasksWhereUserIsCustomer);
         $countResponses = count($task->responses);
         $categoryId = $task->category->id;
         $categoryName = $task->category->title;

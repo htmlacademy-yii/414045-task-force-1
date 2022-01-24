@@ -109,9 +109,11 @@ AppAsset::register($this);
                         <li class="site-list__item <?= Yii::$app->request->get('r') === 'users' ? 'site-list__item--active' : '' ?>">
                             <a href="<?= Route::getUsers() ?>">Исполнители</a>
                         </li>
-                        <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
-                            <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
-                        </li>
+                        <?php if ($user->role === UserConstants::USER_ROLE_CUSTOMER): ?>
+                            <li class="site-list__item"> <?= Yii::$app->request->get('r') === 'create' ? 'site-list__item--active' : '' ?>
+                                <a href="<?= Route::getTaskCreate() ?>">Создать задание</a>
+                            </li>
+                        <?php endif; ?>
                         <li class="site-list__item">
                             <a href="<?= Route::getAccount() ?>">Мой профиль</a>
                         </li>

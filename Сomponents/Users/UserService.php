@@ -313,4 +313,22 @@ final class UserService
         $user->rating = $rating;
         $user->save();
     }
+
+    /**
+     * @param int $executorId
+     * @return bool
+     */
+    public function checkUserIsExecutorForCurrentUser(int $executorId): bool
+    {
+        $user = $this->getUser();
+        $tasks = $user->tasksWhereUserIsCustomer;
+
+        foreach ($tasks as $task) {
+            if ($task->executor_id === $executorId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

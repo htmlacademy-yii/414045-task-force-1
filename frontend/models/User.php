@@ -43,7 +43,8 @@ use yii\web\IdentityInterface;
  * @property Response[] $responses
  * @property Notification[] $notifications
  * @property Review[] $reviews
- * @property Task[] $tasks
+ * @property Task[] $tasksWhereUserIsCustomer
+ * @property Task[] $tasksWhereUserIsExecutor
  * @property UserSettings $userSettings
  * @property City $city
  * @property Category[] $specialties
@@ -80,15 +81,16 @@ final class User extends ActiveRecord implements IdentityInterface
     {
         $conditions = [
             'role' => UserConstants::USER_ROLE_EXECUTOR,
-            's.category_id' => array_flip($filter->categories)
+            's.category_id' => array_flip($filter->categories),
+            'us.is_active' => 1,
         ];
         $query = self::find()->leftJoin(['s' => 'users_specialty'],
-            's.user_id = users.id')->where($conditions);
+            's.user_id = users.id')->leftJoin(['us' => 'user_settings'], 'us.user_id = users.id')->where($conditions);
 
         if (!empty($filter->showCategories)) {
             $category = new CategoryService();
             $conditionCategoryId = ['category_id' => $category->categoriesFilter($filter->showCategories)];
-            $query->filterWhere($conditionCategoryId);
+            $query->andWhere($conditionCategoryId);
         }
 
         if ($filter->isFree) {
@@ -272,16 +274,22 @@ final class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[TasksWhereUserIsCustomer]].
      *
      * @return ActiveQuery
      */
-    public function getTasks(): ActiveQuery
+    public function getTasksWhereUserIsCustomer(): ActiveQuery
     {
-        if ($this->role === UserConstants::USER_ROLE_CUSTOMER) {
-            return $this->hasMany(Task::class, ['customer_id' => 'id']);
-        }
+        return $this->hasMany(Task::class, ['customer_id' => 'id']);
+    }
 
+    /**
+     * Gets query for [[TasksWhereUserIsExecutor]].
+     *
+     * @return ActiveQuery
+     */
+    public function getTasksWhereUserIsExecutor(): ActiveQuery
+    {
         return $this->hasMany(Task::class, ['executor_id' => 'id']);
     }
 

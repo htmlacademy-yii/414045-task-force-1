@@ -15,10 +15,11 @@ class SeedController extends Controller
      */
     public function actionIndex()
     {
-        $pathExportData = __DIR__ . '/../../sqlExportData';
+        $pathExportData = __DIR__ . '/../../sqlExportData/seed';
         if (file_exists($pathExportData)) {
             if (is_dir($pathExportData)) {
                 $files = FileHelper::findFiles($pathExportData, ['only' => ['*.sql']]);
+                sort($files);
                 if (!$files) {
                     echo 'В указанной директории нет SQL файлов!';
                     exit(1);

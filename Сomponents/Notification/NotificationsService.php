@@ -56,10 +56,10 @@ class NotificationsService
      * @param int $taskId
      * @return void
      */
-    public function sendNtfNewMessage(int $taskId)
+    public function sendNtfNewMessage(int $taskId, int $addresseeId)
     {
         $task = Task::findOne($taskId);
-        $user = User::findOne($task->customer_id);
+        $user = User::findOne($addresseeId);
 
         if ($user->userSettings->is_message_ntf_enabled) {
             $title = 'Новое сообщение';

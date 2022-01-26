@@ -78,6 +78,13 @@ class MessagesController extends ActiveController
         ];
         Yii::$app->response->statusCode = 201;
         Yii::$app->response->content = json_encode($responseBody);
-        (new NotificationsService())->sendNtfNewMessage($task_id);
+
+        if ($task->customer_id === $currentUserId) {
+            (new NotificationsService())->sendNtfNewMessage($task_id, $task->executor_id);
+        }
+
+        if ($task->executor_id === $currentUserId) {
+            (new NotificationsService())->sendNtfNewMessage($task_id, $task->customer_id);
+        }
     }
 }

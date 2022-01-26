@@ -48,8 +48,18 @@ class MessagesController extends ActiveController
 
         $message = new Message();
         $task = Task::findOne($task_id);
-        $message->sender_id = $task->executor_id ?? Yii::$app->user->id;
-        $message->addressee_id = $task->category_id;
+        $currentUserId = Yii::$app->user->id;
+
+        if ($task->customer_id === $currentUserId) {
+            $message->sender_id = $task->customer_id;
+            $message->addressee_id = $task->executor_id;
+        }
+
+        if ($task->executor_id === $currentUserId) {
+            $message->sender_id = $task->executor_id;
+            $message->addressee_id = $task->customer_id;
+        }
+
         $message->content = $content;
         $message->task_id = $task_id;
 

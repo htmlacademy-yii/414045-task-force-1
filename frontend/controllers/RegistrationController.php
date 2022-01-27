@@ -9,7 +9,6 @@ use Components\Routes\Route;
 use Components\Users\UserService;
 use frontend\models\City;
 use frontend\models\User;
-use frontend\models\UserSettings;
 use Yii;
 use yii\base\Exception;
 use yii\filters\AccessControl;

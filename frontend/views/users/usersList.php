@@ -24,14 +24,14 @@ $lastActivity = (new UserService())->getLastActivity($model);
     </div>
     <div class="feedback-card__top--name user__search-card">
         <p class="link-name">
-            <a href="/users/view/<?= $model->id ?>" class="link-regular"><?= $model->name ?></a>
+            <a href="/users/view/<?= $model->id ?>" class="link-regular"><?= encode($model->name) ?></a>
         </p>
         <?php for ($i = 0; $i < 5; $i++): ?>
             <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
         <?php endfor; ?>
         <b><?= $model->rating / 100 ?></b>
         <p class="user__search-content">
-            <?= $model->about ?>
+            <?= encode($model->about) ?>
         </p>
     </div>
     <span class="new-task__time"><?= $lastActivity ?></span>

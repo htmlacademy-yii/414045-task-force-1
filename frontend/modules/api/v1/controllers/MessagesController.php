@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace frontend\modules\api\controllers;
+namespace frontend\modules\api\v1\controllers;
 
 use Components\Notification\NotificationsService;
 use frontend\models\Message;

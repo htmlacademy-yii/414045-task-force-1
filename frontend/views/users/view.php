@@ -24,8 +24,8 @@ use yii\widgets\ListView;
             <img src="<?= $user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="120" height="120"
                  alt="Аватар пользователя">
             <div class="content-view__headline">
-                <h1><?= $user->name ?></h1>
-                <p><?= $user->full_address ?>, <?= $userAge ?></p>
+                <h1><?= encode($user->name) ?></h1>
+                <p><?= encode($user->full_address) ?>, <?= $userAge ?></p>
                 <div class="profile-mini__name five-stars__rate">
                     <?php for ($i = 0; $i < 5; $i++): ?>
                         <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
@@ -42,7 +42,7 @@ use yii\widgets\ListView;
             </div>
         </div>
         <div class="content-view__description">
-            <p><?= $user->about ?></p>
+            <p><?= encode($user->about) ?></p>
         </div>
         <div class="user__card-general-information">
             <div class="user__card-info">
@@ -59,7 +59,7 @@ use yii\widgets\ListView;
                         <a class="user__card-link--tel link-regular" href="#"><?= $user->phone ?></a>
                         <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
                         <?php if ($user->skype): ?>
-                            <a class="user__card-link--skype link-regular" href="#"><?= $user->skype ?></a>
+                            <a class="user__card-link--skype link-regular" href="#"><?= encode($user->skype) ?></a>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>

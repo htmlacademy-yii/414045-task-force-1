@@ -14,12 +14,18 @@ use frontend\models\Category;
  */
 final class CategoryService
 {
+    /**
+     * @return array
+     */
     public function getCategoryNames(): array
     {
         $categories = collect(Category::find()->select('title')->all());
         return $categories->pluck('title')->all();
     }
 
+    /**
+     * @return array
+     */
     public function getCategoryNamesForDB(): array
     {
         $categories = collect(Category::find()->select('title')->all());
@@ -30,13 +36,21 @@ final class CategoryService
         return $categories;
     }
 
-    public function getCategoryName($nameCategoryForUser): string
+    /**
+     * @param string $nameCategoryForUser
+     * @return string
+     */
+    public function getCategoryName(string $nameCategoryForUser): string
     {
         $categoriesNames = array_flip(CategoryConstants::NAME_MAP);
         return $categoriesNames[$nameCategoryForUser];
     }
 
-    public function categoriesFilter($categoriesId): array
+    /**
+     * @param array|string $categoriesId
+     * @return array
+     */
+    public function categoriesFilter(array|string $categoriesId): array
     {
         return array_map(fn($id): int => $id + 1, $categoriesId);
     }

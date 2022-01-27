@@ -24,19 +24,4 @@ class m220126_125105_seed_categories extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220126_125105_seed_categories cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

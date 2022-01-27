@@ -96,7 +96,7 @@ use Components\Constants\MyTaskListFilterConstants;
                 </svg>
             </div>
             <a href="/my-tasks?filter=<?= MyTaskListFilterConstants::EXPIRED ?>">
-                Скрытые
+                Просроченные
             </a>
         </li>
     </ul>

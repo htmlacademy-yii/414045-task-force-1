@@ -38,8 +38,7 @@ return [
                 'users/view/<id:\d+>' => 'users/get-view',
                 'registration' => 'registration/index',
                 'create' => 'create/index',
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/messages'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api/tasks'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['v1/messages', 'v1/tasks']],
             ],
         ],
         'user' => [
@@ -59,8 +58,8 @@ return [
         ],
     ],
     'modules' => [
-        'api' => [
-            'class' => 'frontend\modules\api\Module'
+        'v1' => [
+            'class' => 'frontend\modules\api\v1\Module'
         ]
     ],
 ];

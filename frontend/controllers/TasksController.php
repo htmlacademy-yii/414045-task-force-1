@@ -7,6 +7,7 @@ namespace frontend\controllers;
 use Components\Constants\CategoryConstants;
 use Components\Constants\ResponseConstants;
 use Components\Constants\TaskConstants;
+use Components\Exceptions\TimeException;
 use Components\Locations\LocationService;
 use Components\Notification\NotificationsService;
 use Components\Responses\ResponseService;
@@ -109,7 +110,7 @@ final class TasksController extends SecuredController
      * @param int|null $id id задачи
      * @return string
      * @throws HttpException
-     * @throws TaskStateException
+     * @throws TaskStateException|TimeException
      */
     public function actionGetView(int $id = null): string
     {

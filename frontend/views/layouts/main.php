@@ -139,7 +139,7 @@ AppAsset::register($this);
                                 <p class="lightbulb__new-task <?= (new NotificationsService())->getNotificationClassName($notification->type) ?>">
                                     <?= $notification->content ?>
                                     <a href="<?= Route::getTaskView($notification->task_id) ?>"
-                                       class="link-regular">«<?= $notification->task->title ?>»</a>
+                                       class="link-regular">«<?= encode($notification->task->title) ?>»</a>
                                 </p>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -153,7 +153,7 @@ AppAsset::register($this);
                                  alt="Аватар пользователя">
                         </a>
                         <span class="header__account-name">
-                 <?= $user->name ?>
+                 <?= encode($user->name) ?>
              </span>
                     </div>
                     <div class="account__pop-up">

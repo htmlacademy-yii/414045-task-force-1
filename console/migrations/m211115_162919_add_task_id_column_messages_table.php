@@ -22,19 +22,4 @@ class m211115_162919_add_task_id_column_messages_table extends Migration
     {
         $this->dropColumn('messages', 'task_id');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m211115_162919_add_task_id_column_messages_table cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

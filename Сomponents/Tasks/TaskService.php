@@ -225,13 +225,14 @@ class TaskService
         $tasks = Task::find();
 
         if ($filter === null) {
-            $tasks->orWhere(['executor_id' => $userId])->orWhere(['customer_id' => $userId]);
+            $tasks->Where(['executor_id' => $userId])
+                ->orWhere(['customer_id' => $userId]);
         }
 
         if ($filter === MyTaskListFilterConstants::COMPLETED) {
-            $tasks->orWhere(['executor_id' => $userId])
+            $tasks->Where(['executor_id' => $userId])
                 ->orWhere(['customer_id' => $userId])
-                ->where(['state' => TaskConstants::DONE_TASK_STATUS_NAME]);
+                ->andWhere(['state' => TaskConstants::DONE_TASK_STATUS_NAME]);
         }
 
         if ($filter === MyTaskListFilterConstants::NEW) {
@@ -239,9 +240,9 @@ class TaskService
         }
 
         if ($filter === MyTaskListFilterConstants::ACTIVE) {
-            $tasks->orWhere(['executor_id' => $userId])
+            $tasks->Where(['executor_id' => $userId])
                 ->orWhere(['customer_id' => $userId])
-                ->where(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME]);
+                ->andWhere(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME]);
         }
 
         if ($filter === MyTaskListFilterConstants::CANCELED) {
@@ -252,9 +253,9 @@ class TaskService
         }
 
         if ($filter === MyTaskListFilterConstants::EXPIRED) {
-            $tasks->orWhere(['executor_id' => $userId])
+            $tasks->Where(['executor_id' => $userId])
                 ->orWhere(['customer_id' => $userId])
-                ->where(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME])
+                ->andwhere(['state' => TaskConstants::IN_WORK_TASK_STATUS_NAME])
                 ->andWhere(['<', 'deadline', date('Y-m-d')]);
         }
 

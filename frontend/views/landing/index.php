@@ -167,8 +167,8 @@ use yii\widgets\ActiveForm;
                         <div class="landing-task">
                             <div class="landing-task-top task-courier"></div>
                             <div class="landing-task-description">
-                                <h3><a href="#" class="link-regular"><?= StringHelper::truncate($task->title, 15, '...') ?></a></h3>
-                                <p><?= StringHelper::truncate($task->description, 50, '...') ?></p>
+                                <h3><a href="#" class="link-regular"><?= encode(StringHelper::truncate($task->title, 15, '...')) ?></a></h3>
+                                <p><?= encode(StringHelper::truncate($task->description, 50, '...')) ?></p>
                             </div>
                             <div class="landing-task-info">
                                 <div class="task-info-left">

@@ -24,19 +24,4 @@ class m220126_083053_seed_cities extends Migration
 
         return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220126_083053_seed_cities cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

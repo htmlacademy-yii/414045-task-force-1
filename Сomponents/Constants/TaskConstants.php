@@ -35,6 +35,9 @@ final class TaskConstants
         = [
             self::NEW_TASK_STATUS_NAME => [Cancel::class, Response::class],
             self::IN_WORK_TASK_STATUS_NAME => [Done::class, Refuse::class],
+            self::CANCELED_TASK_STATUS_NAME => [],
+            self::DONE_TASK_STATUS_NAME => [],
+            self::FAILED_TASK_STATUS_NAME => [],
         ];
     public const STATUS_MAP
         = [

@@ -41,7 +41,7 @@ TaskViewAsset::register($this);
         <div class="content-view__card-wrapper">
             <div class="content-view__header">
                 <div class="content-view__headline">
-                    <h1><?= $task->title ?></h1>
+                    <h1><?= encode($task->title) ?></h1>
                     <span>Размещено в категории
                                     <a href="<?= Route::getTasks($categoryId) ?>"
                                        class="link-regular"><?= $categoryName ?></a>
@@ -57,7 +57,7 @@ TaskViewAsset::register($this);
             <div class="content-view__description">
                 <h3 class="content-view__h3">Общее описание</h3>
                 <p>
-                    <?= $task->description ?>
+                    <?= encode($task->description) ?>
                 </p>
             </div>
             <div class="content-view__attach">
@@ -74,7 +74,7 @@ TaskViewAsset::register($this);
                     <div class="content-view__address">
                         <span class="address__town"><?= $locationDescription ?></span><br>
                         <span><?= $locationName ?></span>
-                        <p><?= $task->address_comment ?></p>
+                        <p><?= encode($task->address_comment) ?></p>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@ TaskViewAsset::register($this);
                 <img src="<?= $customer->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="62" height="62"
                      alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
-                    <p><?= $customer->name ?></p>
+                    <p><?= encode($customer->name) ?></p>
                 </div>
             </div>
             <p class="info-customer"><span><?= $countCustomerTasks ?> заданий</span><span

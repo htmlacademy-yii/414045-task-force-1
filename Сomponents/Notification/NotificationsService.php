@@ -15,6 +15,7 @@ class NotificationsService
 {
     /**
      * @param string $email
+     * @param string $title
      * @param string $content
      * @return void
      */
@@ -54,6 +55,7 @@ class NotificationsService
 
     /**
      * @param int $taskId
+     * @param int $addresseeId
      * @return void
      */
     public function sendNtfNewMessage(int $taskId, int $addresseeId)

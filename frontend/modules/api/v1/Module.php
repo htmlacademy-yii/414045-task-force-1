@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace frontend\modules\api;
+namespace frontend\modules\api\v1;
 
 class Module extends \yii\base\Module
 {

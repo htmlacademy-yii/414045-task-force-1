@@ -19,7 +19,7 @@ $lastActivity = (new UserService())->getLastActivity($model->user);
                     src="<?= $model->user->avatar_src ?? UserConstants::USER_DEFAULT_AVATAR_SRC ?>" width="55"
                     height="55"></a>
         <div class="feedback-card__top--name">
-            <p><a href="<?= Route::getUserView($model->user_id) ?>" class="link-regular"><?= $model->user->name ?></a>
+            <p><a href="<?= Route::getUserView($model->user_id) ?>" class="link-regular"><?= encode($model->user->name) ?></a>
             </p>
             <?php for ($i = 0; $i < 5; $i++): ?>
                 <span class="<?= ($rating <= $i) ? 'star-disabled' : '' ?>"></span>
@@ -30,7 +30,7 @@ $lastActivity = (new UserService())->getLastActivity($model->user);
     </div>
     <div class="feedback-card__content">
         <p>
-            <?= $model->content ?>
+            <?= encode($model->content) ?>
         </p>
         <span><?= $model->price ?> ₽</span>
     </div>
